@@ -66,7 +66,7 @@
 					<key>begin</key>
 					<string>\[</string>
 					<key>end</key>
-					<string>\](')?</string>
+					<string>\]((\.)?'*)</string>
 					<key>endCaptures</key>
 					<dict>
 						<key>1</key>
@@ -84,12 +84,6 @@
 							<string>\bend\b</string>
 							<key>name</key>
 							<string>constant.numeric.julia</string>
-						</dict>
-						<dict>
-							<key>match</key>
-							<string>(?:\]')</string>
-							<key>name</key>
-							<string>keyword.operator</string>
 						</dict>
 						<dict>
 							<key>include</key>
@@ -115,6 +109,30 @@
 		<dict>
 			<key>patterns</key>
 			<array>
+                <dict>
+                    <key>begin</key>
+                    <string>#=</string>
+                    <key>beginCaptures</key>
+                    <dict>
+                            <key>0</key>
+                            <dict>
+                                    <key>name</key>
+                                    <string>punctuation.definition.comment.begin.julia</string>
+                            </dict>
+                    </dict>
+                    <key>end</key>
+                    <string>=#</string>
+                    <key>endCaptures</key>
+                    <dict>
+                            <key>0</key>
+                            <dict>
+                                    <key>name</key>
+                                    <string>punctuation.definition.comment.end.julia</string>
+                            </dict>
+                    </dict>
+                    <key>name</key>
+                    <string>comment.block.number-sign-equals.julia</string>
+                </dict>
 				<dict>
 					<key>captures</key>
 					<dict>
@@ -172,7 +190,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>^\s*([a-zA-Z0-9_]+!?)(?=.*\)\s*=(?!=))</string>
+					<string>^\s*([a-zA-Z0-9\._]+!?)(?=.*\)\s*=(?!=))</string>
 					<key>captures</key>
 					<dict>
 						<key>1</key>
@@ -184,7 +202,7 @@
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>\b(function|macro)\s+([a-zA-Z0-9_]+!?)\b</string>
+					<string>\b(function|macro)\s+([a-zA-Z0-9_\.]+!?)\b</string>
 					<key>captures</key>
 					<dict>
 						<key>1</key>
@@ -237,7 +255,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>((\b0(x|X)[0-9a-fA-F]+)|(\b0o[0-7]+)|(\b0b[0-1]+)|((\b[0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]*)?(im)?|\bInf(32)?\b|\bNaN(32)?\b)</string>
+					<string>((\b0(x|X)[0-9a-fA-F](_?[0-9a-fA-F])*)|(\b0o[0-7](_?[0-7])*)|(\b0b[0-1](_?[0-1])*)|((\b[0-9](_?[0-9])*\.?(_?[0-9]*))|(\.[0-9](_?[0-9])*))((e|E)(\+|-)?(_?[0-9])*)?(im)?|\bInf(32)?\b|\bNaN(32)?\b)</string>
 					<key>name</key>
 					<string>constant.numeric.julia</string>
 				</dict>
@@ -328,11 +346,6 @@
 				<dict>
 					<key>captures</key>
 					<dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>variable</string>
-						</dict>
 						<key>2</key>
 						<dict>
 							<key>name</key>
