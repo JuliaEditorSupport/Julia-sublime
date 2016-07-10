@@ -322,7 +322,7 @@
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>(?:&gt;|&lt;|&gt;=|&lt;=|==|!=|\.&gt;|\.&lt;|\.&gt;=|\.&gt;=|\.==|\.!=|\.=|\.!|&lt;:|:&gt;)</string>
+					<string>(?:&gt;|&lt;|&gt;=|≥|\.≥|&lt;=|≤|\.≤|==|!=|≠|\.&gt;|\.&lt;|\.&gt;=|\.&gt;=|\.==|\.!=|\.≠|\.=|\.!|&lt;:|:&gt;|===|≡|!==|≢)</string>
 					<key>name</key>
 					<string>keyword.operator.relation.julia</string>
 				</dict>
