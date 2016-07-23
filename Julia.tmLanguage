@@ -164,7 +164,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>([^\s\[\]\(\)\{\}\+\-\*\/]+)\(</string>
+					<string>([^\s\[\]\(\)\{\}\+\-\*\/\d][^\s\[\]\(\)\{\}\+\-\*\/]*)\(</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -212,7 +212,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>([^\s\[\]\(\)\{\}\+\-\*\/]+)({[^}]*})?\((?=.*\)\s*=(?!=))</string>
+					<string>([^\s\[\]\(\)\{\}\+\-\*\/\d][^\s\[\]\(\)\{\}\+\-\*\/]*)({[^}]*})?\((?=.*\)\s*=(?!=))</string>
 				</dict>
 				<dict>
 					<key>captures</key>
@@ -234,7 +234,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>\b(function|stagedfunction|macro)\s+([^\s\[\]\(\)\{\}\+\-\*\/]+)({[^}]*})?\(</string>
+					<string>\b(function|stagedfunction|macro)\s+([^\s\[\]\(\)\{\}\+\-\*\/\d][^\s\[\]\(\)\{\}\+\-\*\/]*)({[^}]*})?\(</string>
 				</dict>
 			</array>
 		</dict>
@@ -310,7 +310,7 @@
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>(?:\|\||&amp;&amp;|!)</string>
+					<string>(?:\|\||&amp;&amp;|(?&lt;=\s)!)</string> <!-- Bang cannot be preceeded by non-whitespace, because if it is, then it is part of a variable name. Using a positive lookbehind assertion. -->
 					<key>name</key>
 					<string>keyword.operator.boolean.julia</string>
 				</dict>
