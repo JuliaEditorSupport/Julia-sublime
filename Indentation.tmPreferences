@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+
+  <key>scope</key>
+  <string>source.julia</string>
+
+  <key>settings</key>
+  <dict>
+
+    <key>decreaseIndentPattern</key>
+    <string>^\s*(end|else|elseif|catch|finally).*$</string>
+
+    <key>increaseIndentPattern</key>
+    <string>^\s*(begin|function|macro|for|while|if|else|elseif|type|immutable|try|catch|finally).*$</string>
+
+  </dict>
+
+</dict>
+</plist>
