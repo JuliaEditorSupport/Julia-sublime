@@ -1,0 +1,10 @@
+<snippet>
+  <content><![CDATA[
+while $1
+    $0
+end
+]]></content>
+  <tabTrigger>while</tabTrigger>
+  <scope>source.julia</scope>
+  <description>while loop</description>
+</snippet>

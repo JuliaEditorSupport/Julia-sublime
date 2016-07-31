@@ -1,0 +1,10 @@
+<snippet>
+  <content><![CDATA[
+if $1
+    $0
+end
+]]></content>
+  <tabTrigger>if</tabTrigger>
+  <scope>source.julia</scope>
+  <description>if</description>
+</snippet>

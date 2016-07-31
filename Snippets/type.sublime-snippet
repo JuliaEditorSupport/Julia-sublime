@@ -1,0 +1,10 @@
+<snippet>
+  <content><![CDATA[
+type $1
+    $0
+end
+]]></content>
+  <tabTrigger>type</tabTrigger>
+  <scope>source.julia</scope>
+  <description>type definition</description>
+</snippet>
