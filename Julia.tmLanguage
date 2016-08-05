@@ -358,7 +358,7 @@
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>(?:\.(?=[a-zA-Z])|\.\.+)</string>
+					<string>(?:\.(?=\p{Alpha})|\.\.+)</string>
 					<key>name</key>
 					<string>keyword.operator.dots.julia</string>
 				</dict>
@@ -576,7 +576,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>(?&lt;![a-zA-Z0-9:&lt;]:):[a-zA-Z_][a-zA-Z0-9_]*\b</string>
+					<string>(?&lt;![\p{Alnum}:&lt;]:)(?&lt;=:)[\p{Alpha}_]\w*\b</string>
 					<key>name</key>
 					<string>constant.other.symbol.julia</string>
 				</dict>
