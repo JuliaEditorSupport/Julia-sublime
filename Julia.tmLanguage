@@ -164,7 +164,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>([^\s\[\]\(\)\{\}\+\-\*\/\d][^\s\[\]\(\)\{\}\+\-\*\/]*)\(</string>
+					<string>([^\s\[\]\(\)\{\}\+\-\*\/=\d][^\s\[\]\(\)\{\}\+\-\*\/=]*)\(</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -212,7 +212,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>([^\s\[\]\(\)\{\}\+\-\*\/\d][^\s\[\]\(\)\{\}\+\-\*\/]*)({[^}]*})?\((?=.*\)\s*=(?!=))</string>
+					<string>([^\s\[\]\(\)\{\}\+\-\*\/=\d][^\s\[\]\(\)\{\}\+\-\*\/=]*)({[^}]*})?\((?=.*\)\s*=(?!=))</string>
 				</dict>
 				<dict>
 					<key>captures</key>
@@ -234,7 +234,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>\b(function|stagedfunction|macro)\s+([^\s\[\]\(\)\{\}\+\-\*\/\d][^\s\[\]\(\)\{\}\+\-\*\/]*)({[^}]*})?\(</string>
+					<string>\b(function|stagedfunction|macro)\s+([^\s\[\]\(\)\{\}\+\-\*\/=\d][^\s\[\]\(\)\{\}\+\-\*\/=]*)({[^}]*})?\(</string>
 				</dict>
 			</array>
 		</dict>
