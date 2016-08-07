@@ -1,7 +1,7 @@
 <snippet>
   <content><![CDATA[
-for ${1:x in xs}
-    ${0:x}
+for $1
+    $0
 end
 ]]></content>
   <tabTrigger>for</tabTrigger>
