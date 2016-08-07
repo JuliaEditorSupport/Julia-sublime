@@ -292,7 +292,14 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>(?:::(?:(?:Union)?\([^)]*\)|\w+(?:{[^}]*})?))(?:\.\.\.)?</string>
+					<!--
+						Ugly regex to support nested types (to some degree at least),
+						we need some push/pop thing to do this nicely.
+						Double colon is highlighted as part of the type if
+						preceded by whitespace, otherwise highlight as an operator.
+					-->
+					<!-- <string>((?&lt;=[\s\(,])::|(?&lt;=\w::))\w+({[^{]*({[^{]*({[^{]*({[^{]*({[^{]*({[^{]*})?})?})?})?})?})?</string> -->
+					<string>((?&lt;=(?:^|\s|\(|,))::|(?&lt;=\w::))\w+({[^{]*((\s*\,\s*\w+)?({[^{]*((\s*\,\s*\w+)?({[^{]*((\s*\,\s*\w+)?({[^{]*((\s*\,\s*\w+)?({[^{]*})?)*})?)*})?)*})?)*})?</string>
 					<key>name</key>
 					<string>support.type.julia</string>
 				</dict>
