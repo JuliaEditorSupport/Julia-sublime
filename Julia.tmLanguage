@@ -26,10 +26,6 @@
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#operator</string>
-		</dict>
-		<dict>
-			<key>include</key>
 			<string>#array</string>
 		</dict>
 		<dict>
@@ -39,6 +35,10 @@
 		<dict>
 			<key>include</key>
 			<string>#bracket</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#number</string>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -54,11 +54,11 @@
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#keyword</string>
+			<string>#operator</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#number</string>
+			<string>#keyword</string>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -164,7 +164,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>([^\s\[\]\(\)\{\}\+\-\*\/=\d][^\s\[\]\(\)\{\}\+\-\*\/=]*)\(</string>
+					<string>([^\s\[\]\(\)\{\}\+\-\*\/=]*)\(</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -212,7 +212,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>([^\s\[\]\(\)\{\}\+\-\*\/=\d][^\s\[\]\(\)\{\}\+\-\*\/=]*)({[^}]*})?\((?=.*\)\s*=(?!=))</string>
+					<string>([^\s\[\]\(\)\{\}\+\-\*\/=]*)({[^}]*})?\((?=.*\)\s*=(?!=))</string>
 				</dict>
 				<dict>
 					<key>captures</key>
@@ -234,7 +234,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>\b(function|stagedfunction|macro)\s+([^\s\[\]\(\)\{\}\+\-\*\/=\d][^\s\[\]\(\)\{\}\+\-\*\/=]*)({[^}]*})?\(</string>
+					<string>\b(function|stagedfunction|macro)\s+([^\s\[\]\(\)\{\}\+\-\*\/=]*)({[^}]*})?\(</string>
 				</dict>
 			</array>
 		</dict>
@@ -298,7 +298,6 @@
 						Double colon is highlighted as part of the type if
 						preceded by whitespace, otherwise highlight as an operator.
 					-->
-					<!-- <string>((?&lt;=[\s\(,])::|(?&lt;=\w::))\w+({[^{]*({[^{]*({[^{]*({[^{]*({[^{]*({[^{]*})?})?})?})?})?})?</string> -->
 					<string>((?&lt;=(?:^|\s|\(|,))::|(?&lt;=\w::))\w+({[^{]*((\s*\,\s*\w+)?({[^{]*((\s*\,\s*\w+)?({[^{]*((\s*\,\s*\w+)?({[^{]*((\s*\,\s*\w+)?({[^{]*})?)*})?)*})?)*})?)*})?</string>
 					<key>name</key>
 					<string>support.type.julia</string>
