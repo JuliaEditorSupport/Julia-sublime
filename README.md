@@ -15,3 +15,12 @@ If you haven't already, [install Package Control](https://packagecontrol.io/inst
 ### Manual installation
 
 Clone the repository into `~/.config/sublime-text-3/Packages/`. (The path may be different depending on OS and version.)
+
+
+## Example
+
+Gets the tricky things right
+
+[![Highlight example](https://github.com/JuliaEditorSupport/Julia-sublime/blob/master/highlight-example.png)](https://github.com/JuliaEditorSupport/Julia-sublime/wiki)
+
+Feel free to open an issue if something looks wrong or if something can be done better.
