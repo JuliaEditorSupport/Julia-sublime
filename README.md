@@ -5,6 +5,7 @@ Julia language support for Sublime Text 2/3.
 - Syntax highlighting
 - Auto-indentation
 - Snippets
+- Unicode tab completion (just like the [REPL](http://docs.julialang.org/en/latest/manual/interacting-with-julia/#tab-completion))
 
 
 ## Installation
