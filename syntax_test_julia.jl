@@ -95,13 +95,13 @@
 ## SYMBOLS
 ##
 
+  :1.2
+# ^ keyword.operator
+#  ^^^ constant.other.symbol
 # (issue 3)
-  :1
+  :βa
 # ^ keyword.operator
-#  ^ constant.other.symbol
-  :β
-# ^ keyword.operator
-#  ^ constant.other.symbol
+#  ^^ constant.other.symbol
   :+
 # ^ keyword.operator
 #  ^ constant.other.symbol
@@ -364,7 +364,7 @@
 
 
 ##
-## MACRO
+## MACROS
 ##
 
   macro foo(a) end
