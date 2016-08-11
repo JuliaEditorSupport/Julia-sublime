@@ -1,0 +1,319 @@
+%YAML 1.2
+---
+name: Julia
+file_extensions: [jl]
+first_line_match: ^#!.*\bjulia\s*$
+scope: source.julia
+
+# TODO: String interpolation highlighting, yes or no?
+
+variables:
+  # TODO: Clean this up. Split into several varaibles and remove superfluous escapes
+  op_symb: (?:(?:\:\=|\=\>|~|\$\=|\?|\-\-|\-\-\>|\|\|&|\<\:|\>\:|\|\>|\<\||\:|\.\.\.|\.\.|\.|\$|\:\:|¬)|\.?(?:\=|\+\=|\-\=|\*\=|/\=|//\=|\=|\^\=|÷\=|%\=|\<\<\=|\>\>\=|\>\>\>\=|\|\=|&\=|←|→|↔|↚|↛|↠|↣|↦|↮|⇎|⇏|⇒|⇔|⇴|⇶|⇷|⇸|⇹|⇺|⇻|⇼|⇽|⇾|⇿|⟵|⟶|⟷|⟷|⟹|⟺|⟻|⟼|⟽|⟾|⟿|⤀|⤁|⤂|⤃|⤄|⤅|⤆|⤇|⤌|⤍|⤎|⤏|⤐|⤑|⤔|⤕|⤖|⤗|⤘|⤝|⤞|⤟|⤠|⥄|⥅|⥆|⥇|⥈|⥊|⥋|⥎|⥐|⥒|⥓|⥖|⥗|⥚|⥛|⥞|⥟|⥢|⥤|⥦|⥧|⥨|⥩|⥪|⥫|⥬|⥭|⥰|⧴|⬱|⬰|⬲|⬳|⬴|⬵|⬶|⬷|⬸|⬹|⬺|⬻|⬼|⬽|⬾|⬿|⭀|⭁|⭂|⭃|⭄|⭇|⭈|⭉|⭊|⭋|⭌|￩|￫|\>|\<|\>\=|≥|\<\=|≤|\=\=|\=\=\=|≡|≠|≢|∈|∉|∋|∌|⊆|⊈|⊂|⊄|⊊|∝|∊|∍|∥|∦|∷|∺|∻|∽|∾|≁|≃|≄|≅|≆|≇|≈|≉|≊|≋|≌|≍|≎|≐|≑|≒|≓|≔|≕|≖|≗|≘|≙|≚|≛|≜|≝|≞|≟|≣|≦|≧|≨|≩|≪|≫|≬|≭|≮|≯|≰|≱|≲|≳|≴|≵|≶|≷|≸|≹|≺|≻|≼|≽|≾|≿|⊀|⊁|⊃|⊅|⊇|⊉|⊋|⊏|⊐|⊑|⊒|⊜|⊩|⊬|⊮|⊰|⊱|⊲|⊳|⊴|⊵|⊶|⊷|⋍|⋐|⋑|⋕|⋖|⋗|⋘|⋙|⋚|⋛|⋜|⋝|⋞|⋟|⋠|⋡|⋢|⋣|⋤|⋥|⋦|⋧|⋨|⋩|⋪|⋫|⋬|⋭|⋲|⋳|⋴|⋵|⋶|⋷|⋸|⋹|⋺|⋻|⋼|⋽|⋾|⋿|⟈|⟉|⟒|⦷|⧀|⧁|⧡|⧣|⧤|⧥|⩦|⩧|⩪|⩫|⩬|⩭|⩮|⩯|⩰|⩱|⩲|⩳|⩴|⩵|⩶|⩷|⩸|⩹|⩺|⩻|⩼|⩽|⩾|⩿|⪀|⪁|⪂|⪃|⪄|⪅|⪆|⪇|⪈|⪉|⪊|⪋|⪌|⪍|⪎|⪏|⪐|⪑|⪒|⪓|⪔|⪕|⪖|⪗|⪘|⪙|⪚|⪛|⪜|⪝|⪞|⪟|⪠|⪡|⪢|⪣|⪤|⪥|⪦|⪧|⪨|⪩|⪪|⪫|⪬|⪭|⪮|⪯|⪰|⪱|⪲|⪳|⪴|⪵|⪶|⪷|⪸|⪹|⪺|⪻|⪼|⪽|⪾|⪿|⫀|⫁|⫂|⫃|⫄|⫅|⫆|⫇|⫈|⫉|⫊|⫋|⫌|⫍|⫎|⫏|⫐|⫑|⫒|⫓|⫔|⫕|⫖|⫗|⫘|⫙|⫷|⫸|⫹|⫺|⊢|⊣|\+|\-|\||⊕|⊖|⊞|⊟|\+\+|∪|∨|⊔|±|∓|∔|∸|≂|≏|⊎|⊻|⊽|⋎|⋓|⧺|⧻|⨈|⨢|⨣|⨤|⨥|⨦|⨧|⨨|⨩|⨪|⨫|⨬|⨭|⨮|⨹|⨺|⩁|⩂|⩅|⩊|⩌|⩏|⩐|⩒|⩔|⩖|⩗|⩛|⩝|⩡|⩢|⩣|\<\<|\>\>|\>\>\>|\*|/|÷|%|&|⋅|∘|×|\\|∩|∧|⊗|⊘|⊙|⊚|⊛|⊠|⊡|⊓|∗|∙|∤|⅋|≀|⊼|⋄|⋆|⋇|⋉|⋊|⋋|⋌|⋏|⋒|⟑|⦸|⦼|⦾|⦿|⧶|⧷|⨇|⨰|⨱|⨲|⨳|⨴|⨵|⨶|⨷|⨸|⨻|⨼|⨽|⩀|⩃|⩄|⩋|⩍|⩎|⩑|⩓|⩕|⩘|⩚|⩜|⩞|⩟|⩠|⫛|⊍|▷|⨝|⟕|⟖|⟗|//|\^|↑|↓|⇵|⟰|⟱|⤈|⤉|⤊|⤋|⤒|⤓|⥉|⥌|⥍|⥏|⥑|⥔|⥕|⥘|⥙|⥜|⥝|⥠|⥡|⥣|⥥|⥮|⥯|￪|￬))
+  lang_symb: (?:[\(\)\{\}\[\],.;:='"])
+  fn_symb: '[^\s{{lang_symb}}{{op_symb}}]'
+  identifier_continue: '[[:alnum:]_]'
+  identifier: '\b[[:alpha:]_]{{identifier_continue}}*\b'
+  nested_braces: '{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*})?)*})?)*})?)*})?)*}'
+  fn_name_def: (?:\()?(?=[^!])(?:[^\s{{lang_symb}}]*)(?:\))?
+  new_identifier: (?=[^!]){{fn_symb}}
+  weak_boundary: (?<=(?:^|\s|{{lang_symb}}|[{{op_symb}}]))
+
+contexts:
+  main:
+    - include: declarations
+    - include: expressions
+
+  expressions:
+    - include: comments
+    - include: type-annotation
+    - include: subtype
+    - include: symbols
+    - include: literals
+    - include: operators
+    - include: strings
+    - include: keywords
+    - include: macros
+    - include: function-call
+    - include: variable
+    - include: brackets
+
+  declarations:
+    - include: decl-func
+    - include: decl-func-mathematical
+    - include: decl-type
+    - include: decl-macro
+    - include: decl-typealias
+
+  comments:
+    - match: '#='
+      push: comment-block
+    - match: '#.*'
+      scope: comment.line.number-sign.julia
+
+  comment-block:
+    - meta_scope: comment.block.number-sign-equals.julia
+    - match: '#='
+      push: comment-block
+    - match: '=#'
+      pop: true
+
+  strings:
+    - match: '\br"'
+      push:
+      - meta_scope: string.quoted.other.julia
+      - match: (\\"|\\\\)
+        scope: constant.character.escape.julia
+      - match: '"'
+        pop: true
+    - match: '"""'
+      push:
+      - meta_scope: string.quoted.single.julia
+      - include: string-escape
+      - match: '"""'
+        pop: true
+    - match: '"'
+      push: string-content
+    - match: '\w+"'
+      push:
+      - meta_scope: string.quoted.other.julia
+      - include: string-escape
+      - match: '"'
+        pop: true
+    - match: "'"
+      push:
+      - meta_scope: string.quoted.single.julia
+      - include: string-escape
+      - match: "'"
+        pop: true
+    - match: '`'
+      push:
+      - meta_scope: string.interpolated.julia
+      - match: \\.
+        scope: constant.character.escape.julia
+      - match: '`'
+        pop: true
+
+  string-content:
+    - match: '"'
+      pop: true
+    - meta_scope: string.quoted.double.julia
+    - match: \\(\\|[0-3]\d{0,2}|[4-7]\d?|x[a-fA-F0-9]{0,2}|u[a-fA-F0-9]{0,4}|U[a-fA-F0-9]{0,8}|.)
+      scope: constant.character.escape.julia
+    - match: (\$)({{fn_symb}}+)
+      captures:
+        1: keyword.operator
+        2: variable.other
+    - match: \$(?=\()
+      scope: keyword.operator
+      set: string-interpolation
+
+  string-interpolation:
+    - match: (?<=\))
+      set: string-content
+    - include: brackets
+
+  string-escape:
+    - match: \\(\\|[0-3]\d{0,2}|[4-7]\d?|x[a-fA-F0-9]{0,2}|u[a-fA-F0-9]{0,4}|U[a-fA-F0-9]{0,8}|.)
+      scope: constant.character.escape.julia
+
+  keywords:
+    - match: \b(begin|end|function|type|macro|quote|let|local|global|const|abstract|typealias|bitstype|immutable|module|baremodule|using|import|export|importall|in)\b
+      scope: keyword.other.julia
+    - match: \b(if|else|elseif|for|while|do|try|catch|finally|return|break|continue)\b
+      scope: keyword.control.julia
+
+  literals:
+    - match: |-
+        (?x)
+        (?:
+          {{weak_boundary}}0b[0-1]+|           # binary
+          {{weak_boundary}}0o[0-7]+|           # octal
+          {{weak_boundary}}0x[0-9a-fA-F]+|     # hex
+          (
+            \B\.[0-9]+|                        # .11
+            {{weak_boundary}}[0-9]+(\.[0-9]*)? # 11.11, 11., 11
+          )
+          (e[-+]?[0-9]+)?|                     # 1e123, 1e+123
+          (e[-+][0-9]+)?                       # e+123
+        )
+      scope: constant.numeric.julia
+    - match: \b(true|false|nothing|NaN|Inf)\b
+      scope: constant.language.julia
+
+  subtype:
+    - match: (?<=<:)\s*[\w\.]+
+      scope: support.type.julia
+    - include: type-bracket
+
+  type-annotation:
+    - match: (?<=::)[\w\.]+
+      scope: support.type.julia
+    - include: type-bracket
+
+  type-bracket:
+    - match: '{'
+      push:
+      - meta_scope: support.type.julia
+      - match: '}'
+        pop: true
+      - include: type-bracket
+    - match: '}'
+      scope: invalid.illegal.stray-bracket-end
+
+  type:
+    - match: \w+
+      scope: support.type.julia
+    - include: type-bracket
+
+  decl-func:
+    - match: '\bfunction\b'
+      scope: keyword.other.julia
+      push:
+      - meta_scope: meta.function.julia
+      - match: '([^.{(]+)(\.)'
+        captures:
+          1: variable.other
+          2: keyword.operator
+      - match: '([^.{(]+)({{nested_braces}})?'
+        captures:
+          1: entity.name.function
+          2: support.type
+
+      # - match: '(?=[^{(])'
+      #   push:
+      #   - meta_content_scope: entity.name.function.julia
+      #   - include: entity-name-function
+      #   # - match: '{{fn_name_def}}'
+      #   - match: '([^.{]+)(\.)'
+      #     1: variable.other
+      #     2: keyword.operator
+      #   - match: '\.'
+      #     scope: keyword.operator
+      #   - match: '[^{(]'
+      #   - match: ''
+      #     pop: true
+      # - match: '(?={)'
+      #   set: type-bracket
+      #   with_prototype:
+      #   - match: (?<=})\(
+      #     scope: meta.function.parameters.julia
+      #     set: function-parameters
+
+      - match: '(?=\()'
+        set:
+        - match: \(
+          scope: meta.function.parameters.julia
+          set: function-parameters
+
+  function-parameters:
+    - meta_content_scope: meta.function.parameters.julia
+    - match: \)
+      scope: punctuation.section.parameters.end.julia
+      set:
+        - match: ''
+          pop: true
+    - include: comments
+    - match: ','
+      scope: punctuation.separator.parameters.julia
+    - match: '(?==)'
+      set:
+        - match: '='
+          scope: keyword.operator.assignment.julia
+          set:
+            - meta_scope: meta.function.parameters.default-value.julia
+            - match: '(?=[,)])'
+              set: function-parameters
+            - include: expressions
+    - match: '(?=::)'
+      set:
+        - match: '::'
+          scope: keyword.operator.type-annotation.julia
+          set:
+            - meta_scope: meta.function.parameters.annotation.julia
+            - match: '(?=[,)=])'
+              set: function-parameters
+            - include: type
+            - match: \.\.\.
+              scope: keyword.operator
+    - match: ({{fn_symb}})(\.\.\.)?
+      captures:
+        1: variable.parameter.julia
+        2: keyword.operator
+      # scope: variable.parameter.julia
+
+  decl-func-mathematical:
+    - match: '(?:\()?(?=[^!])([^\s{{lang_symb}}]+)(?:\))?({{nested_braces}})?\((?=.*\)\s*=(?!=))'
+      captures:
+        1: entity.name.function.julia
+        2: support.type.julia
+    # TODO: Do a lookahead and then parse parameters, something like https://github.com/sublimehq/Packages/blob/master/JavaScript/JavaScript.sublime-syntax#L719
+
+  decl-type:
+    - match: \b(type|immutable|abstract)\s+(\w+(?:{{nested_braces}})?)
+      captures:
+        1: keyword.other
+        2: entity.name.function
+    - match: \b(bitstype)\s+(\d+)\s+(\w+(?:{{nested_braces}})?)
+      captures:
+        1: keyword.other
+        2: constant.numeric
+        3: entity.name.function
+
+  decl-macro:
+    - match: '\bmacro\b'
+      scope: keyword.other.julia
+      push:
+        - meta_scope: meta.macro.julia
+        - match: '([^(]+)'
+          scope: entity.name.function
+        - match: '(?=\()'
+          set:
+            - match: \(
+              scope: meta.macro.parameters.julia
+              set: function-parameters
+
+  decl-typealias:
+    - match: \b(typealias)\s+(\w+(?:{{nested_braces}})?)\s+(\w+(?:{{nested_braces}})?)?
+      captures:
+        1: keyword.other
+        2: entity.name.function
+        3: support.type
+
+  function-call:
+    - match: '({{new_identifier}}+)({{nested_braces}})?(?=\()'
+      captures:
+        1: variable.function.julia
+        2: support.type.julia
+
+  symbols:
+    - match: (?<![{{fn_symb}}\<\)\}\],.]:)(?<=:)[^\.\:\(]?[\w\!\_]*
+      scope: constant.other.symbol.julia
+
+  operators:
+    # Bang can also be part of a function name, thus it is treated separately
+    # Single quote as an operator cannot be preceded by space (because of conflic with chars) (this is also the behavior of the Julia parser)
+    - match: ({{op_symb}}|!|(?<!(?:\s|^))')
+    # - match: ({{op_symb}}|!|(?<=(?:^|[^\s]))')
+      scope: keyword.operator.julia
+
+  macros:
+    - match: '@\w+\b'
+      scope: variable.macro variable.parameter
+      # Setting variable.parameter here is wrong,
+      # but it gives nice highlighting in default color theme
+
+  variable:
+    - match: '{{fn_symb}}+'
+      scope: variable.other
+
+  oldtype:
+    - match: (?<=::)\w+({{nested_braces}})?
+      scope: support.type.julia
+
+  brackets:
+    - match: \(
+      push:
+        - match: \)
+          pop: true
+        - include: expressions
