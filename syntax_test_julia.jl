@@ -356,11 +356,28 @@
 #                                ^^^ keyword.other
 
 # Parenthesized function name
+  function (a)(b) end
+# ^^^^^^^^ keyword.other
+#           ^ entity.name.function
+#              ^ variable.parameter
+#                 ^^^ keyword.other
   function (+)(a) end
 # ^^^^^^^^ keyword.other
 #           ^ entity.name.function
 #              ^ variable.parameter
 #                 ^^^ keyword.other
+  (+)(a, b) = ...
+#  ^ entity.name.function
+#     ^ variable.parameter
+#        ^ variable.parameter
+#           ^ keyword.operator
+
+# Anonymous function
+  function (a) foo end
+# ^^^^^^^^ keyword.other
+#           ^ variable.parameter
+#              ^^^ variable.other
+#                  ^^^ keyword.other
 
 
 ##

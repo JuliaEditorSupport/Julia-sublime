@@ -5,10 +5,13 @@ file_extensions: [jl]
 first_line_match: ^#!.*\bjulia\s*$
 scope: source.julia
 
-# TODO: String interpolation highlighting, yes or no?
+##  TODO
+# - String interpolation highlighting, yes or no?
+# - Clean up types
+# - Clean up variables, split into several varaibles and remove superfluous escapes
+# - How to highlight this `gap_lst_{d+1} *= stride`?
 
 variables:
-  # TODO: Clean this up. Split into several varaibles and remove superfluous escapes
   op_symb: (?:(?:\:\=|\=\>|~|\$\=|\?|\-\-|\-\-\>|\|\|&|\<\:|\>\:|\|\>|\<\||\:|\.\.\.|\.\.|\.|\$|\:\:|¬)|\.?(?:\=|\+\=|\-\=|\*\=|/\=|//\=|\=|\^\=|÷\=|%\=|\<\<\=|\>\>\=|\>\>\>\=|\|\=|&\=|←|→|↔|↚|↛|↠|↣|↦|↮|⇎|⇏|⇒|⇔|⇴|⇶|⇷|⇸|⇹|⇺|⇻|⇼|⇽|⇾|⇿|⟵|⟶|⟷|⟷|⟹|⟺|⟻|⟼|⟽|⟾|⟿|⤀|⤁|⤂|⤃|⤄|⤅|⤆|⤇|⤌|⤍|⤎|⤏|⤐|⤑|⤔|⤕|⤖|⤗|⤘|⤝|⤞|⤟|⤠|⥄|⥅|⥆|⥇|⥈|⥊|⥋|⥎|⥐|⥒|⥓|⥖|⥗|⥚|⥛|⥞|⥟|⥢|⥤|⥦|⥧|⥨|⥩|⥪|⥫|⥬|⥭|⥰|⧴|⬱|⬰|⬲|⬳|⬴|⬵|⬶|⬷|⬸|⬹|⬺|⬻|⬼|⬽|⬾|⬿|⭀|⭁|⭂|⭃|⭄|⭇|⭈|⭉|⭊|⭋|⭌|￩|￫|\>|\<|\>\=|≥|\<\=|≤|\=\=|\=\=\=|≡|≠|≢|∈|∉|∋|∌|⊆|⊈|⊂|⊄|⊊|∝|∊|∍|∥|∦|∷|∺|∻|∽|∾|≁|≃|≄|≅|≆|≇|≈|≉|≊|≋|≌|≍|≎|≐|≑|≒|≓|≔|≕|≖|≗|≘|≙|≚|≛|≜|≝|≞|≟|≣|≦|≧|≨|≩|≪|≫|≬|≭|≮|≯|≰|≱|≲|≳|≴|≵|≶|≷|≸|≹|≺|≻|≼|≽|≾|≿|⊀|⊁|⊃|⊅|⊇|⊉|⊋|⊏|⊐|⊑|⊒|⊜|⊩|⊬|⊮|⊰|⊱|⊲|⊳|⊴|⊵|⊶|⊷|⋍|⋐|⋑|⋕|⋖|⋗|⋘|⋙|⋚|⋛|⋜|⋝|⋞|⋟|⋠|⋡|⋢|⋣|⋤|⋥|⋦|⋧|⋨|⋩|⋪|⋫|⋬|⋭|⋲|⋳|⋴|⋵|⋶|⋷|⋸|⋹|⋺|⋻|⋼|⋽|⋾|⋿|⟈|⟉|⟒|⦷|⧀|⧁|⧡|⧣|⧤|⧥|⩦|⩧|⩪|⩫|⩬|⩭|⩮|⩯|⩰|⩱|⩲|⩳|⩴|⩵|⩶|⩷|⩸|⩹|⩺|⩻|⩼|⩽|⩾|⩿|⪀|⪁|⪂|⪃|⪄|⪅|⪆|⪇|⪈|⪉|⪊|⪋|⪌|⪍|⪎|⪏|⪐|⪑|⪒|⪓|⪔|⪕|⪖|⪗|⪘|⪙|⪚|⪛|⪜|⪝|⪞|⪟|⪠|⪡|⪢|⪣|⪤|⪥|⪦|⪧|⪨|⪩|⪪|⪫|⪬|⪭|⪮|⪯|⪰|⪱|⪲|⪳|⪴|⪵|⪶|⪷|⪸|⪹|⪺|⪻|⪼|⪽|⪾|⪿|⫀|⫁|⫂|⫃|⫄|⫅|⫆|⫇|⫈|⫉|⫊|⫋|⫌|⫍|⫎|⫏|⫐|⫑|⫒|⫓|⫔|⫕|⫖|⫗|⫘|⫙|⫷|⫸|⫹|⫺|⊢|⊣|\+|\-|\||⊕|⊖|⊞|⊟|\+\+|∪|∨|⊔|±|∓|∔|∸|≂|≏|⊎|⊻|⊽|⋎|⋓|⧺|⧻|⨈|⨢|⨣|⨤|⨥|⨦|⨧|⨨|⨩|⨪|⨫|⨬|⨭|⨮|⨹|⨺|⩁|⩂|⩅|⩊|⩌|⩏|⩐|⩒|⩔|⩖|⩗|⩛|⩝|⩡|⩢|⩣|\<\<|\>\>|\>\>\>|\*|/|÷|%|&|⋅|∘|×|\\|∩|∧|⊗|⊘|⊙|⊚|⊛|⊠|⊡|⊓|∗|∙|∤|⅋|≀|⊼|⋄|⋆|⋇|⋉|⋊|⋋|⋌|⋏|⋒|⟑|⦸|⦼|⦾|⦿|⧶|⧷|⨇|⨰|⨱|⨲|⨳|⨴|⨵|⨶|⨷|⨸|⨻|⨼|⨽|⩀|⩃|⩄|⩋|⩍|⩎|⩑|⩓|⩕|⩘|⩚|⩜|⩞|⩟|⩠|⫛|⊍|▷|⨝|⟕|⟖|⟗|//|\^|↑|↓|⇵|⟰|⟱|⤈|⤉|⤊|⤋|⤒|⤓|⥉|⥌|⥍|⥏|⥑|⥔|⥕|⥘|⥙|⥜|⥝|⥠|⥡|⥣|⥥|⥮|⥯|￪|￬))
   lang_symb: (?:[\(\)\{\}\[\],.;:='"])
   fn_symb: '[^\s{{lang_symb}}{{op_symb}}]'
@@ -59,6 +62,7 @@ contexts:
       pop: true
 
   strings:
+    # Regex string: Has special escaping
     - match: '\br"'
       push:
       - meta_scope: string.quoted.other.julia
@@ -66,12 +70,14 @@ contexts:
         scope: constant.character.escape.julia
       - match: '"'
         pop: true
+    # Triple double-quoted string
     - match: '"""'
       push:
       - meta_scope: string.quoted.single.julia
       - include: string-escape
       - match: '"""'
         pop: true
+    # Double-quoted
     - match: '"'
       push: string-content
     - match: '\w+"'
@@ -80,12 +86,14 @@ contexts:
       - include: string-escape
       - match: '"'
         pop: true
+    # Single-quoted string
     - match: "'"
       push:
       - meta_scope: string.quoted.single.julia
       - include: string-escape
       - match: "'"
         pop: true
+    # Cmd string
     - match: '`'
       push:
       - meta_scope: string.interpolated.julia
@@ -167,44 +175,30 @@ contexts:
     - include: type-bracket
 
   decl-func:
-    - match: '\bfunction\b'
+    - match: '\bfunction\s+'
       scope: keyword.other.julia
       push:
       - meta_scope: meta.function.julia
+      # Parenthesized function name
+      - match: '\(([^.\{\(\)]+)\)({{nested_braces}})?\('
+        captures:
+          1: entity.name.function
+          2: support.type
+        set: function-parameters
+      # Anonymous function
+      - match: \(
+        set: function-parameters
+      # Ordinary function name
+      - match: '([^.{(]+)({{nested_braces}})?\('
+        captures:
+          1: entity.name.function
+          2: support.type
+        set: function-parameters
+      # Function name on the form "Module.func"
       - match: '([^.{(]+)(\.)'
         captures:
           1: variable.other
           2: keyword.operator
-      - match: '([^.{(]+)({{nested_braces}})?'
-        captures:
-          1: entity.name.function
-          2: support.type
-
-      # - match: '(?=[^{(])'
-      #   push:
-      #   - meta_content_scope: entity.name.function.julia
-      #   - include: entity-name-function
-      #   # - match: '{{fn_name_def}}'
-      #   - match: '([^.{]+)(\.)'
-      #     1: variable.other
-      #     2: keyword.operator
-      #   - match: '\.'
-      #     scope: keyword.operator
-      #   - match: '[^{(]'
-      #   - match: ''
-      #     pop: true
-      # - match: '(?={)'
-      #   set: type-bracket
-      #   with_prototype:
-      #   - match: (?<=})\(
-      #     scope: meta.function.parameters.julia
-      #     set: function-parameters
-
-      - match: '(?=\()'
-        set:
-        - match: \(
-          scope: meta.function.parameters.julia
-          set: function-parameters
 
   function-parameters:
     - meta_content_scope: meta.function.parameters.julia
@@ -240,14 +234,26 @@ contexts:
       captures:
         1: variable.parameter.julia
         2: keyword.operator
-      # scope: variable.parameter.julia
 
   decl-func-mathematical:
-    - match: '(?:\()?(?=[^!])([^\s{{lang_symb}}]+)(?:\))?({{nested_braces}})?\((?=.*\)\s*=(?!=))'
-      captures:
-        1: entity.name.function.julia
-        2: support.type.julia
-    # TODO: Do a lookahead and then parse parameters, something like https://github.com/sublimehq/Packages/blob/master/JavaScript/JavaScript.sublime-syntax#L719
+    # Ordinary function name
+    - match: '(?=(?=[^!])([^\s{{lang_symb}}]+)({{nested_braces}})?\([^\(\)]*\)\s*=(?!=))'
+      push:
+      - meta_scope: meta.function.julia
+      - match: '([^.{(]+)({{nested_braces}})?\('
+        captures:
+          1: entity.name.function
+          2: support.type
+        set: function-parameters
+    # Parenthesize function name
+    - match: '(?=\((?=[^!])([^\s{{lang_symb}}]+)\)({{nested_braces}})?\([^\(\)]*\)\s*=(?!=))'
+      push:
+      - meta_scope: meta.function.julia
+      - match: '\(([^.{()]+)\)({{nested_braces}})?\('
+        captures:
+          1: entity.name.function
+          2: support.type
+        set: function-parameters
 
   decl-type:
     - match: \b(type|immutable|abstract)\s+(\w+(?:{{nested_braces}})?)
@@ -287,7 +293,7 @@ contexts:
         2: support.type.julia
 
   symbols:
-    - match: (?<![{{fn_symb}}\<\)\}\],.]:)(?<=:)[^\.\:\(]?[\w\.\!\_]*
+    - match: (?<![{{fn_symb}}\<\)\}\].]:)(?<=:)[^\.\:\(]?[\w\.\!\_]*
       scope: constant.other.symbol.julia
 
   operators:
