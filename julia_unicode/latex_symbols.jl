@@ -4,7 +4,7 @@ include(joinpath(JULIA_HOME, "..", "share", "julia", "base", "latex_symbols.jl")
 
 println(φ, "latex_symbols = [")
 for (ω, (α, β)) in enumerate(latex_symbols)
-    print(φ, "(\"", escape_string(α), "\", \"",  β, "\")")
+    print(φ, "(\"", escape_string(α), "\", u\"",  β, "\")")
     ω < length(latex_symbols) && print(φ, ",")
     println(φ, "")
 end

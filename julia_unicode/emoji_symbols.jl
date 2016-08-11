@@ -4,7 +4,7 @@ include(joinpath(JULIA_HOME, "..", "share", "julia", "base", "emoji_symbols.jl")
 
 println(📁, "emoji_symbols = [")
 for (📞, (🔑, 🍺)) in enumerate(emoji_symbols)
-    print(📁, "(\"", escape_string(🔑), "\", \"",  🍺, "\")")
+    print(📁, "(\"", escape_string(🔑), "\", u\"",  🍺, "\")")
     📞 < length(emoji_symbols) && print(📁, ",")
     println(📁, "")
 end

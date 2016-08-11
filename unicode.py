@@ -1,8 +1,11 @@
 import sublime
 import sublime_plugin
 import re
-from .latex_symbols import latex_symbols
-from .emoji_symbols import emoji_symbols
+
+if sublime.version() > "3000":
+    from .julia_unicode import latex_symbols, emoji_symbols
+else:
+    from julia_unicode import latex_symbols, emoji_symbols
 
 
 CONTAINS_COMPLETIONS = re.compile(r".*(\\[:_0-9a-zA-Z+-^]*)$")
