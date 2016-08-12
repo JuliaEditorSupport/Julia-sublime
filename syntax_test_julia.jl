@@ -123,9 +123,10 @@
 #  ^ source.julia
 #   ^ variable.other
 #      ^ source.julia
-  :++,
+  :++a
 # ^ keyword.operator
 #  ^^ constant.other.symbol
+#    ^ variable.other
   :+a
 # ^ keyword.operator
 #  ^ constant.other.symbol
@@ -135,9 +136,15 @@
 #  ^ constant.other.symbol
 #   ^ keyword.operator
 #    ^ variable.other
+  :.//aa
+# ^ keyword.operator
+#  ^ constant.other.symbol
+#   ^^ keyword.operator
+#     ^^ variable.other
+
 
 ##
-## TERNARY
+## TERNARY OPERATORS
 ##
 
   a?b:c
@@ -153,7 +160,6 @@
 #       ^ keyword.operator
 #        ^ variable.other
 
-:.//faa?
 
 ##
 ## RANGES
@@ -222,13 +228,22 @@
 #            ^ keyword.operator
 #              ^^^ variable.function
 #                 ^^^^^^^^ support.type
-  aa::AA{BB}=fun{CC{DD}}()
+  aa::AA{BB}=fun{CC{DD}}() closed
 # ^^ variable.other
 #   ^^ keyword.operator
 #     ^^^^^^ support.type
 #           ^ keyword.operator
 #            ^^^ variable.function
 #               ^^^^^^^^ support.type
+#                          ^^^^^^ variable.other
+  mytype = Array
+# ^^^^^^ variable.other
+#        ^ keyword.operator
+#          ^^^^^ variable.other
+  mytype = Array{Int}
+# ^^^^^^ variable.other
+#        ^ keyword.operator
+#          ^^^^^^^^^^ variable.other
 
 # (issue 17)
 # All things being defined are green, types as well
@@ -623,11 +638,9 @@ a = "foo$(a+f(a, g())+b)(a)bar" closed
 #      ^ variable.function
 #             ^ string
 #                ^ variable.other
-
-
-##
-## TERNARY
-##
-
-a = a() ? a : a
-a = ? c-'0' : b
+  a = ? c-'0':b
+#       ^ variable.other
+#        ^ keyword.operator
+#         ^^^ string.quoted.single
+#            ^ keyword.operator
+#             ^ variable.other

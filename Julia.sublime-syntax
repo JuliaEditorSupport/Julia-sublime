@@ -213,7 +213,7 @@ contexts:
         (?x)
         (?<! {{symb_id}}: )   # Not preceded by `a:`
         (?<! {{symb_id}}\s: ) # or `a :` (How to match multiple spaces in lookbehind?)
-        (?<! [<)}\].]: )      # or other symbol-blocking char.
+        (?<! [<)}\].'"]: )    # or other symbol-blocking chars.
         (?<=:)                # Preceeded by colon.
         (                     # The actual symbol is either representing a operator which can consist of multiple chars (these must be listed before {{symb_op}})
           (\+\+|\.\+|{{symb_op}})| # TODO: Complete this list
@@ -229,10 +229,11 @@ contexts:
       scope: support.function.julia variable.macro.julia
 
   variable:
-    - match: '{{symb_id}}+({{nested_braces}})'
-      scope: support.type.julia
-    - match: '{{symb_id}}+'
-      scope: variable.other.julia
+    - match: '{{symb_id}}+({{nested_braces}})?'
+      # scope: support.type.julia
+      scope: variable.other
+    # - match: '{{symb_id}}+'
+    #   scope: variable.other.julia
 
   strings:
     # Regex string: Has special escaping
