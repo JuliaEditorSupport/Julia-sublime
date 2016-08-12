@@ -6,7 +6,7 @@
             { "key": "selector", "operator": "equal", "operand": "source.julia" },
             { "key": "setting.tab_completion", "operator": "equal", "operand": true },
             { "key": "has_next_field", "operator": "equal", "operand": false },
-            { "key": "julia_unicode_can_complete"},
+            { "key": "julia_unicode_has_prefix"},
             { "key": "julia_unicode_is_completed", "operand": false }
         ]
     },
@@ -28,7 +28,7 @@
             { "key": "selector", "operator": "equal", "operand": "source.julia" },
             { "key": "auto_complete_visible" },
             { "key": "setting.auto_complete_commit_on_tab" },
-            { "key": "julia_unicode_can_complete"}
+            { "key": "julia_unicode_has_prefix"}
         ]
     },
 
@@ -38,7 +38,7 @@
             { "key": "selector", "operator": "equal", "operand": "source.julia" },
             { "key": "auto_complete_visible" },
             { "key": "setting.auto_complete_commit_on_tab", "operand": false },
-            { "key": "julia_unicode_can_complete"}
+            { "key": "julia_unicode_has_prefix"}
         ]
     }
 ]

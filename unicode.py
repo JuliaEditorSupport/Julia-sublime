@@ -23,11 +23,11 @@ def get_command(view):
         return None
 
 
-def julia_unicode_can_complete(view, exact=True):
+def julia_unicode_has_prefix(view, check_match=False):
     c = get_command(view)
     if not c:
         return False
-    if not exact:
+    if not check_match:
         return True
 
     for s in symbols:
@@ -65,9 +65,9 @@ class JuliaUnicodeListener(sublime_plugin.EventListener):
         if view.settings().get('is_widget'):
             return
         if key == 'julia_unicode_is_completed':
-            return julia_unicode_can_complete(view, True) == operand
-        elif key == 'julia_unicode_can_complete':
-            return julia_unicode_can_complete(view, False) == operand
+            return julia_unicode_has_prefix(view, True) == operand
+        elif key == 'julia_unicode_has_prefix':
+            return julia_unicode_has_prefix(view) == operand
 
         return None
 
