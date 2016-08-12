@@ -208,26 +208,26 @@
 # All things being defined are green, types as well
   type Foo{T<:Real} end
 # ^^^^ keyword.other
-#      ^^^ entity.name.function
+#      ^^^ entity.name.type
 #         ^^^^^^^^^ support.type
   type Foo{T}<:Bar{T} end
 # ^^^^ keyword.other
-#      ^^^ entity.name.function
+#      ^^^ entity.name.type
 #         ^^^ support.type
 #            ^^ keyword.operator
 #              ^^^^^^ support.type
   immutable Foo{T<:Real} end
 # ^^^^^^^^^ keyword.other
-#           ^^^ entity.name.function
+#           ^^^ entity.name.type
 #              ^^^^^^^^^ support.type
   typealias Foo{T} Bar{T}
 # ^^^^^^^^^ keyword.other
-#           ^^^^^^ entity.name.function
+#           ^^^^^^ entity.name.type
 #                  ^^^^^^ support.type
   bitstype 32 Foo{T}<:Bar{T}
 # ^^^^^^^^ keyword.other
 #          ^^ constant.numeric
-#             ^^^^^^ entity.name.function
+#             ^^^^^^ entity.name.type
 #                   ^^ keyword.operator
 #                     ^^^^^^ support.type
 
@@ -422,7 +422,7 @@
 
   macro foo(a) end
 # ^^^^^ keyword.other
-#       ^^^ entity.name.function
+#       ^^^ entity.name.macro
 #           ^ variable.parameter
   @foo a
 # ^^^^ variable.macro
