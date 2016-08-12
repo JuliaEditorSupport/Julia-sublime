@@ -97,9 +97,10 @@
 ##
 
   :a.b
-  :1.2
 # ^ keyword.operator
-#  ^^^ constant.other.symbol
+#  ^ constant.other.symbol
+#   ^ keyword.operator
+#    ^ variable.other
 # (issue 3)
   ,:βa
 #  ^ keyword.operator
@@ -122,17 +123,37 @@
 #  ^ source.julia
 #   ^ variable.other
 #      ^ source.julia
-
-# TODO: FAIL on this is expected. I don't know exactly how Julia parses symbols, so it's hard to replicate. I.e. when is continuation of symbol allowed? Definitely not always. See the next test.
-  :++
+  :++,
 # ^ keyword.operator
 #  ^^ constant.other.symbol
+  :+a
+# ^ keyword.operator
+#  ^ constant.other.symbol
+#   ^ variable.other
   :∘+a # Yes, this is correct, equivalent to +(:∘, a)
 # ^ keyword.operator
 #  ^ constant.other.symbol
 #   ^ keyword.operator
 #    ^ variable.other
 
+##
+## TERNARY
+##
+
+  a?b:c
+# ^ variable.other
+#  ^ keyword.operator
+#   ^ variable.other
+#    ^ keyword.operator
+#     ^ variable.other
+  a ? b :c
+# ^ variable.other
+#   ^ keyword.operator
+#     ^ variable.other
+#       ^ keyword.operator
+#        ^ variable.other
+
+:.//faa?
 
 ##
 ## RANGES
