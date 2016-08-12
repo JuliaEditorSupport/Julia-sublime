@@ -48,7 +48,7 @@
 
 
 ##
-## FUNCITON CALLS
+## FUNCTION CALLS
 ##
 
 # (issue 9, 16)
@@ -96,6 +96,7 @@
 ## SYMBOLS
 ##
 
+  :a.b
   :1.2
 # ^ keyword.operator
 #  ^^^ constant.other.symbol
@@ -207,15 +208,18 @@
 # All things being defined are green, types as well
   type Foo{T<:Real} end
 # ^^^^ keyword.other
-#      ^^^^^^^^^^^^ entity.name.function
+#      ^^^ entity.name.function
+#         ^^^^^^^^^ support.type
   type Foo{T}<:Bar{T} end
 # ^^^^ keyword.other
-#      ^^^^^^ entity.name.function
+#      ^^^ entity.name.function
+#         ^^^ support.type
 #            ^^ keyword.operator
 #              ^^^^^^ support.type
   immutable Foo{T<:Real} end
 # ^^^^^^^^^ keyword.other
-#           ^^^^^^^^^^^^ entity.name.function
+#           ^^^ entity.name.function
+#              ^^^^^^^^^ support.type
   typealias Foo{T} Bar{T}
 # ^^^^^^^^^ keyword.other
 #           ^^^^^^ entity.name.function
@@ -394,6 +398,23 @@
 #              ^^^ variable.other
 #                  ^^^ keyword.other
 
+# Type constructor
+ (::Type{Foo{A}}){B}(a::Bar{B}) = ...
+# ^^ keyword.operator
+#   ^^^^^^^^^^^^ entity.name.function
+#                ^^^ support.type
+#                    ^ variable.parameter
+#                     ^^ keyword.operator
+#                       ^^^^^^ support.type
+  function (::Type{Foo{A}}){B}(a::Bar{b})
+# ^^^^^^^^ keyword.other
+#           ^^ keyword.operator
+#             ^^^^^^^^^^^^ entity.name.function
+#                          ^^^ support.type
+#                              ^ variable.parameter
+#                               ^^ keyword.operator
+#                                 ^^^^^^ support.type
+
 
 ##
 ## MACROS
@@ -403,8 +424,8 @@
 # ^^^^^ keyword.other
 #       ^^^ entity.name.function
 #           ^ variable.parameter
-  @foo(a)
-# ^^^^ variable.macro variable.parameter
+  @foo a
+# ^^^^ variable.macro
 #      ^ variable.other
 
 

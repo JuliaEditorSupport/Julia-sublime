@@ -8,8 +8,6 @@ scope: source.julia
 ##  TODO
 # - String interpolation highlighting, yes or no?
 # - Clean up types
-# - How to highlight this `gap_lst_{d+1} *= stride`?
-# - Try to use atomic regex for type matching
 
 variables:
   symb_op_ascii: '[-+*/\\=^:.<>~?&$%|]'
@@ -17,11 +15,13 @@ variables:
   symb_op_unicode: '[≤≥¬←→↔↚↛↠↣↦↮⇎⇏⇒⇔⇴⇶⇷⇸⇹⇺⇻⇼⇽⇾⇿⟵⟶⟷⟷⟹⟺⟻⟼⟽⟾⟿⤀⤁⤂⤃⤄⤅⤆⤇⤌⤍⤎⤏⤐⤑⤔⤕⤖⤗⤘⤝⤞⤟⤠⥄⥅⥆⥇⥈⥊⥋⥎⥐⥒⥓⥖⥗⥚⥛⥞⥟⥢⥤⥦⥧⥨⥩⥪⥫⥬⥭⥰⧴⬱⬰⬲⬳⬴⬵⬶⬷⬸⬹⬺⬻⬼⬽⬾⬿⭀⭁⭂⭃⭄⭇⭈⭉⭊⭋⭌￩￫≡≠≢∈∉∋∌⊆⊈⊂⊄⊊∝∊∍∥∦∷∺∻∽∾≁≃≄≅≆≇≈≉≊≋≌≍≎≐≑≒≓≔≕≖≗≘≙≚≛≜≝≞≟≣≦≧≨≩≪≫≬≭≮≯≰≱≲≳≴≵≶≷≸≹≺≻≼≽≾≿⊀⊁⊃⊅⊇⊉⊋⊏⊐⊑⊒⊜⊩⊬⊮⊰⊱⊲⊳⊴⊵⊶⊷⋍⋐⋑⋕⋖⋗⋘⋙⋚⋛⋜⋝⋞⋟⋠⋡⋢⋣⋤⋥⋦⋧⋨⋩⋪⋫⋬⋭⋲⋳⋴⋵⋶⋷⋸⋹⋺⋻⋼⋽⋾⋿⟈⟉⟒⦷⧀⧁⧡⧣⧤⧥⩦⩧⩪⩫⩬⩭⩮⩯⩰⩱⩲⩳⩴⩵⩶⩷⩸⩹⩺⩻⩼⩽⩾⩿⪀⪁⪂⪃⪄⪅⪆⪇⪈⪉⪊⪋⪌⪍⪎⪏⪐⪑⪒⪓⪔⪕⪖⪗⪘⪙⪚⪛⪜⪝⪞⪟⪠⪡⪢⪣⪤⪥⪦⪧⪨⪩⪪⪫⪬⪭⪮⪯⪰⪱⪲⪳⪴⪵⪶⪷⪸⪹⪺⪻⪼⪽⪾⪿⫀⫁⫂⫃⫄⫅⫆⫇⫈⫉⫊⫋⫌⫍⫎⫏⫐⫑⫒⫓⫔⫕⫖⫗⫘⫙⫷⫸⫹⫺⊢⊣⊕⊖⊞⊟∪∨⊔±∓∔∸≂≏⊎⊻⊽⋎⋓⧺⧻⨈⨢⨣⨤⨥⨦⨧⨨⨩⨪⨫⨬⨭⨮⨹⨺⩁⩂⩅⩊⩌⩏⩐⩒⩔⩖⩗⩛⩝⩡⩢⩣÷⋅∘×∩∧⊗⊘⊙⊚⊛⊠⊡⊓∗∙∤⅋≀⊼⋄⋆⋇⋉⋊⋋⋌⋏⋒⟑⦸⦼⦾⦿⧶⧷⨇⨰⨱⨲⨳⨴⨵⨶⨷⨸⨻⨼⨽⩀⩃⩄⩋⩍⩎⩑⩓⩕⩘⩚⩜⩞⩟⩠⫛⊍▷⨝⟕⟖⟗↑↓⇵⟰⟱⤈⤉⤊⤋⤒⤓⥉⥌⥍⥏⥑⥔⥕⥘⥙⥜⥝⥠⥡⥣⥥⥮⥯￪￬]'
   symb_op: '(?:{{symb_op_ascii}}|{{symb_op_unicode}})'
   symb_lang: (?:[(){}\[\],.;:='"])
-  identifier: '[^\s{{symb_lang}}{{symb_op}}]+'
-  weak_boundary: (?<=(?:^|\s|{{symb_lang}}|{{symb_op}}))
-  # A monster that attempts to be recursive
-  nested_braces: '{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*})?)*})?)*})?)*})?)*}'
-  # nested_braces: '({(?:\1??[^{]*?}))+'
+  symb_id: (?:[^\s{{symb_lang}}{{symb_op}}]) # general identifier
+  boundary: (?<=(?:^|\s|{{symb_lang}}|{{symb_op}})) # alternative to \b
+  # Recursively match curly braces
+  # Must be wrapped in a matching group when used
+  nested_braces: '{(?>[^{}]+|\g<-1>)*}'
+  # A monster that attempts to be recursive, not needed because this regex engine supports recursion
+  # nested_braces: '{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*(?:(?:\s*\,\s*\w+)?(?:{[^{]*})?)*})?)*})?)*})?)*}'
 
 contexts:
   main:
@@ -30,8 +30,8 @@ contexts:
 
   expressions:
     - include: comments
-    - include: type-annotation
     - include: symbols
+    - include: type-annotation
     - include: literals
     - include: operators
     - include: strings
@@ -39,11 +39,11 @@ contexts:
     - include: macros
     - include: function-call
     - include: variable
-    - include: brackets
+    - include: nested_parens
 
   declarations:
     - include: decl-func
-    - include: decl-func-mathematical
+    - include: decl-func-assignment-form
     - include: decl-type
     - include: decl-macro
     - include: decl-typealias
@@ -60,6 +60,193 @@ contexts:
       push: comment-block
     - match: '=#'
       pop: true
+
+  keywords:
+    - match: \b(begin|end|function|type|macro|quote|let|local|global|const|abstract|typealias|bitstype|immutable|module|baremodule|using|import|export|importall|in)\b
+      scope: keyword.other.julia
+    - match: \b(if|else|elseif|for|while|do|try|catch|finally|return|break|continue)\b
+      scope: keyword.control.julia
+
+  literals:
+    - match: |-
+        (?x)
+        (?:
+          {{boundary}}0b[0-1]+|            # binary
+          {{boundary}}0o[0-7]+|            # octal
+          {{boundary}}0x[0-9a-fA-F]+|      # hex
+          (
+            \B\.[0-9]+|                    # .11
+            {{boundary}}[0-9]+(\.[0-9]*)?  # 11.11, 11., 11
+          )
+          (e[-+]?[0-9]+)?|                 # 1e123, 1e+123
+          (e[-+][0-9]+)?                   # e+123
+        )
+      scope: constant.numeric.julia
+    - match: \b(true|false|nothing|NaN|Inf)\b
+      scope: constant.language.julia
+
+  type-annotation:
+    # Dollar is ok because types can be interpolated.
+    # Dot is ok because types can be picked from modules,
+    # but no more than one dot, because splat can follow type.
+    - match: (::)((?:(?!\.\.)[\$\w\.])*({{nested_braces}})?)
+      captures:
+        1: keyword.operator.type-annotation.julia
+        2: support.type.julia
+    - match: (<:)((?:(?!\.\.)[\${{symb_id}}\.])*({{nested_braces}})?)
+      captures:
+        1: keyword.operator.type-annotation.julia
+        2: support.type.julia
+
+  decl-func:
+    - match: '\bfunction\s+'
+      scope: keyword.other.julia
+      push:
+        - meta_scope: meta.function.julia
+        - include: decl-func-type-constructor
+        - include: decl-func-paren-name
+        - include: decl-func-standard
+        # Anonymous function
+        - match: \(
+          set: function-parameters
+        # Function name on the form "Module.func"
+        - match: '([^.{(]+)(\.)'
+          captures:
+            1: variable.other
+            2: keyword.operator
+
+  # Do look-aheads to catch and distinguish function definitions on assignment form from function calls
+  decl-func-assignment-form:
+    - match: '(?=\((?=[^!])(::([^.\)]+))\)({{nested_braces}})?\([^\(\)]*\)\s*=(?!=))'
+      push: decl-func-type-constructor
+    - match: '(?=(?=[^!])([^\s{{symb_lang}}]+)({{nested_braces}})?\([^\(\)]*\)\s*=(?!=))'
+      push: decl-func-standard
+    - match: '(?=\((?=[^!])([^\s{{symb_lang}}]+)\)({{nested_braces}})?\([^\(\)]*\)\s*=(?!=))'
+      push: decl-func-paren-name
+
+  decl-func-standard:
+    - match: '([^.{(]+)({{nested_braces}})?\('
+      captures:
+        1: entity.name.function
+        2: support.type
+      set: function-parameters
+
+  decl-func-type-constructor:
+    - match: '\((::)([^.\)]+)\)({{nested_braces}})?'
+      captures:
+        1: keyword.operator
+        2: entity.name.function
+        3: support.type
+      set: function-parameters
+
+  decl-func-paren-name:
+    - match: '\(([^.{()]+)\)({{nested_braces}})?\('
+      captures:
+        1: entity.name.function
+        2: support.type
+      set: function-parameters
+
+  function-parameters:
+    - meta_content_scope: meta.function.parameters.julia
+    - match: \)
+      scope: punctuation.section.parameters.end.julia
+      set:
+        - match: ''
+          pop: true
+    - include: comments
+    - match: ','
+      scope: punctuation.separator.parameters.julia
+    - match: '='
+      scope: keyword.operator.assignment.julia
+      set:
+        - meta_scope: meta.function.parameters.default-value.julia
+        - match: '(?=[,)])'
+          set: function-parameters
+        - include: expressions
+    - include: type-annotation
+    - match: \.\.\. # Splat after type
+      scope: keyword.operator
+    - match: ({{symb_id}}+)(\.\.\.)?
+      captures:
+        1: variable.parameter.julia
+        2: keyword.operator
+
+  decl-type:
+    - match: \b(type|immutable|abstract)\s+({{symb_id}}+)((?:{{nested_braces}})?)
+      captures:
+        1: keyword.other
+        2: entity.name.function
+        3: support.type
+    - match: \b(bitstype)\s+(\d+)\s+(\w+(?:{{nested_braces}})?)
+      captures:
+        1: keyword.other
+        2: constant.numeric
+        3: entity.name.function
+
+  decl-macro:
+    - match: '\bmacro\b'
+      scope: keyword.other.julia
+      push:
+        - meta_scope: meta.macro.julia
+        - match: '([^(]+)'
+          scope: entity.name.function
+        - match: '(?=\()'
+          set:
+            - match: \(
+              scope: meta.macro.parameters.julia
+              set: function-parameters
+
+  decl-typealias:
+    - match: \b(typealias)\s+(\w+)({{nested_braces}})?\s+(\w+(?:{{nested_braces}})?)?
+      captures:
+        1: keyword.other
+        2: entity.name.function
+        3: entity.name.function # The nested_braces must be wrapped in a matching group
+        4: support.type
+
+  function-call:
+    - match: '({{symb_id}}+)({{nested_braces}})?(?=\()'
+      captures:
+        # Julians want all their function highlighted by default.
+        # The scope `variable.function` is applied last, thus giving it precedence
+        # so that user can override the color in the color theme.
+        1: support.function.julia variable.function.julia
+        2: support.type.julia
+
+  symbols:
+    - match: |-
+        (?x)
+        (?<!              # Not preceeded by
+          (?:
+            {{symb_id}}|  # variable or
+            [<)}\].]      # other symbol-blocking char
+          ):              # followed by colon.
+        )
+        (?<=:)            # Preceeded by colon.
+        [^.:(]?           # Not so restrictive on the first symbol
+        (?:
+          {{symb_id}}|    # More restrictive for the
+          [!_.]           # follwing symbols.
+        )*
+      scope: constant.other.symbol.julia
+
+  operators:
+    # - Bang is not only an operator symbol, it can also be
+    #   part of a function name, thus it is treated separately.
+    # - Single quote is not only an operator symbol, it can also start a string.
+    #   It is an operator if it is not preceded by space or newline
+    - match: ({{symb_op}}|!|(?<!(?:\s|^))')
+      scope: keyword.operator.julia
+
+  macros:
+    - match: '@\w+\b'
+      scope: variable.macro keyword.macro
+
+  variable:
+    - match: '{{symb_id}}+({{nested_braces}})'
+      scope: support.type
+    - match: '{{symb_id}}+'
+      scope: variable.other
 
   strings:
     # Regex string: Has special escaping
@@ -108,7 +295,7 @@ contexts:
     - meta_scope: string.quoted.double.julia
     - match: \\(\\|[0-3]\d{0,2}|[4-7]\d?|x[a-fA-F0-9]{0,2}|u[a-fA-F0-9]{0,4}|U[a-fA-F0-9]{0,8}|.)
       scope: constant.character.escape.julia
-    - match: (\$)({{identifier}})
+    - match: (\$)({{symb_id}}+)
       captures:
         1: keyword.operator
         2: variable.other
@@ -119,194 +306,14 @@ contexts:
   string-interpolation:
     - match: (?<=\))
       set: string-content
-    - include: brackets
+    - include: nested_parens
 
   string-escape:
     - match: \\(\\|[0-3]\d{0,2}|[4-7]\d?|x[a-fA-F0-9]{0,2}|u[a-fA-F0-9]{0,4}|U[a-fA-F0-9]{0,8}|.)
       scope: constant.character.escape.julia
 
-  keywords:
-    - match: \b(begin|end|function|type|macro|quote|let|local|global|const|abstract|typealias|bitstype|immutable|module|baremodule|using|import|export|importall|in)\b
-      scope: keyword.other.julia
-    - match: \b(if|else|elseif|for|while|do|try|catch|finally|return|break|continue)\b
-      scope: keyword.control.julia
-
-  literals:
-    - match: |-
-        (?x)
-        (?:
-          {{weak_boundary}}0b[0-1]+|           # binary
-          {{weak_boundary}}0o[0-7]+|           # octal
-          {{weak_boundary}}0x[0-9a-fA-F]+|     # hex
-          (
-            \B\.[0-9]+|                        # .11
-            {{weak_boundary}}[0-9]+(\.[0-9]*)? # 11.11, 11., 11
-          )
-          (e[-+]?[0-9]+)?|                     # 1e123, 1e+123
-          (e[-+][0-9]+)?                       # e+123
-        )
-      scope: constant.numeric.julia
-    - match: \b(true|false|nothing|NaN|Inf)\b
-      scope: constant.language.julia
-
-  type-bracket:
-    - match: '{'
-      push:
-      - meta_scope: support.type.julia
-      - match: '}'
-        pop: true
-      - include: type-bracket
-    - match: '}'
-      scope: invalid.illegal.stray-bracket-end
-
-  type-annotation:
-    # Dollar is ok because types can be interpolated.
-    # Dot is ok because types can be picked from modules,
-    # but no more than one dot, because splat can follow type
-    - match: (::)(((?!\.\.)[\$\w\.])*)
-      captures:
-        1: keyword.operator.type-annotation.julia
-        2: support.type.julia
-    - match: (?<=<:)\s*[\w\.]+
-      scope: support.type.julia
-    - include: type-bracket
-
-  decl-func:
-    - match: '\bfunction\s+'
-      scope: keyword.other.julia
-      push:
-      - meta_scope: meta.function.julia
-      # Parenthesized function name
-      - match: '\(([^.\{\(\)]+)\)({{nested_braces}})?\('
-        captures:
-          1: entity.name.function
-          2: support.type
-        set: function-parameters
-      # Anonymous function
-      - match: \(
-        set: function-parameters
-      # Ordinary function name
-      - match: '([^.{(]+)({{nested_braces}})?\('
-        captures:
-          1: entity.name.function
-          2: support.type
-        set: function-parameters
-      # Function name on the form "Module.func"
-      - match: '([^.{(]+)(\.)'
-        captures:
-          1: variable.other
-          2: keyword.operator
-
-  function-parameters:
-    - meta_content_scope: meta.function.parameters.julia
-    - match: \)
-      scope: punctuation.section.parameters.end.julia
-      set:
-        - match: ''
-          pop: true
-    - include: comments
-    - match: ','
-      scope: punctuation.separator.parameters.julia
-    - match: '='
-      scope: keyword.operator.assignment.julia
-      set:
-        - meta_scope: meta.function.parameters.default-value.julia
-        - match: '(?=[,)])'
-          set: function-parameters
-        - include: expressions
-    - include: type-annotation
-    - match: \.\.\. # Splat after type
-      scope: keyword.operator
-    - match: ({{identifier}})(\.\.\.)?
-      captures:
-        1: variable.parameter.julia
-        2: keyword.operator
-
-  decl-func-mathematical:
-    # Ordinary function name
-    - match: '(?=(?=[^!])([^\s{{symb_lang}}]+)({{nested_braces}})?\([^\(\)]*\)\s*=(?!=))'
-      push:
-      - meta_scope: meta.function.julia
-      - match: '([^.{(]+)({{nested_braces}})?\('
-        captures:
-          1: entity.name.function
-          2: support.type
-        set: function-parameters
-    # Parenthesize function name
-    - match: '(?=\((?=[^!])([^\s{{symb_lang}}]+)\)({{nested_braces}})?\([^\(\)]*\)\s*=(?!=))'
-      push:
-      - meta_scope: meta.function.julia
-      - match: '\(([^.{()]+)\)({{nested_braces}})?\('
-        captures:
-          1: entity.name.function
-          2: support.type
-        set: function-parameters
-
-  decl-type:
-    - match: \b(type|immutable|abstract)\s+(\w+(?:{{nested_braces}})?)
-      captures:
-        1: keyword.other
-        2: entity.name.function
-    - match: \b(bitstype)\s+(\d+)\s+(\w+(?:{{nested_braces}})?)
-      captures:
-        1: keyword.other
-        2: constant.numeric
-        3: entity.name.function
-
-  decl-macro:
-    - match: '\bmacro\b'
-      scope: keyword.other.julia
-      push:
-        - meta_scope: meta.macro.julia
-        - match: '([^(]+)'
-          scope: entity.name.function
-        - match: '(?=\()'
-          set:
-            - match: \(
-              scope: meta.macro.parameters.julia
-              set: function-parameters
-
-  decl-typealias:
-    - match: \b(typealias)\s+(\w+(?:{{nested_braces}})?)\s+(\w+(?:{{nested_braces}})?)?
-      captures:
-        1: keyword.other
-        2: entity.name.function
-        3: support.type
-
-  function-call:
-    - match: '({{identifier}}+)({{nested_braces}})?(?=\()'
-      captures:
-        # Julians want all their function highlighted by default.
-        # The scope `variable.function` is applied last, thus giving it precedence
-        # so that user can override the color in the color theme.
-        1: support.function.julia variable.function.julia
-        2: support.type.julia
-
-  symbols:
-    # - match: (?<![{{fn_symb}}+\<\)\}\].]:)(?<=:)[^\.\:\(]?[\w\.\!\_]*
-    - match: (?<![{{identifier}}\<\)\}\].]:)(?<=:)[^\.\:\(]?[\w\.\!\_]*
-      scope: constant.other.symbol.julia
-
-  operators:
-    # - Bang is not only an operator symbol, it can also be
-    #   part of a function name, thus it is treated separately.
-    # - Single quote is not only an operator symbol, it can also start a string.
-    #   It is an operator if it is not preceded by space or newline
-    - match: ({{symb_op}}|!|(?<!(?:\s|^))')
-      scope: keyword.operator.julia
-
-  macros:
-    - match: '@\w+\b'
-      scope: variable.macro variable.parameter
-      # Setting variable.parameter here is wrong,
-      # but it gives nice highlighting in default color theme
-
-  variable:
-    - match: '{{identifier}}'
-      scope: variable.other
-
   # Needed only for string interpolation
-  brackets:
+  nested_parens:
     - match: \(
       push:
         - match: \)
