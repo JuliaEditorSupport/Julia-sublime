@@ -110,11 +110,6 @@
   (:∘)
 #  ^ keyword.operator
 #   ^ constant.other.symbol
-  :∘^a
-# ^ keyword.operator
-#  ^ constant.other.symbol
-#   ^ keyword.operator
-#    ^ variable.other
   :a!
 # ^ keyword.operator
 #  ^^ constant.other.symbol
@@ -127,6 +122,16 @@
 #  ^ source.julia
 #   ^ variable.other
 #      ^ source.julia
+
+# TODO: FAIL on this is expected. I don't know exactly how Julia parses symbols, so it's hard to replicate. I.e. when is continuation of symbol allowed? Definitely not always. See the next test.
+  :++
+# ^ keyword.operator
+#  ^^ constant.other.symbol
+  :∘+a # Yes, this is correct, equivalent to +(:∘, a)
+# ^ keyword.operator
+#  ^ constant.other.symbol
+#   ^ keyword.operator
+#    ^ variable.other
 
 
 ##
@@ -210,6 +215,12 @@
 # ^^^^ keyword.other
 #      ^^^ entity.name.type
 #         ^^^^^^^^^ support.type
+  type A <: B end
+# ^^^^ keyword.other
+#      ^ entity.name.type
+#        ^^ keyword.operator
+#           ^ support.type
+#             ^^^ keyword.other
   type Foo{T}<:Bar{T} end
 # ^^^^ keyword.other
 #      ^^^ entity.name.type
@@ -235,6 +246,14 @@
 ##
 ## FUNCTION DEFINITIONS
 ##
+
+  function f(a::b) end
+# ^^^^^^^^ keyword.other
+#          ^ entity.name.function
+#            ^ variable.parameter
+#             ^^ keyword.operator
+#               ^ support.type
+#                  ^^^ keyword.other
 
   function Module.foo!{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) end
 # ^^^^^^^^ keyword.other
@@ -416,6 +435,9 @@
 #                                 ^^^^^^ support.type
 
 
+==(r::RRID, s::RRID) = (r.whence==s.whence && r.id==s.id)
+
+
 ##
 ## MACROS
 ##
@@ -528,12 +550,25 @@
 ## STRING INTERPOLATION
 ##
 
-a = "foo $∇2() bar" closed
-#   ^^^^^ string.quoted.double
-#        ^ keyword.operator
-#         ^^ variable.other
-#           ^^^^^^^ string.quoted.double
-#                   ^ variable.other
+a = "f \$no $∇2() bar" closed
+#   ^^ string.quoted.double
+#      ^^ constant.character.escape
+#        ^^^ string.quoted.double
+#           ^ keyword.operator
+#            ^^ variable.other
+#              ^^^^^^^ string.quoted.double
+#                      ^ variable.other
+a = "foo$(a+f(a, g())+b)foobar" closed
+#   ^^^^ string.quoted.double
+#       ^ keyword.operator
+#         ^ variable.other
+#          ^ keyword.operator
+#           ^ variable.function
+#             ^ variable.other
+#                ^ variable.function
+#                     ^ variable.other
+#                       ^^^^^^^ string.quoted.double
+#                               ^ variable.other
 a = "foo$(a+f(a, g())+b)(a)bar" closed
 #   ^^^^ string.quoted.double
 #       ^ keyword.operator
@@ -553,3 +588,25 @@ a = "foo$(a+f(a, g())+b)(a)bar" closed
 #              ^ variable.other
 #                 ^^ string.quoted.double
 #                    ^ variable.other
+  "a $(f(a))$aa a" a
+# ^^^ string.quoted.double
+#    ^ keyword.operator
+#      ^ variable.function
+#           ^ keyword.operator
+#            ^^ variable.other
+#               ^^ string.quoted.double
+#                  ^ variable.other
+  f("$(g(a.b))") a
+#   ^ string
+#    ^ keyword
+#      ^ variable.function
+#             ^ string
+#                ^ variable.other
+
+
+##
+## TERNARY
+##
+
+a = a() ? a : a
+a = ? c-'0' : b

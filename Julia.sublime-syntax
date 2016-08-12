@@ -12,7 +12,7 @@ variables:
   # The list of unicode symbols allowed as operators is fetched from the Julia parser
   symb_op_unicode: '[≤≥¬←→↔↚↛↠↣↦↮⇎⇏⇒⇔⇴⇶⇷⇸⇹⇺⇻⇼⇽⇾⇿⟵⟶⟷⟷⟹⟺⟻⟼⟽⟾⟿⤀⤁⤂⤃⤄⤅⤆⤇⤌⤍⤎⤏⤐⤑⤔⤕⤖⤗⤘⤝⤞⤟⤠⥄⥅⥆⥇⥈⥊⥋⥎⥐⥒⥓⥖⥗⥚⥛⥞⥟⥢⥤⥦⥧⥨⥩⥪⥫⥬⥭⥰⧴⬱⬰⬲⬳⬴⬵⬶⬷⬸⬹⬺⬻⬼⬽⬾⬿⭀⭁⭂⭃⭄⭇⭈⭉⭊⭋⭌￩￫≡≠≢∈∉∋∌⊆⊈⊂⊄⊊∝∊∍∥∦∷∺∻∽∾≁≃≄≅≆≇≈≉≊≋≌≍≎≐≑≒≓≔≕≖≗≘≙≚≛≜≝≞≟≣≦≧≨≩≪≫≬≭≮≯≰≱≲≳≴≵≶≷≸≹≺≻≼≽≾≿⊀⊁⊃⊅⊇⊉⊋⊏⊐⊑⊒⊜⊩⊬⊮⊰⊱⊲⊳⊴⊵⊶⊷⋍⋐⋑⋕⋖⋗⋘⋙⋚⋛⋜⋝⋞⋟⋠⋡⋢⋣⋤⋥⋦⋧⋨⋩⋪⋫⋬⋭⋲⋳⋴⋵⋶⋷⋸⋹⋺⋻⋼⋽⋾⋿⟈⟉⟒⦷⧀⧁⧡⧣⧤⧥⩦⩧⩪⩫⩬⩭⩮⩯⩰⩱⩲⩳⩴⩵⩶⩷⩸⩹⩺⩻⩼⩽⩾⩿⪀⪁⪂⪃⪄⪅⪆⪇⪈⪉⪊⪋⪌⪍⪎⪏⪐⪑⪒⪓⪔⪕⪖⪗⪘⪙⪚⪛⪜⪝⪞⪟⪠⪡⪢⪣⪤⪥⪦⪧⪨⪩⪪⪫⪬⪭⪮⪯⪰⪱⪲⪳⪴⪵⪶⪷⪸⪹⪺⪻⪼⪽⪾⪿⫀⫁⫂⫃⫄⫅⫆⫇⫈⫉⫊⫋⫌⫍⫎⫏⫐⫑⫒⫓⫔⫕⫖⫗⫘⫙⫷⫸⫹⫺⊢⊣⊕⊖⊞⊟∪∨⊔±∓∔∸≂≏⊎⊻⊽⋎⋓⧺⧻⨈⨢⨣⨤⨥⨦⨧⨨⨩⨪⨫⨬⨭⨮⨹⨺⩁⩂⩅⩊⩌⩏⩐⩒⩔⩖⩗⩛⩝⩡⩢⩣÷⋅∘×∩∧⊗⊘⊙⊚⊛⊠⊡⊓∗∙∤⅋≀⊼⋄⋆⋇⋉⋊⋋⋌⋏⋒⟑⦸⦼⦾⦿⧶⧷⨇⨰⨱⨲⨳⨴⨵⨶⨷⨸⨻⨼⨽⩀⩃⩄⩋⩍⩎⩑⩓⩕⩘⩚⩜⩞⩟⩠⫛⊍▷⨝⟕⟖⟗↑↓⇵⟰⟱⤈⤉⤊⤋⤒⤓⥉⥌⥍⥏⥑⥔⥕⥘⥙⥜⥝⥠⥡⥣⥥⥮⥯￪￬]'
   symb_op: '(?:{{symb_op_ascii}}|{{symb_op_unicode}})'
-  symb_lang: (?:[(){}\[\],.;:='"])
+  symb_lang: (?:[(){}\[\],.;:'"])
   symb_id: (?:[^\s{{symb_lang}}{{symb_op}}]) # general identifier
   boundary: (?<=(?:^|\s|{{symb_lang}}|{{symb_op}})) # alternative to \b
   # Recursively match curly braces. Must be wrapped in a matching group when used, it is best to do this explicitly and not here to avoid confusion
@@ -67,7 +67,10 @@ contexts:
     #   part of a function name, thus it is treated separately.
     # - Single quote is not only an operator symbol, it can also start a string.
     #   It is an operator if it is not preceded by space or newline
-    - match: ({{symb_op}}|!|(?<!(?:\s|^))')
+
+    # - match: ({{symb_op}}|!|(?<!(?:\s|^))')
+    #   It is an operator if it is preceded by
+    - match: ({{symb_op}}|!|(?<=(?:{{symb_id}}|[.')\]]))')
       scope: keyword.operator.julia
 
   function-call:
@@ -101,7 +104,7 @@ contexts:
     # Dollar is ok because types can be interpolated.
     # Dot is ok because types can be picked from modules,
     # but no more than one dot, because splat can follow type.
-    - match: (::|<:)\s*((?:(?!\.\.)[$.{{symb_id}}])*({{nested_braces}})?)
+    - match: (::|<:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces}})?)
       captures:
         1: keyword.operator.julia
         2: support.type.julia
@@ -182,7 +185,7 @@ contexts:
       set: function-parameters
 
   decl-type:
-    - match: \b(type|immutable|abstract)\s+({{symb_id}}+)({{nested_braces}})
+    - match: \b(type|immutable|abstract)\s+({{symb_id}}+)({{nested_braces}})?
       scope: meta.type.julia
       captures:
         1: keyword.other
@@ -212,7 +215,7 @@ contexts:
           ):              # followed by colon.
         )
         (?<=:)            # Preceeded by colon.
-        [^.:(]?           # Not so restrictive on the first symbol
+        [^:(\[\s]         # Not so restrictive on the first symbol
         (?:
           {{symb_id}}|    # More restrictive for the
           [!_.]           # follwing symbols.
@@ -277,11 +280,11 @@ contexts:
     - meta_scope: string.quoted.double.julia
     - match: \\(\\|[0-3]\d{0,2}|[4-7]\d?|x[a-fA-F0-9]{0,2}|u[a-fA-F0-9]{0,4}|U[a-fA-F0-9]{0,8}|.)
       scope: constant.character.escape.julia
-    - match: (\$)({{symb_id}}+)
-      captures:
-        1: keyword.operator
-        2: variable.other
-    - match: \$(?=\()
+    # - match: (\$)({{symb_id}}+)
+    #   captures:
+    #     1: keyword.operator
+    #     2: variable.other
+    - match: \$
       scope: keyword.operator
       set: string-interpolation
 
@@ -289,6 +292,11 @@ contexts:
     - match: (?<=\))
       set: string-content
     - include: nested_parens
+    - match: '{{symb_id}}+'
+      scope: variable.other
+      set:
+        - match: ''
+          set: string-content
 
   string-escape:
     - match: \\(\\|[0-3]\d{0,2}|[4-7]\d?|x[a-fA-F0-9]{0,2}|u[a-fA-F0-9]{0,4}|U[a-fA-F0-9]{0,8}|.)
