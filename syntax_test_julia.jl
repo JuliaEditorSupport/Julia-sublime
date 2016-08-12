@@ -69,7 +69,7 @@
 ## UNICODE WORD BOUDARIES
 ##
 
-# Numbers in variable names (issue 18)
+# Unicode and numbers in names (issue 18)
   β1 = 5
 # ^^ variable.other
   β3(x)
@@ -80,8 +80,9 @@
 # ^^ variable.other
   ∇3(x)
 # ^^ variable.function
-  ∇2(x) = x
+  ∇2(∇2) = x
 # ^^ entity.name.function
+#    ^^ variable.parameter
 
 # (issue 11)
   a::B{C}=c()
@@ -99,15 +100,15 @@
 # ^ keyword.operator
 #  ^^^ constant.other.symbol
 # (issue 3)
-  :βa
-# ^ keyword.operator
-#  ^^ constant.other.symbol
-  :+
-# ^ keyword.operator
-#  ^ constant.other.symbol
-  :∘
-# ^ keyword.operator
-#  ^ constant.other.symbol
+  ,:βa
+#  ^ keyword.operator
+#   ^^ constant.other.symbol
+  [:+]
+#  ^ keyword.operator
+#   ^ constant.other.symbol
+  (:∘)
+#  ^ keyword.operator
+#   ^ constant.other.symbol
   :∘^a
 # ^ keyword.operator
 #  ^ constant.other.symbol
@@ -343,17 +344,31 @@
 #                                                     ^ variable.parameter
 #                                                        ^ keyword.operator
 
-# Splats
-  function f(x..., x::Foo{T}...) end
+# Splats and interpolated types
+  f(x..., x::$Foo..., a=a) = ...
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^^^ keyword.operator
+#         ^ variable.parameter
+#          ^^ keyword.operator
+#            ^^^^ support.type
+#                ^^^ keyword.operator
+#                     ^ variable.parameter
+#                      ^ keyword.operator
+#                       ^ variable.other
+  function f(x..., x::$Foo{$T}..., a=a) end
 # ^^^^^^^^ keyword.other
 #          ^ entity.name.function
 #            ^ variable.parameter
 #             ^^^ keyword.operator
 #                  ^ variable.parameter
 #                   ^^ keyword.operator
-#                     ^^^^^^ support.type
-#                           ^^^ keyword.operator
-#                                ^^^ keyword.other
+#                     ^^^^^^^^ support.type
+#                             ^^^ keyword.operator
+#                                  ^ variable.parameter
+#                                   ^ keyword.operator
+#                                    ^ variable.other
+#                                       ^^^ keyword.other
 
 # Parenthesized function name
   function (a)(b) end
@@ -509,3 +524,11 @@ a = "foo$(a+f(a, g())+b)(a)bar" closed
 #                     ^ variable.other
 #                       ^^^^^^^ string.quoted.double
 #                               ^ variable.other
+  a "f(x)=($(f(x)))" a
+# ^ variable.other
+#   ^^^^^^^ string.quoted.double
+#          ^ keyword.operator
+#            ^ variable.function
+#              ^ variable.other
+#                 ^^ string.quoted.double
+#                    ^ variable.other
