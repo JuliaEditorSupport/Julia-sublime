@@ -1,6 +1,12 @@
-// Adhere to to the Julia code formatting guidelines
-// https://github.com/JuliaLang/julia/blob/master/CONTRIBUTING.md#code-formatting-guidelines
 {
+    "auto_complete_triggers": [
+        {
+            "characters": "\\",
+            "selector": "source.julia"
+        }
+    ],
+    // Adhere to to the Julia code formatting guidelines
+    // https://github.com/JuliaLang/julia/blob/master/CONTRIBUTING.md#code-formatting-guidelines
     "tab_size": 4,
-    "translate_tabs_to_spaces": true
+    "translate_tabs_to_spaces": true,
 }
