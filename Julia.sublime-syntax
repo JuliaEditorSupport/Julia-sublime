@@ -18,6 +18,7 @@ variables:
 
   # Types exported from Base. Generated with filter(x -> isa(x, DataType), map(eval, [names(Base); names(Core)]))
   base_types: \b(Pair|AbstractChannel|AbstractRNG|AbstractSerializer|AbstractSparseArray|AbstractUnitRange|ArgumentError|Array|AssertionError|Associative|Base64DecodePipe|Base64EncodePipe|Bidiagonal|BigFloat|BigInt|BitArray|BitArray|BitArray|BufferStream|CachingPool|CapturedException|CartesianIndex|CartesianRange|Int8|Float64|Float32|Channel|Int32|Int64|Int64|Int64|ClusterManager|Cmd|Colon|Complex|Complex|Complex|Complex|CompositeException|Condition|Int64|Int16|UInt64|Int64|Cstring|UInt8|UInt32|UInt64|UInt64|UInt64|UInt16|Int32|Cwstring|Date|DateTime|Diagonal|Dict|DimensionMismatch|Display|EOFError|EachLine|Enum|Enumerate|ErrorException|Factorization|FileMonitor|Filter|FloatRange|Future|HTML|Hermitian|Base.AbstractIOBuffer|IOContext|IOStream|IPAddr|IPv4|IPv6|InitError|IntSet|InvalidStateException|Irrational|KeyError|LinSpace|LoadError|LowerTriangular|MIME|MersenneTwister|MethodError|NullException|Nullable|ObjectIdDict|OrdinalRange|Pair|ParseError|PartialQuickSort|Pipe|PollingFileWatcher|ProcessExitedException|RandomDevice|Range|Rational|RawFD|ReentrantLock|Regex|RegexMatch|RemoteChannel|RemoteException|RepString|RevString|RoundingMode|SerializationState|Set|SharedArray|SparseMatrixCSC|SparseVector|StackFrame|Array|StepRange|String|SubArray|SubString|SymTridiagonal|Symmetric|SystemError|TCPSocket|Text|TextDisplay|Timer|Tridiagonal|TypeError|UDPSocket|UnicodeError|UniformScaling|UnitRange|UpperTriangular|Val|VersionNumber|WeakKeyDict|WorkerConfig|WorkerPool|Zip|AbstractArray|AbstractFloat|AbstractString|Any|Array|Bool|BoundsError|Char|DataType|DenseArray|DirectIndexString|DivideError|DomainError|ErrorException|Exception|Expr|Float16|Float32|Float64|Function|GlobalRef|GotoNode|IO|InexactError|Int64|Int128|Int16|Int32|Int64|Int8|Integer|InterruptException|LabelNode|LambdaInfo|LineNumberNode|Method|MethodTable|Module|NewvarNode|Number|OutOfMemoryError|OverflowError|Ptr|QuoteNode|ReadOnlyMemoryError|Real|Ref|SSAValue|SegmentationFault|Signed|SimpleVector|Slot|SlotNumber|StackOverflowError|String|Symbol|Task|Tuple|Type|TypeConstructor|TypeError|TypeMapEntry|TypeMapLevel|TypeName|TypeVar|TypedSlot|UInt64|UInt128|UInt16|UInt32|UInt64|UInt8|UndefRefError|UndefVarError|Union|Unsigned|Vararg|VecElement|Void|WeakRef)\b
+
   # Symbols part of the language syntax
   symb_lang: (?:[(){}\[\],.;:'"@])
 
@@ -288,16 +289,7 @@ contexts:
         pop: true
     # Triple double-quoted string
     - match: '"""'
-      push:
-      - meta_scope: string.quoted.single.julia
-      - include: string-escape
-      # - match: '^    (.*)$'
-      #   captures:
-      #     1: text.html.markdown markup.raw.block.markdown
-      # - match: '`[^`]+`'
-      #   scope: text.html.markdown markup.raw.inline.markdown
-      - match: '"""'
-        pop: true
+      push: string-triple-content
     # Double-quoted
     - match: '"'
       push: string-content
@@ -331,6 +323,15 @@ contexts:
   string-content:
     - meta_scope: string.quoted.double.julia
     - match: '"'
+      pop: true
+    - include: string-escape
+    - match: \$
+      scope: keyword.operator.julia
+      set: string-interpolation
+
+  string-triple-content:
+    - meta_scope: string.quoted.double.julia
+    - match: '"""'
       pop: true
     - include: string-escape
     - match: \$
