@@ -16,6 +16,28 @@ variables:
   # Multi-character operators
   long_op: (?:\+=|-=|\*=|/=|//=|\\\\=|^=|÷=|%=|<<=|>>=|>>>=|\|=|&=|:=|=>|$=|\|\||<:|>:|\|>|<\||//|\+\+)
 
+  # Types exported from Base. There seems to be no simple way of gettin a list of all types
+  # https://github.com/JuliaLang/julia/blob/master/base/boot.jl
+  base_types: |-
+    (?x)
+    \b(
+      # key types
+      Any|DataType|Vararg|ANY|NTuple|Tuple|Type|TypeConstructor|TypeName|TypeVar|Union|Void|SimpleVector|AbstractArray|DenseArray|
+      # special objects
+      Function|LambdaInfo|Method|MethodTable|TypeMapEntry|TypeMapLevel|Module|Symbol|Task|Array|WeakRef|VecElement|
+      # numeric types
+      Number|Real|Integer|Bool|Ref|Ptr|AbstractFloat|Float16|Float32|Float64|Signed|Int|Int8|Int16|Int32|Int64|Int128|Unsigned|UInt|UInt8|UInt16|UInt32|UInt64|UInt128|
+      # string types
+      Char|DirectIndexString|AbstractString|String|IO|
+      # errors
+      ErrorException|BoundsError|DivideError|DomainError|Exception|InexactError|InterruptException|OutOfMemoryError|ReadOnlyMemoryError|OverflowError|StackOverflowError|SegmentationFault|UndefRefError|UndefVarError|TypeError|
+      # AST representation
+      Expr|GotoNode|LabelNode|LineNumberNode|QuoteNode|GlobalRef|NewvarNode|SSAValue|Slot|SlotNumber|TypedSlot|
+      # Other
+      Dict|BigInt|BigFloat
+    )\b
+
+  # Symbols part of the language syntax
   symb_lang: (?:[(){}\[\],.;:'"@])
 
   # General identifier symbol
@@ -267,11 +289,12 @@ contexts:
       scope: support.function.julia variable.macro.julia
 
   variable:
-    - match: '({{symb_id}}+)({{nested_braces}})?'
-      captures:
-        1: variable.other
-        # 2: support.type.julia
-        2: variable.other
+    - match: '{{symb_id}}+({{nested_braces}})'
+      scope: variable.type support.type.julia
+    - match: '{{base_types}}'
+      scope: variable.type support.type.julia
+    - match: '{{symb_id}}+'
+      scope: variable.other
 
   strings:
     # Regex string: Has special escaping
