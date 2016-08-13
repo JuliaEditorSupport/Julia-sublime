@@ -136,11 +136,21 @@
 #  ^ constant.other.symbol
 #   ^ keyword.operator
 #    ^ variable.other
-  :.//aa
+  :.///a
 # ^ keyword.operator
-#  ^ constant.other.symbol
-#   ^^ keyword.operator
-#     ^^ variable.other
+#  ^^^ constant.other.symbol
+#     ^ keyword.operator
+#      ^ variable.other
+
+:.a
+:.+a
+:.∘a
+:++a
+:+++a
+:/a
+://a
+:///a
+:.///a
 
 
 ##
