@@ -271,9 +271,9 @@ contexts:
 
   variable:
     - match: '{{symb_id}}+({{nested_braces}})'
-      scope: variable.type support.type.julia
+      scope: support.type.julia variable.type
     - match: '{{base_types}}'
-      scope: variable.type support.type.julia
+      scope: support.type.julia variable.type
     - match: '{{symb_id}}+'
       scope: variable.other
 

@@ -257,13 +257,13 @@
   mytype = Array
 # ^^^^^^ variable.other
 #        ^ keyword.operator
-#          ^^^^^ variable.other
+#          ^^^^^ support.type variable.type
   mytype = Array{Int}
 # ^^^^^^ variable.other
 #        ^ keyword.operator
-#          ^^^^^^^^^^ variable.other
+#          ^^^^^^^^^^ support.type variable.type
   mytype = CallMsg{:call}
-#          ^^^^^^^^^^^^^^ variable.other
+#          ^^^^^^^^^^^^^^ support.type variable.type
 
 # (issue 17)
 # All things being defined are green, types as well
@@ -369,23 +369,23 @@
 #                                                                 ^^^ keyword.other
 
 # Assignemetn-form function declaration (issue 19)
-  Module.foo!{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = kron(a, b)
-# ^^^^^^ variable.other
-#       ^ keyword.operator
-#        ^^^^ entity.name.function
-#            ^^^^^^^^^ support.type
-#                      ^^ variable.parameter
-#                        ^^ keyword.operator
-#                          ^^^^^^ support.type
-#                                  ^ variable.parameter
-#                                   ^^ keyword.operator
-#                                     ^^^^^^ support.type
-#                                           ^ keyword.operator
-#                                            ^^ constant.numeric
-#                                              ^^ keyword.operator
-#                                                ^^^^^^ support.type
-#                                                        ^ variable.parameter
-#                                                           ^ keyword.operator
+  MyModule.foo!{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = kron(a, b)
+# ^^^^^^^^ variable.other
+#         ^ keyword.operator
+#          ^^^^ entity.name.function
+#              ^^^^^^^^^ support.type
+#                        ^^ variable.parameter
+#                          ^^ keyword.operator
+#                            ^^^^^^ support.type
+#                                    ^ variable.parameter
+#                                     ^^ keyword.operator
+#                                       ^^^^^^ support.type
+#                                             ^ keyword.operator
+#                                              ^^ constant.numeric
+#                                                ^^ keyword.operator
+#                                                  ^^^^^^ support.type
+#                                                          ^ variable.parameter
+#                                                             ^ keyword.operator
 
 # Assignemetn-form infix operator declaration
   ∘{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = ...
@@ -405,23 +405,23 @@
 #                                                 ^ keyword.operator
 
 # Assignemetn-form infix operator declaration in module
-  Module.∘{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = ...
-# ^^^^^^ variable.other
-#       ^ keyword.operator
-#        ^ entity.name.function
-#         ^^^^^^^^^  support.type
-#                   ^^ variable.parameter
-#                     ^^ keyword.operator
-#                       ^^^^^^  support.type
-#                               ^ variable.parameter
-#                                ^^ keyword.operator
-#                                  ^^^^^^  support.type
-#                                        ^ keyword.operator
-#                                         ^^ constant.numeric
-#                                           ^^ keyword.operator
-#                                             ^^^^^^ support.type
-#                                                     ^ variable.parameter
-#                                                        ^ keyword.operator
+  MyModule.∘{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = ...
+# ^^^^^^^^ variable.other
+#         ^ keyword.operator
+#          ^ entity.name.function
+#           ^^^^^^^^^  support.type
+#                     ^^ variable.parameter
+#                       ^^ keyword.operator
+#                         ^^^^^^  support.type
+#                                 ^ variable.parameter
+#                                  ^^ keyword.operator
+#                                    ^^^^^^  support.type
+#                                          ^ keyword.operator
+#                                           ^^ constant.numeric
+#                                             ^^ keyword.operator
+#                                               ^^^^^^ support.type
+#                                                       ^ variable.parameter
+#                                                          ^ keyword.operator
 
 # (issue 23)
   f(a::B{()}) = ...
