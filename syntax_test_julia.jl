@@ -1,4 +1,8 @@
-# SYNTAX TEST "Packages/Julia-sublime/Julia.sublime-syntax"
+# SYNTAX TEST "Packages/Julia/Julia.sublime-syntax"
+
+# For information on how this file is used, see
+# https://www.sublimetext.com/docs/3/syntax.html#testing
+# Run tests by pressing `ctrl+shif+b`, i.e. run the `build` command
 
 
 ##
@@ -63,6 +67,10 @@
   √(2.3)
 # ^ variable.function
 #   ^^^ constant.numeric
+  TypeConstructor{Foo()}(a)
+# ^^^^^^^^^^^^^^^ variable.function
+#                ^^^^^^^ support.type
+#                        ^ variable.other
 
 
 ##
@@ -254,6 +262,8 @@
 # ^^^^^^ variable.other
 #        ^ keyword.operator
 #          ^^^^^^^^^^ variable.other
+  mytype = CallMsg{:call}
+#          ^^^^^^^^^^^^^^ variable.other
 
 # (issue 17)
 # All things being defined are green, types as well
@@ -358,7 +368,7 @@
 #                                                              ^ variable.parameter
 #                                                                 ^^^ keyword.other
 
-# "Mathematical" function declaration (issue 19)
+# Assignemetn-form function declaration (issue 19)
   Module.foo!{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = kron(a, b)
 # ^^^^^^ variable.other
 #       ^ keyword.operator
@@ -377,7 +387,7 @@
 #                                                        ^ variable.parameter
 #                                                           ^ keyword.operator
 
-# "Mathematical" infix operator declaration
+# Assignemetn-form infix operator declaration
   ∘{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = ...
 # ^ entity.name.function
 #  ^^^^^^^^^ support.type
@@ -394,7 +404,7 @@
 #                                              ^ variable.parameter
 #                                                 ^ keyword.operator
 
-# "Mathematical" infix operator declaration in module
+# Assignemetn-form infix operator declaration in module
   Module.∘{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = ...
 # ^^^^^^ variable.other
 #       ^ keyword.operator
@@ -412,6 +422,14 @@
 #                                             ^^^^^^ support.type
 #                                                     ^ variable.parameter
 #                                                        ^ keyword.operator
+
+# (issue 23)
+  f(a::B{()}) = ...
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^^ keyword.operator
+#      ^^^^^ support.type
+#             ^ keyword.operator
 
 # Splats and interpolated types
   f(x..., x::$Foo..., a=a) = ...
@@ -479,9 +497,18 @@
 #                              ^ variable.parameter
 #                               ^^ keyword.operator
 #                                 ^^^^^^ support.type
+  f(a="()") = a
+# ^ entity.name.function
+#   ^ variable.parameter
+#     ^^^^ string.quoted
+#           ^ keyword.operator
+#             ^ variable.other
 
-
-==(r::RRID, s::RRID) = (r.whence==s.whence && r.id==s.id)
+  (::f{A()}){A{B()}}(a) = ...
+#  ^^ keyword.operator
+#    ^^^^^^ entity.name.function
+#           ^^^^^^^^ support.type
+#                    ^ variable.parameter
 
 
 ##
@@ -508,6 +535,11 @@
 # ^^^^^^ variable.macro
 #        ^^^^ variable.other
 #             ^^^^ variable.other
+  function @macro(arg1,arg2) end
+# ^^^^^^^^ keyword.other
+#          ^^^^^^ variable.macro
+#                 ^^^^ variable.other
+#                      ^^^^ variable.other
 
 
 ##
