@@ -496,6 +496,19 @@
 # ^^^^ variable.macro
 #      ^ variable.other
 
+  @macro arg1 arg2
+# ^^^^^^ variable.macro
+#        ^^^^ variable.other
+#             ^^^^ variable.other
+  @macro(arg1,arg2)
+# ^^^^^^ variable.macro
+#        ^^^^ variable.other
+#             ^^^^ variable.other
+  @macro(arg1,arg2) = ...
+# ^^^^^^ variable.macro
+#        ^^^^ variable.other
+#             ^^^^ variable.other
+
 
 ##
 ## TRANSPOSES
