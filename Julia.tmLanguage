@@ -1,3 +1,14 @@
+
+<!--
+
+	DEPRECATED
+
+	THIS FILE HAS BEEN SUPERSEEDED BY Julia.sublime-syntax
+
+	THIS FILE IS KEPT ONLY FOR COMPATIBILITY WITH OLDER VERSIONS OF SUBLIME TEXT
+
+-->
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
