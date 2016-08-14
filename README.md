@@ -5,8 +5,7 @@ Julia language support for Sublime Text 2/3.
 - Syntax highlighting
 - Auto-indentation
 - Snippets
-
-*Unicode tab completion (like the [REPL](http://docs.julialang.org/en/latest/manual/interacting-with-julia/#tab-completion)) is best achieved with the [JuliaUnicode](https://packagecontrol.io/packages/JuliaUnicode) package.*
+- Unicode tab completion (like the [REPL](http://docs.julialang.org/en/latest/manual/interacting-with-julia/#tab-completion))
 
 
 ## Installation
@@ -20,8 +19,17 @@ Clone the repository into `~/.config/sublime-text-3/Packages/`. (The path may be
 
 ## Example
 
-Gets the tricky things right
+![Highlight example](https://github.com/JuliaEditorSupport/Julia-sublime/blob/master/highlight-example.png)
 
-[![Highlight example](https://github.com/JuliaEditorSupport/Julia-sublime/blob/master/highlight-example.png)](https://github.com/JuliaEditorSupport/Julia-sublime/wiki#tests)
+Feel free to open an issue if something looks wrong or if you think that something can be done better.
 
-Feel free to open an issue if something looks wrong or if something can be done better.
+
+## Technical details
+
+### Sublime Text version support
+
+Sublime Text 3 Build 3103 or later will use `Julia.sublime-syntax` which provides superior highlighting. For backward compatibility `Julia.tmLanguage` acts as fallback.
+
+### Custom colors
+
+The default colors are chosen to satisfy most people. However, you might prefer to highlight types and function calls in different colors. This can be achieved by modifying the color associated with the syntax scope `variable.function` in your color scheme. Similarly for macros etc. Use the shortcut `Ctrl + Shift + Alt + P` to find out what syntax scope is applied to a certain character.

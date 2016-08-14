@@ -1,0 +1,357 @@
+%YAML 1.2
+---
+# https://www.sublimetext.com/docs/3/syntax.html
+name: Julia
+file_extensions: [jl]
+first_line_match: ^#!.*\bjulia\s*$
+scope: source.julia
+
+variables:
+  symb_op_ascii: '[-+*/\\=^:.<>~?&$%|]'
+
+  # The list of unicode symbols allowed as operators is fetched from the Julia parser https://github.com/JuliaLang/julia/blob/master/src/julia-parser.scm
+  symb_op_unicode: '[≤≥¬←→↔↚↛↠↣↦↮⇎⇏⇒⇔⇴⇶⇷⇸⇹⇺⇻⇼⇽⇾⇿⟵⟶⟷⟷⟹⟺⟻⟼⟽⟾⟿⤀⤁⤂⤃⤄⤅⤆⤇⤌⤍⤎⤏⤐⤑⤔⤕⤖⤗⤘⤝⤞⤟⤠⥄⥅⥆⥇⥈⥊⥋⥎⥐⥒⥓⥖⥗⥚⥛⥞⥟⥢⥤⥦⥧⥨⥩⥪⥫⥬⥭⥰⧴⬱⬰⬲⬳⬴⬵⬶⬷⬸⬹⬺⬻⬼⬽⬾⬿⭀⭁⭂⭃⭄⭇⭈⭉⭊⭋⭌￩￫≡≠≢∈∉∋∌⊆⊈⊂⊄⊊∝∊∍∥∦∷∺∻∽∾≁≃≄≅≆≇≈≉≊≋≌≍≎≐≑≒≓≔≕≖≗≘≙≚≛≜≝≞≟≣≦≧≨≩≪≫≬≭≮≯≰≱≲≳≴≵≶≷≸≹≺≻≼≽≾≿⊀⊁⊃⊅⊇⊉⊋⊏⊐⊑⊒⊜⊩⊬⊮⊰⊱⊲⊳⊴⊵⊶⊷⋍⋐⋑⋕⋖⋗⋘⋙⋚⋛⋜⋝⋞⋟⋠⋡⋢⋣⋤⋥⋦⋧⋨⋩⋪⋫⋬⋭⋲⋳⋴⋵⋶⋷⋸⋹⋺⋻⋼⋽⋾⋿⟈⟉⟒⦷⧀⧁⧡⧣⧤⧥⩦⩧⩪⩫⩬⩭⩮⩯⩰⩱⩲⩳⩴⩵⩶⩷⩸⩹⩺⩻⩼⩽⩾⩿⪀⪁⪂⪃⪄⪅⪆⪇⪈⪉⪊⪋⪌⪍⪎⪏⪐⪑⪒⪓⪔⪕⪖⪗⪘⪙⪚⪛⪜⪝⪞⪟⪠⪡⪢⪣⪤⪥⪦⪧⪨⪩⪪⪫⪬⪭⪮⪯⪰⪱⪲⪳⪴⪵⪶⪷⪸⪹⪺⪻⪼⪽⪾⪿⫀⫁⫂⫃⫄⫅⫆⫇⫈⫉⫊⫋⫌⫍⫎⫏⫐⫑⫒⫓⫔⫕⫖⫗⫘⫙⫷⫸⫹⫺⊢⊣⊕⊖⊞⊟∪∨⊔±∓∔∸≂≏⊎⊻⊽⋎⋓⧺⧻⨈⨢⨣⨤⨥⨦⨧⨨⨩⨪⨫⨬⨭⨮⨹⨺⩁⩂⩅⩊⩌⩏⩐⩒⩔⩖⩗⩛⩝⩡⩢⩣÷⋅∘×∩∧⊗⊘⊙⊚⊛⊠⊡⊓∗∙∤⅋≀⊼⋄⋆⋇⋉⋊⋋⋌⋏⋒⟑⦸⦼⦾⦿⧶⧷⨇⨰⨱⨲⨳⨴⨵⨶⨷⨸⨻⨼⨽⩀⩃⩄⩋⩍⩎⩑⩓⩕⩘⩚⩜⩞⩟⩠⫛⊍▷⨝⟕⟖⟗↑↓⇵⟰⟱⤈⤉⤊⤋⤒⤓⥉⥌⥍⥏⥑⥔⥕⥘⥙⥜⥝⥠⥡⥣⥥⥮⥯￪￬]'
+  symb_op: '(?:{{symb_op_ascii}}|{{symb_op_unicode}})'
+
+  # Multi-character operators
+  long_op: (?:\+=|-=|\*=|/=|//=|\\\\=|^=|÷=|%=|<<=|>>=|>>>=|\|=|&=|:=|=>|$=|\|\||<:|>:|\|>|<\||//|\+\+)
+
+  # Types exported from Base. Generated with filter(x -> isa(x, DataType), map(eval, [names(Base); names(Core)]))
+  base_types: \b(Pair|AbstractChannel|AbstractRNG|AbstractSerializer|AbstractSparseArray|AbstractUnitRange|ArgumentError|Array|AssertionError|Associative|Base64DecodePipe|Base64EncodePipe|Bidiagonal|BigFloat|BigInt|BitArray|BitArray|BitArray|BufferStream|CachingPool|CapturedException|CartesianIndex|CartesianRange|Int8|Float64|Float32|Channel|Int32|Int64|Int64|Int64|ClusterManager|Cmd|Colon|Complex|Complex|Complex|Complex|CompositeException|Condition|Int64|Int16|UInt64|Int64|Cstring|UInt8|UInt32|UInt64|UInt64|UInt64|UInt16|Int32|Cwstring|Date|DateTime|Diagonal|Dict|DimensionMismatch|Display|EOFError|EachLine|Enum|Enumerate|ErrorException|Factorization|FileMonitor|Filter|FloatRange|Future|HTML|Hermitian|Base.AbstractIOBuffer|IOContext|IOStream|IPAddr|IPv4|IPv6|InitError|IntSet|InvalidStateException|Irrational|KeyError|LinSpace|LoadError|LowerTriangular|MIME|MersenneTwister|MethodError|NullException|Nullable|ObjectIdDict|OrdinalRange|Pair|ParseError|PartialQuickSort|Pipe|PollingFileWatcher|ProcessExitedException|RandomDevice|Range|Rational|RawFD|ReentrantLock|Regex|RegexMatch|RemoteChannel|RemoteException|RepString|RevString|RoundingMode|SerializationState|Set|SharedArray|SparseMatrixCSC|SparseVector|StackFrame|Array|StepRange|String|SubArray|SubString|SymTridiagonal|Symmetric|SystemError|TCPSocket|Text|TextDisplay|Timer|Tridiagonal|TypeError|UDPSocket|UnicodeError|UniformScaling|UnitRange|UpperTriangular|Val|VersionNumber|WeakKeyDict|WorkerConfig|WorkerPool|Zip|AbstractArray|AbstractFloat|AbstractString|Any|Array|Bool|BoundsError|Char|DataType|DenseArray|DirectIndexString|DivideError|DomainError|ErrorException|Exception|Expr|Float16|Float32|Float64|Function|GlobalRef|GotoNode|IO|InexactError|Int64|Int128|Int16|Int32|Int64|Int8|Integer|InterruptException|LabelNode|LambdaInfo|LineNumberNode|Method|MethodTable|Module|NewvarNode|Number|OutOfMemoryError|OverflowError|Ptr|QuoteNode|ReadOnlyMemoryError|Real|Ref|SSAValue|SegmentationFault|Signed|SimpleVector|Slot|SlotNumber|StackOverflowError|String|Symbol|Task|Tuple|Type|TypeConstructor|TypeError|TypeMapEntry|TypeMapLevel|TypeName|TypeVar|TypedSlot|UInt64|UInt128|UInt16|UInt32|UInt64|UInt8|UndefRefError|UndefVarError|Union|Unsigned|Vararg|VecElement|Void|WeakRef)\b
+
+  # Symbols part of the language syntax
+  symb_lang: (?:[(){}\[\],.;:'"@])
+
+  # General identifier symbol
+  symb_id: (?:[^\s{{symb_lang}}{{symb_op}}])
+
+  # Alternative to \b that works with unicode symbols
+  boundary: (?<=(?:^|\s|{{symb_lang}}|{{symb_op}}))
+
+  # Recursively match nested curly braces and any nested brackets, respectively.
+  # Must be wrapped in a matching group when used, it is best to do this explicitly when used (not here) to avoid confusion
+  nested_braces: '{(?>[^{}]+|\g<-1>)*}'
+  nested_brackets: '[{(\[](?>[^{}()\[\]]+|\g<-1>)*[})\]]'
+
+  # Helpers for function declaration
+  func_name_standard: |-
+    (?x)
+    (?!!)                     # Function name doesn't start with !
+    ([^\s{{symb_lang}}]+)       # Function name
+    ({{nested_braces}})?      # Match type annotation
+    (?=\()
+  func_name_paren: |-
+    (?x)
+    \(                        # Function name is wrapped in parentheses
+    (?!!)                     # Function name doesn't start with !
+    (::)?                     # Function name can start with ::
+    ((?:                      # Rest of function name
+      ({{nested_braces}})|    # Match nested brackets
+      [^)]                    # or anything that doesn't close paren
+    )+)
+    \)
+    ({{nested_braces}})?      # Match type annotation
+    (?=\()
+  func_params: |-
+    (?x)
+    \(                        # Open function parameters
+    (
+      ({{nested_brackets}})|  # Match nested brackets
+      [^)]                    # or anything that doesn't close argument list
+    )*
+    \)                        # Close function parameters.
+    \s*=(?!=)                 # Followed by exactly one equal sign
+
+contexts:
+  main:
+    - include: declarations
+    - include: expressions
+
+  expressions:
+    - include: comments
+    - include: symbols
+    - include: type-annotation
+    - include: literals
+    - include: operators
+    - include: strings
+    - include: keywords
+    - include: macros
+    - include: function-call
+    - include: variable
+    - include: nested_parens
+
+  declarations:
+    - include: decl-func
+    - include: decl-func-assignment-form
+    - include: decl-type
+    - include: decl-macro
+    - include: decl-typealias
+
+  comments:
+    - match: '#='
+      push: comment-block
+    - match: '#.*'
+      scope: comment.line.number-sign.julia
+
+  comment-block:
+    - meta_scope: comment.block.number-sign-equals.julia
+    - match: '#='
+      push: comment-block
+    - match: '=#'
+      pop: true
+
+  keywords:
+    - match: \b(begin|end|function|type|macro|quote|let|local|global|const|abstract|typealias|bitstype|immutable|module|baremodule|using|import|export|importall|in)\b
+      scope: keyword.other.julia
+    - match: \b(if|else|elseif|for|while|do|try|catch|finally|return|break|continue)\b
+      scope: keyword.control.julia
+
+  operators:
+    # - Bang is not only an operator symbol, it can also be
+    #   part of a function name, thus it is treated separately.
+    # - Single quote is not only an operator symbol, it can also start a string.
+    #   It is an operator if it is preceded by an identifier, dot, single-quote right round bracket or right square bracket
+    - match: ({{symb_op}}|!|(?<=(?:{{symb_id}}|[.')\]]))')
+      scope: keyword.operator.julia
+
+  function-call:
+    - match: '({{symb_id}}+)({{nested_braces}})?(?=\()'
+      captures:
+        # Julians want all their function highlighted by default.
+        # The scope `variable.function` is applied last to give it precedence
+        # so that user can override the color in the color theme.
+        1: support.function.julia variable.function.julia
+        2: support.type.julia
+
+  literals:
+    - match: |-
+        (?x)
+        (?:
+          {{boundary}}0b[0-1]+|       # binary
+          {{boundary}}0o[0-7]+|       # octal
+          {{boundary}}0x[\da-fA-F]+|  # hex
+          (
+            \B\.\d+|                  # .11
+            {{boundary}}\d+(\.\d*)?   # 11.11, 11., 11
+          )
+          (e[-+]?\d+)?|               # 1e123, 1e+123
+          (e[-+]\d+)?                 # e+123
+        )
+      scope: constant.numeric.julia
+    - match: \b(true|false|nothing|NaN|Inf)\b
+      scope: constant.language.julia
+
+  type-annotation:
+    # Dollar is ok because types can be interpolated.
+    # Dot is ok because types can be picked from modules,
+    # but no more than one dot, because splat can follow type.
+    - match: (::|<:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces}})?)
+      captures:
+        1: keyword.operator.julia
+        2: support.type.julia
+
+  decl-func:
+    - match: '\bfunction\s+(?!@)'
+      scope: keyword.other.julia
+      push:
+        - meta_scope: meta.function.julia
+        - include: func-name-paren
+        - include: func-name-standard
+        # Anonymous function
+        - match: \(
+          set: function-parameters
+        # Function name on the form "Module.func"
+        - match: '([^.{(]+)(\.)'
+          captures:
+            1: variable.other.julia
+            2: keyword.operator.julia
+
+  # Do lookaheads to distinguish function calls from function definitions on assignment form
+  decl-func-assignment-form:
+    - match: |-
+        (?x)
+        (?=
+          {{func_name_paren}}
+          {{func_params}}
+        )
+      push: func-name-paren
+    - match: |-
+        (?x)
+        (?=
+          {{func_name_standard}}
+          {{func_params}}
+        )
+      push: func-name-standard
+
+  func-name-standard:
+    - match: '{{func_name_standard}}'
+      captures:
+        1: entity.name.function.julia
+        2: support.type.julia
+      set: function-parameters
+
+  func-name-paren:
+    - match: '{{func_name_paren}}'
+      captures:
+        1: keyword.operator.julia
+        2: entity.name.function.julia
+        4: support.type.julia
+      set: function-parameters
+
+  function-parameters:
+    - meta_content_scope: meta.function.parameters.julia
+    - match: \)
+      pop: true
+    - include: comments
+    - match: '='
+      scope: keyword.operator.assignment.julia
+      set:
+        - meta_scope: meta.function.parameters.default-value.julia
+        - match: '(?=[,)])'
+          set: function-parameters
+        - include: expressions
+    - include: type-annotation
+    - match: \.\.\. # Splat after type
+      scope: keyword.operator.julia
+    - match: ({{symb_id}}+)(\.\.\.)?
+      captures:
+        1: variable.parameter.julia
+        2: keyword.operator.julia
+
+  decl-macro:
+    - match: '\b(macro)\s+([^(]+)\('
+      captures:
+        1: keyword.other.julia
+        2: entity.name.macro.julia
+      set: function-parameters
+
+  decl-type:
+    - match: \b(type|immutable|abstract)\s+({{symb_id}}+)({{nested_braces}})?
+      scope: meta.type.julia
+      captures:
+        1: keyword.other.julia
+        2: entity.name.type.julia
+        3: support.type.julia
+    - match: \b(bitstype)\s+(\d+)\s+({{symb_id}}+({{nested_braces}})?)
+      captures:
+        1: keyword.other.julia
+        2: constant.numeric.julia
+        3: entity.name.type.julia
+
+  decl-typealias:
+    - match: \b(typealias)\s+({{symb_id}}+)({{nested_braces}})?\s+({{symb_id}}+({{nested_braces}})?)?
+      captures:
+        1: keyword.other.julia
+        2: entity.name.type.julia
+        3: entity.name.type.julia # Duplication because {{nested_braces}} must be wrapped in a matching group
+        4: support.type.julia
+
+  symbols:
+    # This is slightly more involved than what one might first expect
+    # because, for example, in `:aa` the symbol is `aa` but in `:+a` only `+` is the symbol.
+    # Also take some extra steps to not mess up ternary a?b:c syntax.
+    - match: |-
+        (?x)
+        (?<! {{symb_id}}: )   # Not preceded by `a:`
+        (?<! {{symb_id}}\s: ) # or `a :` (How to match multiple spaces in lookbehind?)
+        (?<! [<)}\].'"]: )    # or other symbol-blocking chars.
+        (?<=:)                # Preceeded by colon.
+        (                     # The actual symbol can be a
+          (\.?{{long_op}})|   # (dotted) multi-character-operator
+          (\.?{{symb_op}})|   # (dotted) operator
+          @?{{symb_id}}*      # variable (or macro) name
+        )
+      scope: constant.other.symbol.julia
+
+  macros:
+    - match: '@{{symb_id}}+\b'
+      # Julians want their macros to light up as functions by default
+      # The scope `variable.macro` is applied last to give it precedence
+      # so that user can override the color in the color theme.
+      scope: support.function.julia variable.macro.julia
+
+  variable:
+    - match: '{{symb_id}}+({{nested_braces}})'
+      scope: support.type.julia variable.type
+    - match: '{{base_types}}'
+      scope: support.type.julia variable.type
+    - match: '{{symb_id}}+'
+      scope: variable.other
+
+  strings:
+    # Regex string: Has special escaping
+    - match: '\br"'
+      push:
+      - meta_scope: string.quoted.other.julia
+      - match: (\\"|\\\\)
+        scope: constant.character.escape.julia
+      - match: '"'
+        pop: true
+    # Triple double-quoted string
+    - match: '"""'
+      push: string-triple-content
+    # Double-quoted
+    - match: '"'
+      push: string-content
+    # Prefixed double-quoted
+    - match: '{{symb_id}}+"'
+      push:
+      - meta_scope: string.quoted.other.julia
+      - include: string-escape
+      - match: '"'
+        pop: true
+    # Single-quoted string
+    - match: "'"
+      push:
+      - meta_scope: string.quoted.single.julia
+      - include: string-escape
+      - match: "'"
+        pop: true
+    # Cmd string
+    - match: '`'
+      push:
+      - meta_scope: string.interpolated.julia
+      - match: \\.
+        scope: constant.character.escape.julia
+      - match: '`'
+        pop: true
+
+  string-escape:
+    - match: \\(\\|[0-3]\d{0,2}|[4-7]\d?|x[a-fA-F0-9]{0,2}|u[a-fA-F0-9]{0,4}|U[a-fA-F0-9]{0,8}|.)
+      scope: constant.character.escape.julia
+
+  string-content:
+    - meta_scope: string.quoted.double.julia
+    - match: '"'
+      pop: true
+    - include: string-escape
+    - match: \$
+      scope: keyword.operator.julia
+      set: string-interpolation
+
+  string-triple-content:
+    - meta_scope: string.quoted.double.julia
+    - match: '"""'
+      pop: true
+    - include: string-escape
+    - match: \$
+      scope: keyword.operator.julia
+      set: string-interpolation
+
+  string-interpolation:
+    - match: (?<=\))
+      set: string-content
+    - include: nested_parens
+    - match: '{{symb_id}}+'
+      scope: variable.other.julia
+      set:
+        - match: ''
+          set: string-content
+
+  # Needed only for string interpolation
+  nested_parens:
+    - match: \(
+      push:
+        - match: \)
+          pop: true
+        - include: expressions
