@@ -699,3 +699,9 @@ a = "foo$(a+f(a, g())+b)(a)bar" closed
 #         ^^^ string.quoted.single
 #            ^ keyword.operator
 #             ^ variable.other
+
+# (issue 25)
+  println("sqrt(4) = 2") closed
+# ^^^^^^^ variable.function
+#         ^^^^^^^^^^^^^ string.quoted
+#                        ^^^^^^ variable.other

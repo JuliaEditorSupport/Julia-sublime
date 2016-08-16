@@ -37,7 +37,7 @@ variables:
   func_name_standard: |-
     (?x)
     (?!!)                     # Function name doesn't start with !
-    ([^\s{{symb_lang}}]+)       # Function name
+    ([^\s{{symb_lang}}]+)     # Function name
     ({{nested_braces}})?      # Match type annotation
     (?=\()
   func_name_paren: |-
@@ -55,11 +55,14 @@ variables:
   func_params: |-
     (?x)
     \(                        # Open function parameters
+    # We are lazy here and don't parse the exact form of a parameter list
+    # with types, default values, splats etc. It is not needed.
+    (?!{{symb_lang}})         # The parameter list cannot start with a reserved symbol
     (
-      ({{nested_brackets}})|  # Match nested brackets
+      ({{nested_brackets}})|  # Match nested brackets, can occur in parameter default value etc.
       [^)]                    # or anything that doesn't close argument list
     )*
-    \)                        # Close function parameters.
+    \)                        # Close function parameters
     \s*=(?!=)                 # Followed by exactly one equal sign
 
 contexts:
