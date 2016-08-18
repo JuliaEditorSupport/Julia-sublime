@@ -154,8 +154,9 @@ contexts:
         2: support.type.julia
 
   decl-func:
-    - match: '\bfunction\s+(?!@)'
-      scope: keyword.other.julia
+    - match: '\b(function)\s+(?!@)'
+      captures:
+        1: keyword.other.julia
       push:
         - meta_scope: meta.function.julia
         - include: func-name-paren
