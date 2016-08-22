@@ -595,6 +595,15 @@
   #=#==#hej=#
 # ^^^^^^^^^^^ comment.block
 
+# (issue 27)
+  a#a
+# ^ variable.other
+#  ^^ comment.line
+  a#=a=# a
+# ^ variable.other
+#  ^^^^^ comment.block
+#        ^ variable.other
+
 
 ##
 ## STIRNGS
