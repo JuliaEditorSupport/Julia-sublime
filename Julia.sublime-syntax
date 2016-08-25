@@ -283,7 +283,15 @@ contexts:
       scope: variable.other
 
   strings:
-    # Regex string: Has special escaping
+    # Regex string, tripple-quoted. Has special escaping and no string interpolation.
+    - match: '\br"""'
+      push:
+      - meta_scope: string.quoted.other.julia
+      - match: (\\"|\\\\)
+        scope: constant.character.escape.julia
+      - match: '"""'
+        pop: true
+    # Regex string. Has special escaping and no string interpolation.
     - match: '\br"'
       push:
       - meta_scope: string.quoted.other.julia

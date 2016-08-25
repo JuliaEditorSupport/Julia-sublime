@@ -644,7 +644,12 @@
 #              ^^^^^^ constant.character.escape
 #                    ^^^^ string.quoted.other
 #                         ^ variable.other
-
+# (issue 28)
+  r"""\n a \" b $""" a
+# ^^^^^^^^^ string.quoted.other
+#          ^^ constant.character.escape
+#            ^^^^^^^ string.quoted.other
+#                    ^ variable.other
 
 ##
 ## STRING INTERPOLATION
