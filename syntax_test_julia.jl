@@ -72,6 +72,39 @@
 #                ^^^^^^^ support.type
 #                        ^ variable.other
 
+# (issue 30)
+  f(a, ")=") a
+# ^ variable.function
+#   ^ variable.other
+#      ^^^^ string.quoted.double
+#            ^ variable.other
+  f(a, a=")=") = a
+# ^ entity.name.function
+#   ^ variable.parameter
+#      ^ variable.parameter
+#       ^ keyword.operator
+#        ^^^^ string.quoted.double
+#              ^ keyword.operator
+#                ^ variable.other
+  f(a, a=(")=")) = a
+# ^ entity.name.function
+#   ^ variable.parameter
+#      ^ variable.parameter
+#       ^ keyword.operator
+#         ^^^^ string.quoted.double
+#                ^ keyword.operator
+#                  ^ variable.other
+  f(a, a=")=\"a") = a
+# ^ entity.name.function
+#   ^ variable.parameter
+#      ^ variable.parameter
+#       ^ keyword.operator
+#        ^^^ string.quoted.double
+#           ^^ constant.character.escape
+#             ^^ string.quoted.double
+#                 ^ keyword.operator
+#                   ^ variable.other
+
 
 ##
 ## UNICODE WORD BOUDARIES

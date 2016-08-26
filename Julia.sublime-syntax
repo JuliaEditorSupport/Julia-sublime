@@ -28,10 +28,22 @@ variables:
   # Alternative to \b that works with unicode symbols
   boundary: (?<=(?:^|\s|{{symb_lang}}|{{symb_op}}))
 
-  # Recursively match nested curly braces and any nested brackets, respectively.
-  # Must be wrapped in a matching group when used, it is best to do this explicitly when used (not here) to avoid confusion
+  # Recursively match nested curly braces
+  # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
   nested_braces: '{(?>[^{}]+|\g<-1>)*}'
-  nested_brackets: '[{(\[](?>[^{}()\[\]]+|\g<-1>)*[})\]]'
+
+  # Recursively match nested brackets (of any type) and strings
+  # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
+  # NOTE: Use of atomic groups speeds up parsing immensely.
+  string: '"(?>(?>\\"|[^"])*|\g<-1>)*"'
+  nested_brackets_and_strings: |-
+    (?x)
+    (?>
+       {(?>{{string}}|[^{}]+|\g<-1>)*}|
+      \((?>{{string}}|[^()]+|\g<-1>)*\)|
+      \[(?>{{string}}|[^\[\]]+|\g<-1>)*\]|
+      {{string}}
+    )
 
   # Helpers for function declaration
   func_name_standard: |-
@@ -57,10 +69,10 @@ variables:
     \(                        # Open function parameters
     # We are lazy here and don't parse the exact form of a parameter list
     # with types, default values, splats etc. It is not needed.
-    (?!{{symb_lang}})         # The parameter list cannot start with a reserved symbol
+    (?!{{symb_lang}})         # The parameter list cannot start with a reserved symbol (this check is perhaps no longer needed)
     (
-      ({{nested_brackets}})|  # Match nested brackets, can occur in parameter default value etc.
-      [^)]                    # or anything that doesn't close argument list
+      ({{nested_brackets_and_strings}})| # Match nested brackets, can occur in parameter default value etc.
+      [^(){}\[\]"]            # or anything that doesn't close the argument list
     )*
     \)                        # Close function parameters
     \s*=(?!=)                 # Followed by exactly one equal sign
