@@ -650,6 +650,13 @@
 #          ^^ constant.character.escape
 #            ^^^^^^^ string.quoted.other
 #                    ^ variable.other
+# (issue 29)
+  """a"$b"c"""
+# ^^^^^ string.quoted.double
+#      ^ keyword.operator
+#       ^ variable.other
+#        ^^^^^ string.quoted.double
+
 
 ##
 ## STRING INTERPOLATION

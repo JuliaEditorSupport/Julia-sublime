@@ -348,7 +348,7 @@ contexts:
     - include: string-escape
     - match: \$
       scope: keyword.operator.julia
-      set: string-interpolation
+      set: string-triple-interpolation
 
   string-interpolation:
     - match: (?<=\))
@@ -359,6 +359,16 @@ contexts:
       set:
         - match: ''
           set: string-content
+
+  string-triple-interpolation:
+    - match: (?<=\))
+      set: string-content
+    - include: nested_parens
+    - match: '{{symb_id}}+'
+      scope: variable.other.julia
+      set:
+        - match: ''
+          set: string-triple-content
 
   # Needed only for string interpolation
   nested_parens:
