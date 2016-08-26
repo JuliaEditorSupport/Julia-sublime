@@ -543,6 +543,15 @@
 #           ^^^^^^^^ support.type
 #                    ^ variable.parameter
 
+  f(a=[b,c]) = d
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^ keyword.operator
+#      ^ variable.other
+#        ^ variable.other
+#            ^ keyword.operator
+#              ^ variable.other
+
 
 ##
 ## MACROS

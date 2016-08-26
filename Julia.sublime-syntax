@@ -94,6 +94,7 @@ contexts:
     - include: function-call
     - include: variable
     - include: nested_parens
+    - include: nested_squarebrackets
 
   declarations:
     - include: decl-func
@@ -382,10 +383,16 @@ contexts:
         - match: ''
           set: string-triple-content
 
-  # Needed only for string interpolation
   nested_parens:
     - match: \(
       push:
         - match: \)
+          pop: true
+        - include: expressions
+
+  nested_squarebrackets:
+    - match: \[
+      push:
+        - match: \]
           pop: true
         - include: expressions
