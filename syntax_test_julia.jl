@@ -552,6 +552,16 @@
 #            ^ keyword.operator
 #              ^ variable.other
 
+# (issue 31)
+  f(x::A=5; z) = ...
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^^ keyword.operator
+#      ^ support.type
+#       ^ keyword.operator
+#        ^ constant.numeric
+#           ^ variable.parameter
+
 
 ##
 ## MACROS

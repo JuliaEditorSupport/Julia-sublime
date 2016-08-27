@@ -224,7 +224,7 @@ contexts:
       scope: keyword.operator.assignment.julia
       set:
         - meta_scope: meta.function.parameters.default-value.julia
-        - match: '(?=[,)])'
+        - match: '(?=[,;)])'
           set: function-parameters
         - include: expressions
     - include: type-annotation
