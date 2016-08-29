@@ -778,3 +778,12 @@ a = "foo$(a+f(a, g())+b)(a)bar" closed
 # ^^^^^^^ variable.function
 #         ^^^^^^^^^^^^^ string.quoted
 #                        ^^^^^^ variable.other
+
+# (issue 32)
+  a `a$a` a
+# ^ variable.other
+#   ^^ string.quoted.cmd
+#     ^ keyword.operator
+#      ^ variable.other
+#       ^ string.quoted.cmd
+#         ^ variable.other
