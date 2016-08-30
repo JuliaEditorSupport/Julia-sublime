@@ -69,7 +69,6 @@ variables:
     \(                        # Open function parameters
     # We are lazy here and don't parse the exact form of a parameter list
     # with types, default values, splats etc. It is not needed.
-    (?!{{symb_lang}})         # The parameter list cannot start with a reserved symbol (this check is perhaps no longer needed)
     (
       ({{nested_brackets_and_strings}})| # Match nested brackets, can occur in parameter default value etc.
       [^(){}\[\]"]            # or anything that doesn't close the argument list
