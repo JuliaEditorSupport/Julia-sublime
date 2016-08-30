@@ -2,7 +2,7 @@
 
 # For information on how this file is used, see
 # https://www.sublimetext.com/docs/3/syntax.html#testing
-# Run tests by pressing `ctrl+shif+b`, i.e. run the `build` command
+# Run tests by pressing `ctrl+shift+b`, i.e. run the `build` command
 
 
 ##
@@ -562,6 +562,27 @@
 #        ^ constant.numeric
 #           ^ variable.parameter
 
+# (issue 33)
+  f(::Int, x::Float64) = x
+# ^ entity.name.function
+#   ^^ keyword.operator
+#     ^^^ support.type
+#          ^variable.parameter
+#           ^^ keyword.operator
+#             ^^^^^^^ support.type
+
+  f(; x::Float64) = x
+# ^ entity.name.function
+#     ^ variable.parameter
+#      ^^ keyword.operator
+#        ^^^^^^^ support.type
+
+  f(x,
+# ^ entity.name.function
+#   ^ variable.parameter
+    y) = x + y
+#   ^ variable.parameter
+
 
 ##
 ## MACROS
@@ -658,7 +679,7 @@
 
 
 ##
-## STIRNGS
+## STRINGS
 ##
 
 "hello" closed
