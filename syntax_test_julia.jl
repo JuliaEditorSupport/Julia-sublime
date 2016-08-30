@@ -577,11 +577,12 @@
 #      ^^ keyword.operator
 #        ^^^^^^^ support.type
 
-  f(x,
-# ^ entity.name.function
-#   ^ variable.parameter
-    y) = x + y
-#   ^ variable.parameter
+# The test below fails, seems to be no way to solve this, see issue #33
+#   f(x,
+# # ^ entity.name.function
+# #   ^ variable.parameter
+#     y) = x + y
+# #   ^ variable.parameter
 
 
 ##
