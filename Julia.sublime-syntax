@@ -26,7 +26,7 @@ variables:
   symb_id: (?:[^\s{{symb_lang}}{{symb_op}}])
 
   # Alternative to \b that works with unicode symbols
-  boundary: (?<=(?:^|\s|{{symb_lang}}|{{symb_op}}))
+  b: (?<=(?:^|\s|{{symb_lang}}|{{symb_op}}))
 
   # Recursively match nested curly braces
   # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
@@ -141,16 +141,16 @@ contexts:
   literals:
     - match: |-
         (?x)
-        (?:
-          {{boundary}}0b[0-1]+|       # binary
-          {{boundary}}0o[0-7]+|       # octal
-          {{boundary}}0x[\da-fA-F]+|  # hex
-          (
-            \B\.\d+|                  # .11
-            {{boundary}}\d+(\.\d*)?   # 11.11, 11., 11
+        (?: # Dashes betwen numeric symbols (11 = 1_1) are allowed everywhere.
+          {{b}}0b[0-1](?:_?[0-1])*|             # binary
+          {{b}}0o[0-7](?:_?[0-7])*|             # octal
+          {{b}}0x[\da-fA-F](?:_?[\da-fA-F])*|   # hex
+          {{b}}(?:
+            \.\d(?:_?\d)*|                      # .11, .11
+            \d(?:_?\d)*(?:\.(?:\d(?:_?\d)*)?)?| # 11.11, 11., 11
+                                                # Empty match. Yes, this is intended, see the following line.
           )
-          (e[-+]?\d+)?|               # 1e123, 1e+123
-          (e[-+]\d+)?                 # e+123
+          (?:e[-+]?\d(?:_?\d)*)?                # Any of the above followed by e+123 or similar, for scientific notation.
         )
       scope: constant.numeric.julia
     - match: \b(true|false|nothing|NaN|Inf)\b

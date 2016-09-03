@@ -21,6 +21,8 @@
 # ^^^^^^ constant.numeric
   1.32e+123
 # ^^^^^^^^^ constant.numeric
+  .32e+123
+# ^^^^^^^^ constant.numeric
   e-123
 # ^^^^^ constant.numeric
   11
@@ -34,6 +36,17 @@
   2.a
 # ^^ constant.numeric
 #   ^ variable.other
+# (issue 37)
+  123_4_56_7
+# ^^^^^^^^^^ constant.numeric
+  0xa_3_f
+# ^^^^^^^ constant.numeric
+  0b1_0_1
+# ^^^^^^^ constant.numeric
+  1.3_2e+1_2_3
+# ^^^^^^^^^^^^ constant.numeric
+
+
 
 ##
 ## CONSTANTS
