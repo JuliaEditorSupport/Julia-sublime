@@ -577,12 +577,11 @@
 #      ^^ keyword.operator
 #        ^^^^^^^ support.type
 
-# The test below fails, seems to be no way to solve this, see issue #33
-#   f(x,
-# # ^ entity.name.function
-# #   ^ variable.parameter
-#     y) = x + y
-# #   ^ variable.parameter
+# The following fails, function parameters should be highlighted.
+# There seems to be no way of solving this, see issue #33.
+  f(x,
+    y) = ...
+# Tests are removed, to avoid superfluous test fails (comments are ignored).
 
 
 ##
