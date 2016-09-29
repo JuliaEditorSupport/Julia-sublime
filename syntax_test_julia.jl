@@ -596,6 +596,17 @@
     y) = ...
 # Tests are removed, to avoid superfluous test fails (comments are ignored).
 
+# (issue 40)
+  function foo end
+# ^^^^^^^^ keyword.other
+#          ^^^ entity.name.function
+#              ^^^ keyword.other
+  function foo (x) end
+# ^^^^^^^^ keyword.other
+#          ^^^ entity.name.function
+#               ^ variable.parameter
+#                  ^^^ keyword.other
+
 
 ##
 ## MACROS

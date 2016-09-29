@@ -51,7 +51,7 @@ variables:
     (?!!)                     # Function name doesn't start with !
     ([^\s{{symb_lang}}]+)     # Function name
     ({{nested_braces}})?      # Match type annotation
-    (?=\()
+    (?=[\( ])
   func_name_paren: |-
     (?x)
     \(                        # Function name is wrapped in parentheses
@@ -216,6 +216,9 @@ contexts:
 
   function-parameters:
     - meta_content_scope: meta.function.parameters.julia
+    - match: end
+      scope: keyword.other
+      pop: true
     - match: \)
       pop: true
     - include: comments
