@@ -23,6 +23,15 @@ def get_prefix(view):
         return None
 
 
+def fix_completion(view, edit):
+    for sel in view.sel():
+        pt = sel.begin()
+        if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
+            view.replace(edit, sublime.Region(pt-3, pt-1), "")
+        elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:+":
+            view.replace(edit, sublime.Region(pt-4, pt-1), "")
+
+
 class JuliaUnicodeListener(sublime_plugin.EventListener):
 
     def on_query_completions(self, view, prefix, locations):
@@ -63,10 +72,7 @@ class JuliaUnicodeInsertBestCompletion(sublime_plugin.TextCommand):
             prefix = get_prefix(view)
             self.completions = [s[1] for s in symbols if s[0].startswith(prefix)]
             view.run_command("insert_best_completion",  {"default": "\t", "exact": False})
-            for sel in view.sel():
-                pt = sel.begin()
-                if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
-                    view.replace(edit, sublime.Region(pt-3, pt-1), "")
+            fix_completion(view, edit)
         else:
             region = sublime.Region(view.sel()[0].begin()-1, view.sel()[0].begin())
             prev_char = view.substr(region)
@@ -85,17 +91,11 @@ class JuliaUnicodeAutoComplete(sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         view.run_command("auto_complete")
-        for sel in view.sel():
-            pt = sel.begin()
-            if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
-                view.replace(edit, sublime.Region(pt-3, pt-1), "")
+        fix_completion(view, edit)
 
 
 class JuliaUnicodeCommitComplete(sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         view.run_command("commit_completion")
-        for sel in view.sel():
-            pt = sel.begin()
-            if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
-                view.replace(edit, sublime.Region(pt-3, pt-1), "")
+        fix_completion(view, edit)
