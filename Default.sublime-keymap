@@ -12,7 +12,7 @@
     },
 
     {
-        "keys": ["tab"], "command": "auto_complete", "context":
+        "keys": ["tab"], "command": "julia_unicode_auto_complete", "context":
         [
             { "key": "setting.tab_completion", "operator": "equal", "operand": true },
             { "key": "has_next_field", "operator": "equal", "operand": false },
