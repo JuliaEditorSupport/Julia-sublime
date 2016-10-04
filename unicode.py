@@ -73,7 +73,10 @@ class JuliaUnicodeInsertBestCompletion(sublime_plugin.TextCommand):
             try:
                 prev_index = self.completions.index(prev_char)
                 next_index = prev_index + 1 if prev_index < len(self.completions) - 1 else 0
-                view.replace(edit, region, self.completions[next_index])
+                for sel in view.sel():
+                    pt = sel.begin()
+                    if view.substr(sublime.Region(pt-1, pt)) == prev_char:
+                        view.replace(edit, sublime.Region(pt-1, pt), self.completions[next_index])
             except:
                 pass
 
