@@ -48,7 +48,7 @@ class JuliaUnicodeListener(sublime_plugin.EventListener):
         prefix = get_command(view)
         if not prefix:
             return None
-        return [(s[0] + "\t" + s[1], s[1]) for s in symbols if prefix in s[0]]
+        return [(s[0] + "\t" + s[1], s[1]) for s in symbols if s[0].startswith(prefix)]
 
     def on_query_context(self, view, key, operator, operand, match_all):
         if view.settings().get('is_widget'):
