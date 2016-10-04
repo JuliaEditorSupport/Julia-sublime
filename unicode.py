@@ -12,7 +12,7 @@ CONTAINS_COMPLETIONS = re.compile(r".*(\\[:_0-9a-zA-Z+-^]*)$")
 symbols = latex_symbols + emoji_symbols
 
 
-def get_command(view):
+def get_prefix(view):
     sel = view.sel()[0]
     pt = sel.end()
     line = view.substr(sublime.Region(view.line(pt).begin(), pt))
@@ -23,40 +23,35 @@ def get_command(view):
         return None
 
 
-def julia_unicode_has_prefix(view, check_match=False):
-    c = get_command(view)
-    if not c:
-        return False
-    if not check_match:
-        return True
-
-    count = 0
-    for s in symbols:
-        if s[0].startswith(c):
-            count = count + 1
-    return count == 1
-
-
 class JuliaUnicodeListener(sublime_plugin.EventListener):
 
     def on_query_completions(self, view, prefix, locations):
         if view.settings().get('is_widget'):
             return
-        if view.score_selector(locations[0], "source.julia") == 0:
-            return
 
-        prefix = get_command(view)
+        if view.score_selector(locations[0], "source.julia") == 0:
+            return None
+
+        prefix = get_prefix(view)
         if not prefix:
             return None
-        return [(s[0] + "\t" + s[1], s[1]) for s in symbols if s[0].startswith(prefix)]
+        ret = [(s[0] + "\t" + s[1], s[1]) for s in symbols if s[0].startswith(prefix)]
+        return ret
 
     def on_query_context(self, view, key, operator, operand, match_all):
         if view.settings().get('is_widget'):
             return
-        if key == 'julia_unicode_is_completed':
-            return julia_unicode_has_prefix(view, True) == operand
+
+        if key == 'julia_unicode_only_match':
+            prefix = get_prefix(view)
+            count = 0
+            for s in symbols:
+                if s[0].startswith(prefix):
+                    count = count + 1
+            return (count == 1) == operand
         elif key == 'julia_unicode_has_prefix':
-            return julia_unicode_has_prefix(view) == operand
+            prefix = get_prefix(view)
+            return (prefix is not None) == operand
 
         return None
 

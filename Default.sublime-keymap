@@ -6,19 +6,19 @@
             { "key": "selector", "operator": "equal", "operand": "source.julia" },
             { "key": "setting.tab_completion", "operator": "equal", "operand": true },
             { "key": "has_next_field", "operator": "equal", "operand": false },
-            { "key": "julia_unicode_has_prefix"},
-            { "key": "julia_unicode_is_completed", "operand": false }
+            { "key": "julia_unicode_has_prefix"}
         ]
     },
 
     {
         "keys": ["tab"], "command": "julia_unicode_auto_complete", "context":
         [
+            { "key": "selector", "operator": "equal", "operand": "source.julia" },
             { "key": "setting.tab_completion", "operator": "equal", "operand": true },
             { "key": "has_next_field", "operator": "equal", "operand": false },
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false },
-            { "key": "selector", "operator": "equal", "operand": "source.julia" },
-            { "key": "julia_unicode_is_completed"}
+            { "key": "auto_complete_visible", "operator": "equal", "operand": false},
+            { "key": "julia_unicode_has_prefix"},
+            { "key": "julia_unicode_only_match"}
         ]
     },
 
