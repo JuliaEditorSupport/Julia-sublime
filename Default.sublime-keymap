@@ -11,6 +11,16 @@
     },
 
     {
+        "keys": ["tab"], "command": "julia_unicode_insert_best_completion",
+        "args": { "next_completion": true },
+        "context":
+        [
+            { "key": "last_command", "operator": "equal", "operand": "julia_unicode_insert_best_completion" },
+            { "key": "setting.tab_completion", "operator": "equal", "operand": true }
+        ]
+    },
+
+    {
         "keys": ["tab"], "command": "julia_unicode_auto_complete", "context":
         [
             { "key": "selector", "operator": "equal", "operand": "source.julia" },

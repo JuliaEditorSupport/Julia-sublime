@@ -57,13 +57,25 @@ class JuliaUnicodeListener(sublime_plugin.EventListener):
 
 
 class JuliaUnicodeInsertBestCompletion(sublime_plugin.TextCommand):
-    def run(self, edit):
+    def run(self, edit, next_completion=False):
         view = self.view
-        view.run_command("insert_best_completion",  {"default": "\t", "exact": False})
-        for sel in view.sel():
-            pt = sel.begin()
-            if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
-                view.replace(edit, sublime.Region(pt-3, pt-1), "")
+        if not next_completion:
+            prefix = get_prefix(view)
+            self.completions = [s[1] for s in symbols if s[0].startswith(prefix)]
+            view.run_command("insert_best_completion",  {"default": "\t", "exact": False})
+            for sel in view.sel():
+                pt = sel.begin()
+                if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
+                    view.replace(edit, sublime.Region(pt-3, pt-1), "")
+        else:
+            region = sublime.Region(view.sel()[0].begin()-1, view.sel()[0].begin())
+            prev_char = view.substr(region)
+            try:
+                prev_index = self.completions.index(prev_char)
+                next_index = prev_index + 1 if prev_index < len(self.completions) - 1 else 0
+                view.replace(edit, region, self.completions[next_index])
+            except:
+                pass
 
 
 class JuliaUnicodeAutoComplete(sublime_plugin.TextCommand):
