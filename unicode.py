@@ -30,6 +30,8 @@ def fix_completion(view, edit):
             view.replace(edit, sublime.Region(pt-3, pt-1), "")
         elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:+":
             view.replace(edit, sublime.Region(pt-4, pt-1), "")
+        elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:-":
+            view.replace(edit, sublime.Region(pt-4, pt-1), "")
 
 
 class JuliaUnicodeListener(sublime_plugin.EventListener):
