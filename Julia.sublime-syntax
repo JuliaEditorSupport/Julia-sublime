@@ -30,6 +30,9 @@ variables:
 
   # Recursively match nested curly braces
   # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
+  # This regex depends on atomic group and back reference recursion.
+  # Cannot match multi-line types, because sublime applies regexes line by line.
+  # TODO: Parse multi-line types separately with push/pop matching. Omg pls no! {nested_braces} is used in 10 places and push/pop would make the code very messy. Who uses multi-line types anyway?
   nested_braces: '{(?>[^{}]+|\g<-1>)*}'
 
   # Recursively match nested brackets (of any type) and strings
