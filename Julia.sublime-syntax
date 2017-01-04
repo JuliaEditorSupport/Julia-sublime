@@ -169,7 +169,7 @@ contexts:
         2: support.type.julia
 
   decl-func:
-    - match: '\b(function)\s+(?!@)'
+    - match: '\b(?<!:)(function)\s+(?!@)'
       captures:
         1: keyword.other.julia
       push:

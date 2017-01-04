@@ -195,6 +195,10 @@
 #  ^^^ constant.other.symbol
 #     ^ keyword.operator
 #      ^ variable.other
+# (issue 43)
+  :function
+# ^ keyword.operator
+#  ^^^^^^^^ constant.other.symbol
 
 :.a
 :.+a
