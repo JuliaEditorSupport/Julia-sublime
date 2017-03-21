@@ -24,7 +24,7 @@ def get_prefix(view):
 
 
 def fix_completion(view, edit):
-    for sel in view.sel():
+    for sel in reversed(view.sel()):
         pt = sel.begin()
         if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
             view.replace(edit, sublime.Region(pt-3, pt-1), "")
@@ -78,15 +78,13 @@ class JuliaUnicodeInsertBestCompletion(sublime_plugin.TextCommand):
         else:
             region = sublime.Region(view.sel()[0].begin()-1, view.sel()[0].begin())
             prev_char = view.substr(region)
-            try:
+            if prev_char in self.completions:
                 prev_index = self.completions.index(prev_char)
                 next_index = prev_index + 1 if prev_index < len(self.completions) - 1 else 0
-                for sel in view.sel():
+                for sel in reversed(view.sel()):
                     pt = sel.begin()
                     if view.substr(sublime.Region(pt-1, pt)) == prev_char:
                         view.replace(edit, sublime.Region(pt-1, pt), self.completions[next_index])
-            except:
-                pass
 
 
 class JuliaUnicodeAutoComplete(sublime_plugin.TextCommand):
