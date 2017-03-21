@@ -1,0 +1,10 @@
+<snippet>
+  <content><![CDATA[
+begin
+    $0
+end
+]]></content>
+  <tabTrigger>begin</tabTrigger>
+  <scope>source.julia</scope>
+  <description>begin block</description>
+</snippet>
