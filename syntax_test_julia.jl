@@ -118,6 +118,14 @@
 #                 ^ keyword.operator
 #                   ^ variable.other
 
+# (issue 46)
+  f(x)
+# ^^^^ meta.function-call
+# ^ variable.function
+#   ^  meta.function-call.arguments
+  abs(x)
+# ^^^ support.function
+# ^^^ variable.function
 
 ##
 ## UNICODE WORD BOUDARIES
