@@ -131,6 +131,14 @@
 #   ^ variable.parameter
 #    ^ keyword.operator.assignment
 
+# (issue 47)
+  Base
+# ^^^^ support.module
+  Pkg.foo()
+# ^^^ support.module
+  Core.foo(x) = 2
+# ^^^^ support.module
+
 ##
 ## UNICODE WORD BOUDARIES
 ##
@@ -165,7 +173,6 @@
   :a.b
 # ^ keyword.operator
 #  ^ constant.other.symbol
-#   ^ keyword.operator
 #    ^ variable.other
 # (issue 3)
   ,:βa
@@ -296,7 +303,6 @@
 # Modules (issue 19)
   MyModule.myfunc(x)
 # ^^^^^^^^ variable.other
-#         ^ keyword.operator
 #          ^^^^^^ variable.function
 #                 ^ variable.other
 
@@ -433,7 +439,6 @@
 # Assignemetn-form function declaration (issue 19)
   MyModule.foo!{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = kron(a, b)
 # ^^^^^^^^ variable.other
-#         ^ keyword.operator
 #          ^^^^ entity.name.function
 #              ^^^^^^^^^ support.type
 #                        ^^ variable.parameter
@@ -469,7 +474,6 @@
 # Assignemetn-form infix operator declaration in module
   MyModule.∘{T<:Real}(xx::Aa{Bb}, β::Aa{Bb}=1.::Aa{Bb}, c) = ...
 # ^^^^^^^^ variable.other
-#         ^ keyword.operator
 #          ^ entity.name.function
 #           ^^^^^^^^^  support.type
 #                     ^^ variable.parameter
@@ -665,7 +669,8 @@
 #  ^ keyword.operator
   β.''
 # ^ variable.other
-#  ^^^ keyword.operator
+#  ^ keyword.operator.broadcast
+#   ^^ keyword.operator
   f()'
 # ^ variable.function
 #    ^ keyword.operator
@@ -682,6 +687,9 @@
 ## INFIX OPERATORS
 ##
 
+  a=b
+#  ^ keyword.operator.assignment
+
 # (issue 6, 8, 10)
   2.⊗a
 # ^^ constant.numeric
@@ -695,6 +703,24 @@
 # ^^^^ constant.numeric
 #     ^ keyword.operator
 #      ^^^ constant.numeric
+
+
+##
+## BROADCAST
+##
+
+  f.(x)
+# ^ variable.function
+#  ^ keyword.operator.broadcast
+  Mod.f.(x)
+#     ^ variable.function
+#      ^ keyword.operator.broadcast
+  a.=b
+#  ^ keyword.operator.broadcast
+#   ^ keyword.operator.assignment
+  a.⊕b
+#  ^ keyword.operator.broadcast
+#   ^ keyword.operator
 
 
 ##
