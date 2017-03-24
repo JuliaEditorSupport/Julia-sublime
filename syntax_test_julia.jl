@@ -126,6 +126,11 @@
   abs(x)
 # ^^^ support.function
 # ^^^ variable.function
+  f(x=1)
+# ^ variable.function
+#   ^ variable.parameter
+#    ^ keyword.operator.assignment
+
 
 ##
 ## UNICODE WORD BOUDARIES

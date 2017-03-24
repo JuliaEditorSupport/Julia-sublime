@@ -148,6 +148,10 @@ contexts:
         - match: \(
           push:
           - meta_content_scope: meta.function-call.arguments.julia
+          - match: '({{symb_id}}+)\s*(=)'
+            captures:
+              1: variable.parameter.julia
+              2: keyword.operator.assignment.julia
           - include: expressions
           - match: (?=\))
             pop: true
