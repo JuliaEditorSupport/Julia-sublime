@@ -131,7 +131,6 @@
 #   ^ variable.parameter
 #    ^ keyword.operator.assignment
 
-
 ##
 ## UNICODE WORD BOUDARIES
 ##
@@ -320,13 +319,13 @@
   mytype = Array
 # ^^^^^^ variable.other
 #        ^ keyword.operator
-#          ^^^^^ support.type variable.type
+#          ^^^^^ support.type
   mytype = Array{Int}
 # ^^^^^^ variable.other
 #        ^ keyword.operator
-#          ^^^^^^^^^^ support.type variable.type
+#          ^^^^^^^^^^ support.type
   mytype = CallMsg{:call}
-#          ^^^^^^^^^^^^^^ support.type variable.type
+#          ^^^^^^^^^^^^^^ support.type
 
 # (issue 17)
 # All things being defined are green, types as well

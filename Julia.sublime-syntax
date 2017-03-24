@@ -315,11 +315,11 @@ contexts:
 
   variable:
     - match: '{{symb_id}}+({{nested_braces}})'
-      scope: support.type.julia variable.type
+      scope: support.type.julia
     - match: '{{base_types}}'
-      scope: support.type.julia variable.type
+      scope: support.type.julia
     - match: '{{symb_id}}+'
-      scope: variable.other
+      scope: variable.other.julia
 
   strings:
     # Regex string, tripple-quoted. Has special escaping and no string interpolation.
