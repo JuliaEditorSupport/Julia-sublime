@@ -1,6 +1,9 @@
 %YAML 1.2
 ---
+
 # https://www.sublimetext.com/docs/3/syntax.html
+# https://www.sublimetext.com/docs/3/scope_naming.html
+
 name: Julia
 file_extensions: [jl]
 first_line_match: ^#!.*\bjulia\s*$
