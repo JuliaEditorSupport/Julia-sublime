@@ -160,45 +160,43 @@ contexts:
       scope: keyword.operator.julia
 
   function-call:
-    - match: '(?=(({{symb_id}}+)\.?)+({{nested_braces}})?\()'
+    - match: '(?<!\.)(?=({{symb_id}}+)\.?({{nested_braces}})?(\())'
       push:
         - meta_content_scope: meta.function-call.julia
-        # Function call from built-in module
-        - match: '(?:({{base_modules}})\.)+({{symb_id}}+)'
-          captures:
-            1: support.module.julia
-            2: variable.function.julia
-        # Function call from module
-        - match: '(?:({{symb_id}}+)\.)+({{symb_id}}+)'
-          captures:
-            1: variable.other.julia
-            2: variable.function.julia
         # Built-in function
         - match: '{{base_funcs}}'
           scope: variable.function.julia support.function.julia
-        # Function
-        - match: '{{symb_id}}+'
-          scope: variable.function.julia
-        # Type
-        - match: '({{nested_braces}})'
-          scope: support.type.julia
-        # Broadcast
-        - match: '\.'
-          scope: keyword.operator.broadcast.julia
-        # Begin arguments
-        - match: \(
-          push:
-          - meta_content_scope: meta.function-call.arguments.julia
-          - match: '({{symb_id}}+)\s*(=)'
-            captures:
-              1: variable.parameter.julia
-              2: keyword.operator.assignment.julia
-          - include: expressions
-          - match: (?=\))
-            pop: true
-        - match: \)
-          scope: meta.function-call.julia
-          pop: true
+        - include: function-call-helper
+    - match: '(?=({{symb_id}}+)\.?({{nested_braces}})?(\())'
+      push: function-call-helper
+
+  function-call-helper:
+    - meta_content_scope: meta.function-call.julia
+    # Function
+    - match: '{{symb_id}}+'
+      scope: variable.function.julia
+    # Type
+    - match: '({{nested_braces}})'
+      scope: support.type.julia
+    # Broadcast
+    - match: '\.'
+      scope: keyword.operator.broadcast.julia
+    # Begin arguments
+    - match: \(
+      push:
+      - meta_content_scope: meta.function-call.arguments.julia
+      - match: '({{symb_id}}+)\s*(=)'
+        captures:
+          1: variable.parameter.julia
+          2: keyword.operator.assignment.julia
+      - include: expressions
+      - match: (?=\))
+        pop: true
+    # End arguments and function call
+    - match: \)
+      scope: meta.function-call.julia
+      pop: true
+
 
   literals:
     - match: |-
@@ -375,7 +373,7 @@ contexts:
       scope: support.type.julia
     - match: '{{base_types}}'
       scope: support.type.julia
-    - match: '{{base_modules}}'
+    - match: '(?<!\.){{base_modules}}'
       scope: support.module.julia
     - match: '{{symb_id}}+'
       scope: variable.other.julia
