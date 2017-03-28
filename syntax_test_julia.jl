@@ -136,8 +136,23 @@
 # ^^^^ support.module
   Pkg.foo()
 # ^^^ support.module
+#     ^^^ variable.function
   Core.foo(x) = 2
 # ^^^^ support.module
+  filter!()
+# ^^^^^^^ support.function
+  length
+# ^^^^^^ support.function
+  Base.filter!()
+# ^^^^ support.module
+#      ^^^^^^^ support.function
+  Base.filter!
+# ^^^^ support.module
+#      ^^^^^^^ support.function
+  Base.length
+# ^^^^ support.module
+#      ^^^^^^ support.function
+
 
 ##
 ## UNICODE WORD BOUDARIES
