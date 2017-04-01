@@ -355,6 +355,18 @@
 #                    ^ support.type
 #                     ^^ keyword.operator
 #                       ^^^^^^^^^^^^ support.type
+  S >: T
+# ^ support.type
+#   ^^ keyword.operator
+#      ^ support.type
+  Foo <: $A{$A}
+# ^^^ support.type
+#     ^^ keyword.operator
+#        ^^^^^^ support.type
+  $A{$A} >: $A{$A}
+# ^^^^^^ support.type
+#        ^^ keyword.operator
+#           ^^^^^^ support.type
 
 # (issue 17)
 # All things being defined are green, types as well
@@ -687,6 +699,17 @@
 #                                   ^^ keyword.operator
 #                                     ^^^^^^^^^^^^^ support.type
 #                                                   ^^^ keyword.other
+  function inv(M::Matrix{T} where T<:AbstractFloat) end
+# ^^^^^^^^ keyword.other
+#          ^^^ entity.name.function
+#              ^ variable.parameter
+#               ^^ keyword.operator
+#                 ^^^^^^^^^ support.type
+#                           ^^^^^ keyword.other
+#                                 ^  support.type
+#                                  ^^ keyword.operator
+#                                    ^^^^^^^^^^^^^ support.type
+#                                                   ^^^ keyword.other
 
 # Anonymous functions
   (x::T{S}, yy::T{S}) ->
@@ -701,7 +724,7 @@
 #  ^ variable.parameter
 #     ^ variable.parameter
 #        ^^ keyword.operator
-  (x::T{S}) -> # TODO set: function-parameters
+  (x::T{S}) ->
 #  ^ variable.parameter
 #   ^^ keyword.operator
 #     ^^^^ support.type

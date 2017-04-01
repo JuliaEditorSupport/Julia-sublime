@@ -64,8 +64,11 @@ variables:
   # This regex depends on atomic group and back reference recursion.
   # Cannot match multi-line types, because sublime applies regexes line by line.
   # TODO: Parse multi-line types separately with push/pop matching. Omg pls no! {nested_braces} is used in 10 places and push/pop would make the code very messy. Who uses multi-line types anyway?
-  # nested_braces: '{(?>[^{}]+|\g<-1>)*}'
-  nested_braces: '(?:{(?>[^{}]+|\g<-1>)*}|\{\w*)' # The second part matches unfinished nested braces, to highlight during typing
+  nested_braces: '{(?>[^{}]+|\g<-1>)*}'
+  # Don't use the following ones for lookaheads! May lead to unwanted matches.
+  # These match unfinished nested braces, to highlight during typing.
+  nested_braces_sloppy: '(?:{(?>[^{}]+|\g<-1>)*}|\{[^\}\)\] ]*)'
+  nested_round_and_square_sloppy: (?:(?>{(?>[^{}]+|\g<-1>)*}|\((?>[^()]+|\g<-1>)*\))|[\{\(][^\}\)\] ]*)
 
   # Recursively match nested brackets (of any type) and strings
   # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
@@ -120,6 +123,7 @@ contexts:
     - include: comments
     - include: symbols
     - include: type-annotation
+    - include: type-comparison
     - include: literals
     - include: operators
     - include: strings
@@ -127,7 +131,7 @@ contexts:
     - include: macros
     - include: support-functions
     - include: function-call
-    - include: function-anonymous
+    - include: anonymous-function
     - include: variable
     - include: nested_parens
     - include: nested_squarebrackets
@@ -206,13 +210,15 @@ contexts:
           pop: true
 
   function-call:
-    - match: '(?<!\.)(?=({{symb_id}}+)\.?({{nested_braces}})?(\())'
+    - match: '(?<!\.)(?={{symb_id}}+\.?({{nested_braces}})?\()'
       push:
         - meta_content_scope: meta.function-call.julia
         # Built-in function
         - match: '{{base_funcs}}'
           scope: variable.function.julia support.function.julia
         - include: function-call-helper
+        - match: ''
+          pop: true
     - match: '(?=({{symb_id}}+)\.?({{nested_braces}})?\()'
       push: function-call-helper
 
@@ -222,27 +228,24 @@ contexts:
     - match: '{{symb_id}}+'
       scope: variable.function.julia
     # Type
-    - match: '({{nested_braces}})'
+    - match: ({{nested_braces}})
       scope: support.type.julia
     # Broadcast
     - match: '\.'
       scope: keyword.operator.broadcast.julia
     # Begin arguments
     - match: \(
-      push:
-      - meta_content_scope: meta.function-call.arguments.julia
-      - match: '({{symb_id}}+)\s*(=)'
-        captures:
-          1: variable.parameter.julia
-          2: keyword.operator.assignment.julia
-      - include: expressions
-      - match: (?=\))
-        pop: true
-    # End arguments and function call
-    - match: \)
-      scope: meta.function-call.julia
-      pop: true
-
+      set:
+        - meta_content_scope: meta.function-call.arguments.julia
+        - match: '({{symb_id}}+)\s*(=)'
+          captures:
+            1: variable.parameter.julia
+            2: keyword.operator.assignment.julia
+        - include: expressions
+        # End arguments and function call
+        - match: \)
+          scope: meta.function-call.julia
+          pop: true
 
   literals:
     - match: |-
@@ -266,10 +269,26 @@ contexts:
     # Dollar is ok because types can be interpolated.
     # Dot is ok because types can be picked from modules,
     # but no more than one dot, because splat can follow type.
-    - match: (::|<:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces}})?)
+    - match: (::)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces_sloppy}})?)\s+(where)\s+
       captures:
         1: keyword.operator.julia
         2: support.type.julia
+        4: keyword.other.julia
+      push:
+        - include: type-comparison
+        - match: ''
+          pop: true
+    - match: (::|<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces_sloppy}})?)
+      captures:
+        1: keyword.operator.julia
+        2: support.type.julia
+
+  type-comparison:
+    - match: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
+      captures:
+        1: support.type.julia
+        3: keyword.operator.julia
+        4: support.type.julia
 
   decl-func:
     - match: '\b(?<!:)(function)\s+(?!@)'
@@ -288,7 +307,7 @@ contexts:
             1: variable.other.julia
             2: keyword.operator.julia
 
-  function-anonymous:
+  anonymous-function:
     - match: '(?=({{nested_brackets_and_strings}})\s*->)'
       set: function-parameters
     - match: '({{symb_id}}+)(::)?({{symb_id}}+)?({{nested_braces}})?\s*(->)'
@@ -359,15 +378,13 @@ contexts:
     - match: end
       scope: keyword.other
       pop: true
-    - match: where
-      scope: invalid
-    - match: \)\s*(where)\s*({{symb_id}}+)(<:)({{symb_id}}+)({{nested_braces}})?
+    - match: \)\s*(where)\s+
       captures:
         1: keyword.other
-        2: support.type
-        3: keyword.operator
-        4: support.type
-        5: support.type
+      push:
+        - include: type-comparison
+        - match: ''
+          pop: true
       pop: true
     - match: \)
       pop: true
@@ -440,15 +457,16 @@ contexts:
       scope: support.function.julia variable.macro.julia
 
   variable:
-    - match: '({{symb_id}}+(?:{{nested_braces}}))(?:\s*(where)\s+({{symb_id}}+)(<:)?({{symb_id}}+)({{nested_braces}})?)?'
+    - match: '({{symb_id}}+({{nested_braces_sloppy}})?)\s*(where)\s+'
       captures:
         1: support.type.julia
-        2: keyword.other.julia
-        3: support.type.julia
-        4: keyword.operator.julia
-        5: support.type.julia
-        6: support.type.julia
-      # scope: support.type.julia
+        3: keyword.other.julia
+      push:
+        - include: type-comparison
+        - match: ''
+          pop: true
+    - match: '{{symb_id}}+({{nested_braces_sloppy}})'
+      scope: support.type.julia
     - match: '{{base_types}}'
       scope: support.type.julia
     - match: '{{base_funcs}}'
