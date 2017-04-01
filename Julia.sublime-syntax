@@ -4,6 +4,18 @@
 # https://www.sublimetext.com/docs/3/syntax.html
 # https://www.sublimetext.com/docs/3/scope_naming.html
 
+
+# Julia is a language under development, this syntax strives to
+# support the latest version of Julia.
+# Julia is currently transitioning from version 0.5 to 0.6,
+# the changes in 0.6 are listed here https://github.com/JuliaLang/julia/blob/master/NEWS.md
+# Some syntax is being removed, but kept for now as deprecated, such
+# features are marked with "# DEPRECATED 0.6" in this file.
+
+# TODO: When 0.6 is properly released, re-run all generated regexes, ones commented with "# julia> ...".
+# The current 0.6 alpha had some issues...
+
+
 name: Julia
 file_extensions: [jl]
 first_line_match: ^#!.*\bjulia\s*$
@@ -20,6 +32,8 @@ variables:
   long_op: (?:\+=|-=|\*=|/=|//=|\\\\=|^=|÷=|%=|<<=|>>=|>>>=|\|=|&=|:=|=>|$=|\|\||<:|>:|\|>|<\||//|\+\+)
 
   # julia> join(sort(unique((filter(x -> isalpha(x[1]), string.(filter!(x -> isa(eval(x), DataType) || isa(eval(x), TypeConstructor), [names(Base); names(Core)])))))), "|")
+  # Julia 0.6 seems to uses UnionAll instead of TypeConstructor
+  # Compare with https://github.com/JuliaLang/julia/blob/master/base/exports.jl
   base_types: \b(?:AbstractArray|AbstractChannel|AbstractFloat|AbstractMatrix|AbstractRNG|AbstractSerializer|AbstractSparseArray|AbstractSparseMatrix|AbstractSparseVector|AbstractString|AbstractUnitRange|AbstractVecOrMat|AbstractVector|Any|ArgumentError|Array|AssertionError|Associative|Base64DecodePipe|Base64EncodePipe|Bidiagonal|BigFloat|BigInt|BitArray|BitMatrix|BitVector|Bool|BoundsError|BufferStream|CachingPool|CapturedException|CartesianIndex|CartesianRange|Cchar|Cdouble|Cfloat|Channel|Char|Cint|Cintmax_t|Clong|Clonglong|ClusterManager|Cmd|Colon|Complex|Complex128|Complex32|Complex64|CompositeException|Condition|Cptrdiff_t|Cshort|Csize_t|Cssize_t|Cstring|Cuchar|Cuint|Cuintmax_t|Culong|Culonglong|Cushort|Cwchar_t|Cwstring|DataType|Date|DateTime|DenseArray|DenseMatrix|DenseVecOrMat|DenseVector|Diagonal|Dict|DimensionMismatch|Dims|DirectIndexString|Display|DivideError|DomainError|EOFError|EachLine|Enum|Enumerate|ErrorException|Exception|Expr|Factorization|FileMonitor|Filter|Float16|Float32|Float64|FloatRange|Function|Future|GlobalRef|GotoNode|HTML|Hermitian|IO|IOBuffer|IOContext|IOStream|IPAddr|IPv4|IPv6|InexactError|InitError|Int|Int128|Int16|Int32|Int64|Int8|IntSet|Integer|InterruptException|InvalidStateException|Irrational|KeyError|LabelNode|LambdaInfo|LinSpace|LineNumberNode|LoadError|LowerTriangular|MIME|Matrix|MersenneTwister|Method|MethodError|MethodTable|Module|NTuple|NewvarNode|NullException|Nullable|Number|ObjectIdDict|OrdinalRange|OutOfMemoryError|OverflowError|Pair|ParseError|PartialQuickSort|Pipe|PollingFileWatcher|ProcessExitedException|Ptr|QuoteNode|RandomDevice|Range|Rational|RawFD|ReadOnlyMemoryError|Real|ReentrantLock|Ref|Regex|RegexMatch|RemoteChannel|RemoteException|RepString|RevString|RoundingMode|SSAValue|SegmentationFault|SerializationState|Set|SharedArray|SharedMatrix|SharedVector|Signed|SimpleVector|Slot|SlotNumber|SparseMatrixCSC|SparseVector|StackFrame|StackOverflowError|StackTrace|StepRange|StridedArray|StridedMatrix|StridedVecOrMat|StridedVector|String|SubArray|SubString|SymTridiagonal|Symbol|Symmetric|SystemError|TCPSocket|Task|Text|TextDisplay|Timer|Tridiagonal|Tuple|Type|TypeConstructor|TypeError|TypeMapEntry|TypeMapLevel|TypeName|TypeVar|TypedSlot|UDPSocket|UInt|UInt128|UInt16|UInt32|UInt64|UInt8|UndefRefError|UndefVarError|UnicodeError|UniformScaling|Union|UnitRange|Unsigned|UpperTriangular|Val|Vararg|VecElement|VecOrMat|Vector|VersionNumber|Void|WeakKeyDict|WeakRef|WorkerConfig|WorkerPool|Zip)\b
 
   # julia> join(filter!(x -> isascii(x[1]) && isalpha(x[1]) && islower(x[1]), map(string, [names(Base); names(Core)])), '|')
@@ -50,7 +64,8 @@ variables:
   # This regex depends on atomic group and back reference recursion.
   # Cannot match multi-line types, because sublime applies regexes line by line.
   # TODO: Parse multi-line types separately with push/pop matching. Omg pls no! {nested_braces} is used in 10 places and push/pop would make the code very messy. Who uses multi-line types anyway?
-  nested_braces: '{(?>[^{}]+|\g<-1>)*}'
+  # nested_braces: '{(?>[^{}]+|\g<-1>)*}'
+  nested_braces: '(?:{(?>[^{}]+|\g<-1>)*}|\{\w*)' # The second part matches unfinished nested braces, to highlight during typing
 
   # Recursively match nested brackets (of any type) and strings
   # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
@@ -112,6 +127,7 @@ contexts:
     - include: macros
     - include: support-functions
     - include: function-call
+    - include: function-anonymous
     - include: variable
     - include: nested_parens
     - include: nested_squarebrackets
@@ -272,6 +288,21 @@ contexts:
             1: variable.other.julia
             2: keyword.operator.julia
 
+  function-anonymous:
+    - match: '(?=({{nested_brackets_and_strings}})\s*->)'
+      set: function-parameters
+    - match: '({{symb_id}}+)(::)?({{symb_id}}+)?({{nested_braces}})?\s*(->)'
+      captures:
+        1: variable.parameter
+        2: keyword.operator
+        3: support.type
+        4: support.type
+        5: keyword.operator
+    - match: '({{symb_id}}+)\s*(->)'
+      captures:
+        1: variable.parameter
+        2: keyword.operator
+
   # Do lookaheads to distinguish function calls from function definitions on assignment form
   decl-func-assignment-form:
     - match: |-
@@ -328,6 +359,16 @@ contexts:
     - match: end
       scope: keyword.other
       pop: true
+    - match: where
+      scope: invalid
+    - match: \)\s*(where)\s*({{symb_id}}+)(<:)({{symb_id}}+)({{nested_braces}})?
+      captures:
+        1: keyword.other
+        2: support.type
+        3: keyword.operator
+        4: support.type
+        5: support.type
+      pop: true
     - match: \)
       pop: true
     - include: comments
@@ -354,7 +395,7 @@ contexts:
       set: function-parameters
 
   decl-type:
-    - match: \b(type|immutable|abstract)\s+({{symb_id}}+)({{nested_braces}})?
+    - match: \b(mutable struct|type|struct|immutable|abstract type|abstract|primitive type)\s+({{symb_id}}+)({{nested_braces}})?
       scope: meta.type.julia
       captures:
         1: keyword.other.julia
@@ -366,7 +407,7 @@ contexts:
         2: constant.numeric.julia
         3: entity.name.type.julia
 
-  decl-typealias:
+  decl-typealias: # DEPRECATED 0.6
     - match: \b(typealias)\s+({{symb_id}}+)({{nested_braces}})?\s+({{symb_id}}+({{nested_braces}})?)?
       captures:
         1: keyword.other.julia
@@ -399,8 +440,15 @@ contexts:
       scope: support.function.julia variable.macro.julia
 
   variable:
-    - match: '{{symb_id}}+({{nested_braces}})'
-      scope: support.type.julia
+    - match: '({{symb_id}}+(?:{{nested_braces}}))(?:\s*(where)\s+({{symb_id}}+)(<:)?({{symb_id}}+)({{nested_braces}})?)?'
+      captures:
+        1: support.type.julia
+        2: keyword.other.julia
+        3: support.type.julia
+        4: keyword.operator.julia
+        5: support.type.julia
+        6: support.type.julia
+      # scope: support.type.julia
     - match: '{{base_types}}'
       scope: support.type.julia
     - match: '{{base_funcs}}'
@@ -517,6 +565,7 @@ contexts:
       push:
         - match: \)
           pop: true
+        - include: declarations
         - include: expressions
 
   nested_squarebrackets:

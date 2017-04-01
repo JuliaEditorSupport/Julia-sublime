@@ -348,6 +348,14 @@
   mytype = CallMsg{:call}
 #          ^^^^^^^^^^^^^^ support.type
 
+# Julia 0.6 (issue 45)
+  A = Array{T} where T<:Integer{Foo}
+#     ^^^^^^^^ support.type
+#              ^^^^^ keyword.other
+#                    ^ support.type
+#                     ^^ keyword.operator
+#                       ^^^^^^^^^^^^ support.type
+
 # (issue 17)
 # All things being defined are green, types as well
   type Foo{T<:Real} end
@@ -380,6 +388,31 @@
 #             ^^^^^^ entity.name.type
 #                   ^^ keyword.operator
 #                     ^^^^^^ support.type
+
+# Julia 0.6 (issue 45)
+  struct Foo{T} end
+# ^^^^^^ keyword.other
+#        ^^^ entity.name.type
+#           ^^^ support.type
+#               ^^^ keyword.other
+  mutable struct Foo{T} end
+# ^^^^^^ keyword.other
+#         ^^^^^^ keyword.other
+#                ^^^ entity.name.type
+#                   ^^^ support.type
+#                       ^^^ keyword.other
+  abstract type Foo{T} end
+# ^^^^^^^^ keyword.other
+#          ^^^^ keyword.other
+#               ^^^ entity.name.type
+#                  ^^^ support.type
+#                      ^^^ keyword.other
+  primitive type Char 32 end
+# ^^^^^^^^^ keyword.other
+#           ^^^^ keyword.other
+#                ^^^^ entity.name.type
+#                     ^^ constant.numeric
+#                        ^^^ keyword.other
 
 
 ##
@@ -641,6 +674,61 @@
 #          ^^^ entity.name.function
 #               ^ variable.parameter
 #                  ^^^ keyword.other
+
+# Jula 0.6 (issue 45)
+  function inv(M::Matrix{T}) where T<:AbstractFloat end
+# ^^^^^^^^ keyword.other
+#          ^^^ entity.name.function
+#              ^ variable.parameter
+#               ^^ keyword.operator
+#                 ^^^^^^^^^ support.type
+#                            ^^^^^ keyword.other
+#                                  ^  support.type
+#                                   ^^ keyword.operator
+#                                     ^^^^^^^^^^^^^ support.type
+#                                                   ^^^ keyword.other
+
+# Anonymous functions
+  (x::T{S}, yy::T{S}) ->
+#  ^ variable.parameter
+#   ^^ keyword.operator
+#     ^^^^ support.type
+#           ^^ variable.parameter
+#             ^^ keyword.operator
+#               ^^^^ support.type
+#                     ^^ keyword.operator
+  (x, y) ->
+#  ^ variable.parameter
+#     ^ variable.parameter
+#        ^^ keyword.operator
+  (x::T{S}) -> # TODO set: function-parameters
+#  ^ variable.parameter
+#   ^^ keyword.operator
+#     ^^^^ support.type
+#           ^^ keyword.operator
+  (x) ->
+#  ^ variable.parameter
+#     ^^ keyword.operator
+  x::T{S} ->
+# ^ variable.parameter
+#  ^^ keyword.operator
+#    ^^^^ support.type
+#         ^^ keyword.operator
+  x ->
+# ^ variable.parameter
+#   ^^ keyword.operator
+  ((x::Array{T}) where T<:Real{Foo}) -> 2x
+#   ^ variable.parameter
+#    ^^ keyword.operator
+#      ^^^^^^^^ support.type
+#                ^^^^^ keyword.other
+#                      ^ support.type
+#                       ^^ keyword.operator
+#                         ^^^^^^^^^ support.type
+#                                    ^^ keyword.operator
+  ((x::T{S}) -> 2x)
+#   ^ variable.parameter
+
 
 
 ##
