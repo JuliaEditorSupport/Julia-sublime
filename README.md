@@ -28,11 +28,11 @@ _Don't hesitate to open an issue if something looks wrong or if you think that s
 
 ### Sublime Text version support
 
-Sublime Text 3 Build 3103 or later will use `Julia.sublime-syntax` which provides superior highlighting. For backward compatibility `Julia.tmLanguage` acts as fallback.
+Sublime Text 3 Build 3103 or later will use `Julia.sublime-syntax` which provides superior highlighting. Older versions of Sublime Text will use `Julia.tmLanguage`, which is no longer maintained.
 
 ### Custom colors
 
-The default colors are chosen to satisfy most people. However, you might prefer to highlight types and function calls in different colors. This can be achieved by modifying the color associated with the syntax scope `variable.function` in your color scheme. Similarly for macros etc. Use the shortcut `ctrl+shift+alt+p` to find out what syntax scope is applied to a certain character.
+The default colors are chosen to satisfy most people. However, you might prefer to highlight macros, types, function calls etc. in different colors. This can be achieved by modifying the color associated with the syntax scope, such as `variable.macro`, in your color scheme. Use the shortcut `ctrl+shift+alt+p` to find out what syntax scope is applied to a certain character.
 
 
 ## Contributing
