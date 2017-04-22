@@ -84,6 +84,7 @@ variables:
     )
 
   # Helpers for function declaration
+  type_comparison_regex: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
   func_name_standard: |-
     (?x)
     (?!!)                     # Function name doesn't start with !
@@ -112,6 +113,10 @@ variables:
       [^(){}\[\]"]            # or anything that doesn't close the argument list
     )*
     \)                        # Close function parameters
+    (                         # Allow where keyword
+      \s+where\s+
+      {{type_comparison_regex}}
+    )?
     \s*=(?!=)                 # Followed by exactly one equal sign
 
 contexts:
@@ -284,7 +289,7 @@ contexts:
         2: support.type.julia
 
   type-comparison:
-    - match: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
+    - match: '{{type_comparison_regex}}'
       captures:
         1: support.type.julia
         3: keyword.operator.julia
