@@ -720,6 +720,16 @@
 #                          ^^ keyword.operator
 #                            ^^^^^^^^^^^^^ support.type
 #                                          ^ keyword.operator
+  inv(M::Matrix{T}) where {T<:AbstractFloat} = M
+# ^^^ entity.name.function
+#     ^ variable.parameter
+#      ^^ keyword.operator
+#        ^^^^^^^^^ support.type
+#                   ^^^^^ keyword.other
+#                         ^^  support.type
+#                           ^^ keyword.operator
+#                             ^^^^^^^^^^^^^^ support.type
+#                                            ^ keyword.operator
   inv(M::Matrix{T} where T<:AbstractFloat) = M
 # ^^^ entity.name.function
 #     ^ variable.parameter
@@ -730,6 +740,18 @@
 #                         ^^ keyword.operator
 #                           ^^^^^^^^^^^^^ support.type
 #                                          ^ keyword.operator
+  inv(M::Matrix{T} where {T<:AbstractFloat}) = M
+# ^^^ entity.name.function
+#     ^ variable.parameter
+#      ^^ keyword.operator
+#        ^^^^^^^^^ support.type
+#                  ^^^^^ keyword.other
+#                        ^^  support.type
+#                          ^^ keyword.operator
+#                            ^^^^^^^^^^^^^^ support.type
+#                                            ^ keyword.operator
+
+
 
 # Anonymous functions
   (x::T{S}, yy::T{S}) ->

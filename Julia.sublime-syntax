@@ -84,7 +84,7 @@ variables:
     )
 
   # Helpers for function declaration
-  type_comparison_regex: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
+  where_type_regex: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
   func_name_standard: |-
     (?x)
     (?!!)                     # Function name doesn't start with !
@@ -115,7 +115,10 @@ variables:
     \)                        # Close function parameters
     (                         # Allow where keyword
       \s+where\s+
-      {{type_comparison_regex}}
+      (
+        {{where_type_regex}}|
+        {{nested_braces}}
+      )
     )?
     \s*=(?!=)                 # Followed by exactly one equal sign
 
@@ -128,7 +131,7 @@ contexts:
     - include: comments
     - include: symbols
     - include: type-annotation
-    - include: type-comparison
+    - include: where-type
     - include: literals
     - include: operators
     - include: strings
@@ -280,7 +283,7 @@ contexts:
         2: support.type.julia
         4: keyword.other.julia
       push:
-        - include: type-comparison
+        - include: where-type
         - match: ''
           pop: true
     - match: (::|<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces_sloppy}})?)
@@ -288,12 +291,21 @@ contexts:
         1: keyword.operator.julia
         2: support.type.julia
 
-  type-comparison:
-    - match: '{{type_comparison_regex}}'
+  where-type:
+    - match: '(\{){{where_type_regex}}(\})'
+      captures:
+        1: support.type.julia
+        2: support.type.julia
+        4: keyword.operator.julia
+        5: support.type.julia
+        7: support.type.julia
+    - match: '{{where_type_regex}}'
       captures:
         1: support.type.julia
         3: keyword.operator.julia
         4: support.type.julia
+    - match: '({{nested_braces}})'
+      scope: support.type.julia
 
   decl-func:
     - match: '\b(?<!:)(function)\s+(?!@)'
@@ -387,7 +399,7 @@ contexts:
       captures:
         1: keyword.other
       push:
-        - include: type-comparison
+        - include: where-type
         - match: ''
           pop: true
       pop: true
@@ -467,7 +479,7 @@ contexts:
         1: support.type.julia
         3: keyword.other.julia
       push:
-        - include: type-comparison
+        - include: where-type
         - match: ''
           pop: true
     - match: '{{symb_id}}+({{nested_braces_sloppy}})'
