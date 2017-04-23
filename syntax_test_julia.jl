@@ -750,8 +750,82 @@
 #                          ^^ keyword.operator
 #                            ^^^^^^^^^^^^^^ support.type
 #                                            ^ keyword.operator
-
-
+  f(x::Array{T,S} where T) = x
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^^ keyword.operator
+#      ^^^^^^^^^^ support.type
+#                 ^^^^^ keyword.other
+#                       ^ support.type
+#                          ^ keyword.operator
+  f(x::Array{T,S} where T where S) = x
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^^ keyword.operator
+#      ^^^^^^^^^^ support.type
+#                 ^^^^^ keyword.other
+#                       ^ support.type
+#                         ^^^^^ keyword.other
+#                               ^ support.type
+#                                  ^ keyword.operator
+  f(x::Array{T,S}) where T = x
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^^ keyword.operator
+#      ^^^^^^^^^^ support.type
+#                  ^^^^^ keyword.other
+#                        ^ support.type
+#                          ^ keyword.operator
+  f(x::Array{T,S}) where T where S = x
+# ^ entity.name.function
+#   ^ variable.parameter
+#    ^^ keyword.operator
+#      ^^^^^^^^^^ support.type
+#                  ^^^^^ keyword.other
+#                        ^ support.type
+#                          ^^^^^ keyword.other
+#                                ^ support.type
+#                                  ^ keyword.operator
+  function f(x::Array{T,S}) where T end
+# ^^^^^^^^ keyword.other
+#          ^ entity.name.function
+#            ^ variable.parameter
+#             ^^ keyword.operator
+#               ^^^^^^^^^^ support.type
+#                           ^^^^^ keyword.other
+#                                 ^ support.type
+#                                   ^^^ keyword.other
+  function f(x::Array{T,S}) where T where S end
+# ^^^^^^^^ keyword.other
+#          ^ entity.name.function
+#            ^ variable.parameter
+#             ^^ keyword.operator
+#               ^^^^^^^^^^ support.type
+#                           ^^^^^ keyword.other
+#                                 ^ support.type
+#                                   ^^^^^ keyword.other
+#                                         ^ support.type
+#                                           ^^^ keyword.other
+  function f(x::Array{T,S} where T) end
+# ^^^^^^^^ keyword.other
+#          ^ entity.name.function
+#            ^ variable.parameter
+#             ^^ keyword.operator
+#               ^^^^^^^^^^ support.type
+#                          ^^^^^ keyword.other
+#                                ^ support.type
+#                                   ^^^ keyword.other
+  function f(x::Array{T,S} where T where S) end
+# ^^^^^^^^ keyword.other
+#          ^ entity.name.function
+#            ^ variable.parameter
+#             ^^ keyword.operator
+#               ^^^^^^^^^^ support.type
+#                          ^^^^^ keyword.other
+#                                ^ support.type
+#                                  ^^^^^ keyword.other
+#                                        ^ support.type
+#                                           ^^^ keyword.other
 
 # Anonymous functions
   (x::T{S}, yy::T{S}) ->

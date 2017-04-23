@@ -84,7 +84,7 @@ variables:
     )
 
   # Helpers for function declaration
-  where_type_regex: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
+  type_comparison_regex: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
   func_name_standard: |-
     (?x)
     (?!!)                     # Function name doesn't start with !
@@ -116,10 +116,11 @@ variables:
     (                         # Allow where keyword
       \s+where\s+
       (
-        {{where_type_regex}}|
-        {{nested_braces}}
+        {{type_comparison_regex}}|
+        {{nested_braces}}|
+        {{symb_id}}+
       )
-    )?
+    )*
     \s*=(?!=)                 # Followed by exactly one equal sign
 
 contexts:
@@ -131,7 +132,7 @@ contexts:
     - include: comments
     - include: symbols
     - include: type-annotation
-    - include: where-type
+    - include: type-comparison
     - include: literals
     - include: operators
     - include: strings
@@ -282,30 +283,42 @@ contexts:
         1: keyword.operator.julia
         2: support.type.julia
         4: keyword.other.julia
-      push:
-        - include: where-type
-        - match: ''
-          pop: true
+      push: where-type
     - match: (::|<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces_sloppy}})?)
       captures:
         1: keyword.operator.julia
         2: support.type.julia
 
+  type-comparison:
+    - match: '{{type_comparison_regex}}'
+      captures:
+        1: support.type.julia
+        3: keyword.operator.julia
+        4: support.type.julia
+
   where-type:
-    - match: '(\{){{where_type_regex}}(\})'
+    - match: (\{){{type_comparison_regex}}(\})
       captures:
         1: support.type.julia
         2: support.type.julia
         4: keyword.operator.julia
         5: support.type.julia
         7: support.type.julia
-    - match: '{{where_type_regex}}'
+    - match: '{{type_comparison_regex}}'
       captures:
         1: support.type.julia
         3: keyword.operator.julia
         4: support.type.julia
-    - match: '({{nested_braces}})'
+    - match: '({{nested_braces_sloppy}})'
       scope: support.type.julia
+    - match: '{{symb_id}}+'
+      scope: support.type.julia
+    - match: \s+(where)\s+
+      captures:
+        1: keyword.other.julia
+      push: where-type
+    - match: ''
+      pop: true
 
   decl-func:
     - match: '\b(?<!:)(function)\s+(?!@)'
@@ -398,11 +411,7 @@ contexts:
     - match: \)\s*(where)\s+
       captures:
         1: keyword.other
-      push:
-        - include: where-type
-        - match: ''
-          pop: true
-      pop: true
+      set: where-type
     - match: \)
       pop: true
     - include: comments
@@ -478,10 +487,7 @@ contexts:
       captures:
         1: support.type.julia
         3: keyword.other.julia
-      push:
-        - include: where-type
-        - match: ''
-          pop: true
+      push: where-type
     - match: '{{symb_id}}+({{nested_braces_sloppy}})'
       scope: support.type.julia
     - match: '{{base_types}}'
