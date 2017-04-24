@@ -63,12 +63,12 @@ variables:
   # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
   # This regex depends on atomic group and back reference recursion.
   # Cannot match multi-line types, because sublime applies regexes line by line.
-  # TODO: Parse multi-line types separately with push/pop matching. Omg pls no! {nested_braces} is used in 10 places and push/pop would make the code very messy. Who uses multi-line types anyway?
-  nested_braces: '{(?>[^{}]+|\g<-1>)*}'
+  # TODO: Parse multi-line types separately with push/pop matching. Omg pls no! {nested_curly} is used in 10 places and push/pop would make the code very messy. Who uses multi-line types anyway?
+  nested_curly: '{(?>[^{}]+|\g<-1>)*}'
   # Don't use the following ones for lookaheads! May lead to unwanted matches.
   # These match unfinished nested braces, to highlight during typing.
-  nested_braces_sloppy: '(?:{(?>[^{}]+|\g<-1>)*}|\{[^\}\)\] ]*)'
-  nested_round_and_square_sloppy: (?:(?>{(?>[^{}]+|\g<-1>)*}|\((?>[^()]+|\g<-1>)*\))|[\{\(][^\}\)\] ]*)
+  nested_curly_sloppy: '(?:{(?>[^{}]+|\g<-1>)*}|\{[^\}\)\] ]*)'
+  nested_curly_and_round_sloppy: (?:(?>{(?>[^{}]+|\g<-1>)*}|\((?>[^()]+|\g<-1>)*\))|[\{\(][^\}\)\] ]*)
 
   # Recursively match nested brackets (of any type) and strings
   # Must be wrapped in a matching group when used. It is best to do this explicitly when used (not here) to avoid confusion.
@@ -84,12 +84,12 @@ variables:
     )
 
   # Helpers for function declaration
-  type_comparison_regex: (\$?{{symb_id}}+({{nested_round_and_square_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_round_and_square_sloppy}})?)
+  type_comparison_regex: (\$?{{symb_id}}+({{nested_curly_and_round_sloppy}})?)\s*(<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_curly_and_round_sloppy}})?)
   func_name_standard: |-
     (?x)
     (?!!)                     # Function name doesn't start with !
     ([^\s{{symb_lang}}]+)     # Function name
-    ({{nested_braces}})?      # Match type annotation
+    ({{nested_curly}})?       # Match type annotation
     (?=[\( ])
   func_name_paren: |-
     (?x)
@@ -97,11 +97,11 @@ variables:
     (?!!)                     # Function name doesn't start with !
     (::)?                     # Function name can start with ::
     ((?:                      # Rest of function name
-      ({{nested_braces}})|    # Match nested brackets
+      ({{nested_curly}})|     # Match nested curly brackets
       [^)]                    # or anything that doesn't close paren
     )+)
     \)
-    ({{nested_braces}})?      # Match type annotation
+    ({{nested_curly}})?       # Match type annotation
     (?=\()
   func_params: |-
     (?x)
@@ -114,10 +114,10 @@ variables:
     )*
     \)                        # Close function parameters
     (                         # Allow where keyword
-      \s+where\s+
+      \s*where\s+
       (
         {{type_comparison_regex}}|
-        {{nested_braces}}|
+        {{nested_curly}}|
         {{symb_id}}+
       )
     )*
@@ -198,7 +198,7 @@ contexts:
       scope: keyword.operator.julia
 
   support-functions:
-    - match: '(?={{base_module_func}}\.?({{nested_braces}})?\()'
+    - match: '(?={{base_module_func}}\.?({{nested_curly}})?\()'
       push:
         - match: ({{base_modules}})\.
           captures:
@@ -219,7 +219,7 @@ contexts:
           pop: true
 
   function-call:
-    - match: '(?<!\.)(?={{symb_id}}+\.?({{nested_braces}})?\()'
+    - match: '(?<!\.)(?={{symb_id}}+\.?({{nested_curly}})?\()'
       push:
         - meta_content_scope: meta.function-call.julia
         # Built-in function
@@ -228,7 +228,7 @@ contexts:
         - include: function-call-helper
         - match: ''
           pop: true
-    - match: '(?=({{symb_id}}+)\.?({{nested_braces}})?\()'
+    - match: '(?=({{symb_id}}+)\.?({{nested_curly}})?\()'
       push: function-call-helper
 
   function-call-helper:
@@ -237,7 +237,7 @@ contexts:
     - match: '{{symb_id}}+'
       scope: variable.function.julia
     # Type
-    - match: ({{nested_braces}})
+    - match: ({{nested_curly}})
       scope: support.type.julia
     # Broadcast
     - match: '\.'
@@ -278,13 +278,13 @@ contexts:
     # Dollar is ok because types can be interpolated.
     # Dot is ok because types can be picked from modules,
     # but no more than one dot, because splat can follow type.
-    - match: (::)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces_sloppy}})?)\s+(where)\s+
+    - match: (::)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))*({{nested_curly_and_round_sloppy}})?)\s*(where)\s+
       captures:
         1: keyword.operator.julia
         2: support.type.julia
         4: keyword.other.julia
       push: where-type
-    - match: (::|<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))+({{nested_braces_sloppy}})?)
+    - match: (::|<:|>:)\s*((?:(?!\.\.)(?:[$.]|{{symb_id}}))*({{nested_curly_and_round_sloppy}})?)
       captures:
         1: keyword.operator.julia
         2: support.type.julia
@@ -309,11 +309,11 @@ contexts:
         1: support.type.julia
         3: keyword.operator.julia
         4: support.type.julia
-    - match: '({{nested_braces_sloppy}})'
+    - match: '({{nested_curly_sloppy}})'
       scope: support.type.julia
     - match: '{{symb_id}}+'
       scope: support.type.julia
-    - match: \s+(where)\s+
+    - match: \s*(where)\s+
       captures:
         1: keyword.other.julia
       push: where-type
@@ -340,7 +340,7 @@ contexts:
   anonymous-function:
     - match: '(?=({{nested_brackets_and_strings}})\s*->)'
       set: function-parameters
-    - match: '({{symb_id}}+)(::)?({{symb_id}}+)?({{nested_braces}})?\s*(->)'
+    - match: '({{symb_id}}+)(::)?({{symb_id}}+)?({{nested_curly}})?\s*(->)'
       captures:
         1: variable.parameter
         2: keyword.operator
@@ -438,24 +438,24 @@ contexts:
       set: function-parameters
 
   decl-type:
-    - match: \b(mutable struct|type|struct|immutable|abstract type|abstract|primitive type)\s+({{symb_id}}+)({{nested_braces}})?
+    - match: \b(mutable struct|type|struct|immutable|abstract type|abstract|primitive type)\s+({{symb_id}}+)({{nested_curly}})?
       scope: meta.type.julia
       captures:
         1: keyword.other.julia
         2: entity.name.type.julia
         3: support.type.julia
-    - match: \b(bitstype)\s+(\d+)\s+({{symb_id}}+({{nested_braces}})?)
+    - match: \b(bitstype)\s+(\d+)\s+({{symb_id}}+({{nested_curly}})?)
       captures:
         1: keyword.other.julia
         2: constant.numeric.julia
         3: entity.name.type.julia
 
   decl-typealias: # DEPRECATED 0.6
-    - match: \b(typealias)\s+({{symb_id}}+)({{nested_braces}})?\s+({{symb_id}}+({{nested_braces}})?)?
+    - match: \b(typealias)\s+({{symb_id}}+)({{nested_curly}})?\s+({{symb_id}}+({{nested_curly}})?)?
       captures:
         1: keyword.other.julia
         2: entity.name.type.julia
-        3: entity.name.type.julia # Duplication because {{nested_braces}} must be wrapped in a matching group
+        3: entity.name.type.julia # Duplication because {{nested_curly}} must be wrapped in a matching group
         4: support.type.julia
 
   symbols:
@@ -483,12 +483,12 @@ contexts:
       scope: support.function.julia variable.macro.julia
 
   variable:
-    - match: '({{symb_id}}+({{nested_braces_sloppy}})?)\s*(where)\s+'
+    - match: '({{symb_id}}+({{nested_curly_sloppy}})?)\s*(where)\s+'
       captures:
         1: support.type.julia
         3: keyword.other.julia
       push: where-type
-    - match: '{{symb_id}}+({{nested_braces_sloppy}})'
+    - match: '{{symb_id}}+({{nested_curly_sloppy}})'
       scope: support.type.julia
     - match: '{{base_types}}'
       scope: support.type.julia

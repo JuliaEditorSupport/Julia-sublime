@@ -826,6 +826,33 @@
 #                                  ^^^^^ keyword.other
 #                                        ^ support.type
 #                                           ^^^ keyword.other
+  function f(x::typeof(yy) where T where S) end
+# ^^^^^^^^ keyword.other
+#          ^ entity.name.function
+#            ^ variable.parameter
+#             ^^ keyword.operator
+#               ^^^^^^^^^^ support.type
+#                          ^^^^^ keyword.other
+#                                ^ support.type
+#                                  ^^^^^ keyword.other
+#                                        ^ support.type
+#                                           ^^^ keyword.other
+  function *(x::Bool, y::T)::promote_type(Bool,T) where T<:Unsigned end
+# ^^^^^^^^ keyword.other
+#          ^ entity.name.function
+#            ^ variable.parameter
+#             ^^ keyword.operator
+#               ^^^^ support.type
+#                     ^ variable.parameter
+#                      ^^ keyword.operator
+#                        ^ support.type
+#                          ^^ keyword.operator
+#                            ^^^^^^^^^^^^^^^^^^^^ support.type
+#                                                 ^^^^^ keyword.other
+#                                                       ^ support.type
+#                                                        ^^ keyword.operator
+#                                                          ^^^^^^^^ support.type
+#                                                                   ^^^ keyword.other
 
 # Anonymous functions
   (x::T{S}, yy::T{S}) ->
