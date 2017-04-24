@@ -8,7 +8,8 @@ else:
     from julia_unicode import latex_symbols, emoji_symbols
 
 
-RE_COMMAND_PREFIX = re.compile(r".*(\\[\^_0-9\-=]+|\\[a-zA-Z]+|\\:[_a-zA-Z0-9+-]+:*)$")
+RE_COMMAND_PREFIX = re.compile(
+    r".*(\\[\^_]+[a-zA-Z0-9=+\-()]*|\\[a-zA-Z]+|\\:[_a-zA-Z0-9+\-]+:*)$")
 symbols = latex_symbols + emoji_symbols
 
 
