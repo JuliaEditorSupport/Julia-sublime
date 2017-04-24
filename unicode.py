@@ -8,42 +8,47 @@ else:
     from julia_unicode import latex_symbols, emoji_symbols
 
 
-CONTAINS_COMPLETIONS = re.compile(r".*(\\[:_0-9a-zA-Z+-^]*)$")
+RE_COMMAND_PREFIX = re.compile(r".*(\\[\^_0-9\-=]+|\\[a-zA-Z]+|\\:[_a-zA-Z0-9+-]+:*)$")
 symbols = latex_symbols + emoji_symbols
 
 
-def get_prefix(view):
-    sel = view.sel()[0]
-    pt = sel.end()
-    line = view.substr(sublime.Region(view.line(pt).begin(), pt))
-    m = CONTAINS_COMPLETIONS.match(line)
-    if m:
-        return m.group(1)
-    else:
-        return None
+def is_ascii(s):
+    return all(ord(c) < 128 for c in s)
 
 
-def fix_completion(view, edit):
-    for sel in reversed(view.sel()):
-        pt = sel.begin()
-        if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
-            view.replace(edit, sublime.Region(pt-3, pt-1), "")
-        elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:+":
-            view.replace(edit, sublime.Region(pt-4, pt-1), "")
-        elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:-":
-            view.replace(edit, sublime.Region(pt-4, pt-1), "")
+class JuliaUnicodeMixins(object):
+    def find_command_backward(self, view, pt):
+        line_content = view.substr(view.line(pt))
+        row, col = view.rowcol(pt)
+        m = RE_COMMAND_PREFIX.match(line_content[:col])
+        if m:
+            return sublime.Region(pt - len(m.group(1)), pt)
+
+    def look_command_backward(self, view, pt):
+        ret = self.find_command_backward(view, pt)
+        if ret:
+            return view.substr(ret)
+
+    def fix_completion(self, view, edit):
+        for sel in view.sel():
+            pt = sel.begin()
+            if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
+                view.replace(edit, sublime.Region(pt-3, pt-1), "")
+            elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:+":
+                view.replace(edit, sublime.Region(pt-4, pt-1), "")
+            elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:-":
+                view.replace(edit, sublime.Region(pt-4, pt-1), "")
 
 
-class JuliaUnicodeListener(sublime_plugin.EventListener):
+class JuliaUnicodeListener(JuliaUnicodeMixins, sublime_plugin.EventListener):
 
     def on_query_completions(self, view, prefix, locations):
         if view.settings().get('is_widget'):
             return
-
         if view.score_selector(locations[0], "source.julia") == 0:
             return None
 
-        prefix = get_prefix(view)
+        prefix = self.look_command_backward(view, locations[0])
         if not prefix:
             return None
         ret = [(s[0] + "\t" + s[1], s[1]) for s in symbols if s[0].startswith(prefix)]
@@ -52,29 +57,40 @@ class JuliaUnicodeListener(sublime_plugin.EventListener):
     def on_query_context(self, view, key, operator, operand, match_all):
         if view.settings().get('is_widget'):
             return
+        if len(view.sel()) == 0 or not view.sel()[0].empty():
+            return
 
-        if key == 'julia_unicode_only_match':
-            prefix = get_prefix(view)
+        pt = view.sel()[0].end()
+
+        if view.score_selector(pt, "source.julia") == 0:
+            return None
+
+        if key == 'julia_unicode_only_one_match':
+            prefix = self.look_command_backward(view, pt)
             count = 0
             for s in symbols:
                 if s[0].startswith(prefix):
                     count = count + 1
             return (count == 1) == operand
-        elif key == 'julia_unicode_has_prefix':
-            prefix = get_prefix(view)
+        elif key == 'julia_unicode_has_matches':
+            prefix = self.look_command_backward(view, pt)
             return (prefix is not None) == operand
 
         return None
 
 
-class JuliaUnicodeInsertBestCompletion(sublime_plugin.TextCommand):
+class JuliaUnicodeInsertBestCompletion(JuliaUnicodeMixins, sublime_plugin.TextCommand):
     def run(self, edit, next_completion=False):
         view = self.view
+        if len(view.sel()) == 0 or not view.sel()[0].empty():
+            return
+        pt = view.sel()[0].end()
+
         if not next_completion:
-            prefix = get_prefix(view)
+            prefix = self.look_command_backward(view, pt)
             self.completions = [s[1] for s in symbols if s[0].startswith(prefix)]
             view.run_command("insert_best_completion",  {"default": "\t", "exact": False})
-            fix_completion(view, edit)
+            self.fix_completion(view, edit)
         else:
             region = sublime.Region(view.sel()[0].begin()-1, view.sel()[0].begin())
             prev_char = view.substr(region)
@@ -87,15 +103,15 @@ class JuliaUnicodeInsertBestCompletion(sublime_plugin.TextCommand):
                         view.replace(edit, sublime.Region(pt-1, pt), self.completions[next_index])
 
 
-class JuliaUnicodeAutoComplete(sublime_plugin.TextCommand):
+class JuliaUnicodeAutoComplete(JuliaUnicodeMixins, sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         view.run_command("auto_complete")
-        fix_completion(view, edit)
+        self.fix_completion(view, edit)
 
 
-class JuliaUnicodeCommitComplete(sublime_plugin.TextCommand):
+class JuliaUnicodeCommitComplete(JuliaUnicodeMixins, sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         view.run_command("commit_completion")
-        fix_completion(view, edit)
+        self.fix_completion(view, edit)
