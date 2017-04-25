@@ -265,8 +265,7 @@ contexts:
           {{b}}0x[\da-fA-F](?:_?[\da-fA-F])*|   # hex
           {{b}}(?:
             \.\d(?:_?\d)*|                      # .11, .11
-            \d(?:_?\d)*(?:\.(?:\d(?:_?\d)*)?)?| # 11.11, 11., 11
-                                                # Empty match. Yes, this is intended, see the following line.
+            \d(?:_?\d)*(?:\.(?:\d(?:_?\d)*)?)?  # 11.11, 11., 11
           )
           (?:e[-+]?\d(?:_?\d)*)?                # Any of the above followed by e+123 or similar, for scientific notation.
         )

@@ -15,16 +15,16 @@
 # ^^^ constant.numeric
   0xa3
 # ^^^^ constant.numeric
-  e+123
-# ^^^^^ constant.numeric
+  1e+123
+# ^^^^^^ constant.numeric
   12e123
 # ^^^^^^ constant.numeric
   1.32e+123
 # ^^^^^^^^^ constant.numeric
   .32e+123
 # ^^^^^^^^ constant.numeric
-  e-123
-# ^^^^^ constant.numeric
+  1.e-123
+# ^^^^^^^ constant.numeric
   11
 # ^^ constant.numeric
   .11
@@ -45,7 +45,22 @@
 # ^^^^^^^ constant.numeric
   1.3_2e+1_2_3
 # ^^^^^^^^^^^^ constant.numeric
-
+# (issue 51)
+  e2
+# ^^ variable.other
+  2e
+# ^ constant.numeric
+#  ^ support.function
+  2e2
+# ^^^ constant.numeric
+  e+2
+# ^ support.function
+#  ^ keyword.operator
+#   ^ constant.numeric
+  2+e
+# ^ constant.numeric
+#  ^ keyword.operator
+#   ^ support.function
 
 
 ##
