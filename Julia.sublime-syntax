@@ -437,7 +437,8 @@ contexts:
       set: function-parameters
 
   decl-type:
-    - match: \b(mutable struct|type|struct|immutable|abstract type|abstract|primitive type)\s+({{symb_id}}+)({{nested_curly}})?
+    # Dollar is ok because type names can be interpolated.
+    - match: \b(mutable struct|type|struct|immutable|abstract type|abstract|primitive type)\s+((?:\$|{{symb_id}})+)({{nested_curly}})?
       scope: meta.type.julia
       captures:
         1: keyword.other.julia

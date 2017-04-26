@@ -423,7 +423,7 @@
 #           ^^^ support.type
 #               ^^^ keyword.other
   mutable struct Foo{T} end
-# ^^^^^^ keyword.other
+# ^^^^^^^ keyword.other
 #         ^^^^^^ keyword.other
 #                ^^^ entity.name.type
 #                   ^^^ support.type
@@ -439,6 +439,14 @@
 #           ^^^^ keyword.other
 #                ^^^^ entity.name.type
 #                     ^^ constant.numeric
+#                        ^^^ keyword.other
+
+# (issue 52)
+  mutable struct $Foo{T} end
+# ^^^^^^^ keyword.other
+#         ^^^^^^ keyword.other
+#                ^^^^ entity.name.type
+#                    ^^^ support.type
 #                        ^^^ keyword.other
 
 
