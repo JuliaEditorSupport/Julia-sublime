@@ -438,7 +438,18 @@ contexts:
 
   decl-type:
     # Dollar is ok because type names can be interpolated.
-    - match: \b(mutable struct|type|struct|immutable|abstract type|abstract|primitive type)\s+((?:\$|{{symb_id}})+)({{nested_curly}})?
+    - match: \b(?:(mutable)\s+(struct)|(abstract)\s+(type)|(primitive)\s+(type))\s+((?:\$|{{symb_id}})+)({{nested_curly}})?
+      scope: meta.type.julia
+      captures: # Make this less repetitive?
+        1: keyword.other.julia
+        2: keyword.other.julia
+        3: keyword.other.julia
+        4: keyword.other.julia
+        5: keyword.other.julia
+        6: keyword.other.julia
+        7: entity.name.type.julia
+        8: support.type.julia
+    - match: \b(type|struct|immutable|abstract)\s+((?:\$|{{symb_id}})+)({{nested_curly}})?
       scope: meta.type.julia
       captures:
         1: keyword.other.julia
