@@ -43,10 +43,18 @@ class JuliaUnicodeMixins(object):
 
 class JuliaUnicodeListener(JuliaUnicodeMixins, sublime_plugin.EventListener):
 
+    def should_complete(self, view, pt):
+        if view.score_selector(pt, "source.julia") > 0:
+            return True
+        elif view.settings().get('is_widget') and \
+                sublime.active_window().active_view().score_selector(pt, "source.julia") > 0:
+            return True
+        else:
+            return False
+
     def on_query_completions(self, view, prefix, locations):
-        if view.settings().get('is_widget'):
-            return
-        if view.score_selector(locations[0], "source.julia") == 0:
+
+        if not self.should_complete(view, locations[0]):
             return None
 
         prefix = self.look_command_backward(view, locations[0])
@@ -56,14 +64,13 @@ class JuliaUnicodeListener(JuliaUnicodeMixins, sublime_plugin.EventListener):
         return ret
 
     def on_query_context(self, view, key, operator, operand, match_all):
-        if view.settings().get('is_widget'):
-            return
+
         if len(view.sel()) == 0 or not view.sel()[0].empty():
             return
 
         pt = view.sel()[0].end()
 
-        if view.score_selector(pt, "source.julia") == 0:
+        if not self.should_complete(view, pt):
             return None
 
         if key == 'julia_unicode_only_one_match':
