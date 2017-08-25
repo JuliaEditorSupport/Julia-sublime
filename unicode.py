@@ -47,7 +47,7 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
         if view.score_selector(pt, "source.julia") > 0:
             return True
         elif view.settings().get('is_widget') and \
-                sublime.active_window().active_view().score_selector(pt, "source.julia") > 0:
+                view.window().active_view().match_selector(pt, "source.julia"):
             return True
         else:
             return False
