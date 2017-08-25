@@ -65,7 +65,8 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
 
     def on_query_context(self, view, key, operator, operand, match_all):
 
-        if len(view.sel()) == 0 or not view.sel()[0].empty():
+        sel = view.sel()
+        if len(sel) == 0 or not sel[0].empty():
             return
 
         pt = view.sel()[0].end()
