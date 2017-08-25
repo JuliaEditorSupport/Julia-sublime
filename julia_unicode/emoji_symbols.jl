@@ -1,4 +1,4 @@
-include(joinpath(JULIA_HOME, "..", "share", "julia", "base", "emoji_symbols.jl"));
+include(joinpath(JULIA_HOME, "..", "share", "julia", "base", "repl", "emoji_symbols.jl"));
 
 📁 = open("emoji_symbols.py", "w")
 

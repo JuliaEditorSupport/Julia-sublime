@@ -17,7 +17,7 @@ def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
 
-class JuliaUnicodeMixins(object):
+class JuliaUnicodeMixin(object):
     def find_command_backward(self, view, pt):
         line_content = view.substr(view.line(pt))
         row, col = view.rowcol(pt)
@@ -41,7 +41,7 @@ class JuliaUnicodeMixins(object):
                 view.replace(edit, sublime.Region(pt-4, pt-1), "")
 
 
-class JuliaUnicodeListener(JuliaUnicodeMixins, sublime_plugin.EventListener):
+class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
 
     def should_complete(self, view, pt):
         if view.score_selector(pt, "source.julia") > 0:
@@ -87,7 +87,7 @@ class JuliaUnicodeListener(JuliaUnicodeMixins, sublime_plugin.EventListener):
         return None
 
 
-class JuliaUnicodeInsertBestCompletion(JuliaUnicodeMixins, sublime_plugin.TextCommand):
+class JuliaUnicodeInsertBestCompletion(JuliaUnicodeMixin, sublime_plugin.TextCommand):
     def run(self, edit, next_completion=False):
         view = self.view
         if len(view.sel()) == 0 or not view.sel()[0].empty():
@@ -111,14 +111,14 @@ class JuliaUnicodeInsertBestCompletion(JuliaUnicodeMixins, sublime_plugin.TextCo
                         view.replace(edit, sublime.Region(pt-1, pt), self.completions[next_index])
 
 
-class JuliaUnicodeAutoComplete(JuliaUnicodeMixins, sublime_plugin.TextCommand):
+class JuliaUnicodeAutoComplete(JuliaUnicodeMixin, sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         view.run_command("auto_complete")
         self.fix_completion(view, edit)
 
 
-class JuliaUnicodeCommitComplete(JuliaUnicodeMixins, sublime_plugin.TextCommand):
+class JuliaUnicodeCommitComplete(JuliaUnicodeMixin, sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         view.run_command("commit_completion")

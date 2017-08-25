@@ -1,4 +1,3 @@
-# This Python file uses the following encoding: utf-8
 emoji_symbols = [
 ("\\:ghost:", u"👻"),
 ("\\:metro:", u"🚇"),
