@@ -12,7 +12,7 @@
     <string>^\s*(end|else|elseif|catch|finally).*$</string>
 
     <key>increaseIndentPattern</key>
-    <string>^(\s*|\w*\s*=\s*|.*@\w*\s*)[\w\s]*(if|else|elseif|for|while|begin|function|type|macro|immutable|try|catch|finally|let|quote|.*\)\s*do|struct)(?!.*\bend\b[^\]]*$).*$</string>
+    <string>^(\s*|\w*\s*=\s*|@\w*\s*)[\w\s]*(if|else|elseif|for|while|begin|function|type|macro|immutable|try|catch|finally|let|quote|.*\)\s*do|struct)(?!.*\bend\b[^\]]*$).*$</string>
 
   </dict>
 
