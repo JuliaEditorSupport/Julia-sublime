@@ -981,6 +981,29 @@
 
   a=b
 #  ^ keyword.operator.assignment
+  a >= b
+#   ^ keyword.operator.julia
+  a <= b
+#   ^ keyword.operator.julia
+  x -> 2 + x
+#   ^ keyword.operator
+  a => b
+#   ^ keyword.operator.julia
+  x .-= 3
+#   ^ keyword.operator.broadcast.julia
+#    ^ keyword.operator.julia
+  a == b
+#   ^ keyword.operator.julia
+  a != b
+#   ^ keyword.operator.julia
+  a === b
+#   ^ keyword.operator.julia
+#    ^ keyword.operator.julia
+#     ^ keyword.operator.julia
+  a !== b
+#   ^ keyword.operator.julia
+#    ^ keyword.operator.julia
+#     ^ keyword.operator.julia
 
 # (issue 6, 8, 10)
   2.⊗a
