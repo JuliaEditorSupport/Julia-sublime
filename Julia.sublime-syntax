@@ -29,7 +29,7 @@ variables:
   symb_op: '(?:{{symb_op_ascii}}|{{symb_op_unicode}})'
 
   # Multi-character operators
-  long_op: (?:\+=|-=|\*=|/=|//=|\\\\=|^=|÷=|%=|<<=|>>=|>>>=|\|=|&=|:=|=>|$=|\|\||<:|>:|\|>|<\||//|\+\+)
+  long_op: (?:\+=|-=|\*=|/=|//=|\\\\=|^=|÷=|%=|<<=|>>=|>>>=|\|=|&=|:=|=>|$=|\|\||&&|<:|>:|\|>|<\||//|\+\+|<=|>=|->|===|==|!==|!=)
 
   # julia> join(sort(unique((filter(x -> isalpha(x[1]), string.(filter!(x -> isa(eval(x), DataType) || isa(eval(x), TypeConstructor), [names(Base); names(Core)])))))), "|")
   # Julia 0.6 seems to uses UnionAll instead of TypeConstructor
@@ -174,6 +174,10 @@ contexts:
   operators:
     # Bang is not only an operator symbol, it can also be part of a function name, thus it is treated separately.
     # Single quote is not only an operator symbol, it can also start a string. It is an operator if it is preceded by an identifier, dot, single-quote, right round bracket or right square bracket
+    - match: (\.?)({{long_op}})
+      captures:
+        1: keyword.operator.broadcast.julia
+        2: keyword.operator.julia
     - match: (\.?)(=)
       captures:
         1: keyword.operator.broadcast.julia
