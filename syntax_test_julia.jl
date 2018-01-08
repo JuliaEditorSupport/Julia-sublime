@@ -1,4 +1,4 @@
-# SYNTAX TEST "Packages/Julia/Julia.sublime-syntax"
+# SYNTAX TEST "Packages/Julia-sublime/Julia.sublime-syntax"
 
 # For information on how this file is used, see
 # https://www.sublimetext.com/docs/3/syntax.html#testing
@@ -50,17 +50,17 @@
 # ^^ variable.other
   2e
 # ^ constant.numeric
-#  ^ support.function
+#  ^ variable.other
   2e2
 # ^^^ constant.numeric
   e+2
-# ^ support.function
+# ^ variable.other
 #  ^ keyword.operator
 #   ^ constant.numeric
   2+e
 # ^ constant.numeric
 #  ^ keyword.operator
-#   ^ support.function
+#   ^ variable.other
 
 
 ##
@@ -73,10 +73,54 @@
 # ^^^^^ constant.language
   nothing
 # ^^^^^^^ constant.language
+  missing
+# ^^^^^^^ constant.language
+  uninitialized
+# ^^^^^^^^^^^^^ constant.language
   NaN
 # ^^^ constant.language
+  NaN16
+# ^^^^^ constant.language
+  NaN32
+# ^^^^^ constant.language
+  NaN64
+# ^^^^^ constant.language
   Inf
 # ^^^ constant.language
+  Inf16
+# ^^^^^ constant.language
+  Inf32
+# ^^^^^ constant.language
+  Inf64
+# ^^^^^ constant.language
+  ℯ
+# ^ constant.language
+  pi
+# ^^ constant.language
+  π
+# ^ constant.language
+  im
+# ^^ constant.language
+  ARGS
+# ^^^^ constant.language
+  C_NULL
+# ^^^^^^ constant.language
+  ENDIAN_BOM
+# ^^^^^^^^^^ constant.language
+  ENV
+# ^^^ constant.language
+  LOAD_PATH
+# ^^^^^^^^^ constant.language
+  PROGRAM_FILE
+# ^^^^^^^^^^^^ constant.language
+  STDERR
+# ^^^^^^ constant.language
+  STDIN
+# ^^^^^ constant.language
+  STDOUT
+# ^^^^^^ constant.language
+  VERSION
+# ^^^^^^^ constant.language
 
 
 ##
@@ -161,6 +205,9 @@
   Base.filter!()
 # ^^^^ support.module
 #      ^^^^^^^ support.function
+  Base.filter()
+# ^^^^ support.module
+#      ^^^^^^ support.function
   Base.filter!
 # ^^^^ support.module
 #      ^^^^^^^ support.function
@@ -385,36 +432,41 @@
 
 # (issue 17)
 # All things being defined are green, types as well
-  type Foo{T<:Real} end
-# ^^^^ keyword.other
-#      ^^^ entity.name.type
-#         ^^^^^^^^^ support.type
-  type A <: B end
-# ^^^^ keyword.other
-#      ^ entity.name.type
-#        ^^ keyword.operator
-#           ^ support.type
-#             ^^^ keyword.other
-  type Foo{T}<:Bar{T} end
-# ^^^^ keyword.other
-#      ^^^ entity.name.type
-#         ^^^ support.type
-#            ^^ keyword.operator
+  mutable struct Foo{T<:Real} end
+# ^^^^^^^ keyword.other
+#         ^^^^^^ keyword.other
+#                ^^^ entity.name.type
+#                   ^^^^^^^^^ support.type
+  mutable struct A <: B end
+# ^^^^^^^ keyword.other
+#         ^^^^^^ keyword.other
+#                ^ entity.name.type
+#                  ^^ keyword.operator
+#                     ^ support.type
+#                       ^^^ keyword.other
+  mutable struct Foo{T}<:Bar{T} end
+# ^^^^^^^ keyword.other
+#         ^^^^^^ keyword.other
+#                ^^^ entity.name.type
+#                   ^^^ support.type
+#                      ^^ keyword.operator
+#                        ^^^^^^ support.type
+  struct Foo{T<:Real} end
+# ^^^^^^ keyword.other
+#        ^^^ entity.name.type
+#           ^^^^^^^^^ support.type
+  const Foo{T} Bar{T}
+# ^^^^^ keyword.other
+#       ^^^^^^ support.type
 #              ^^^^^^ support.type
-  immutable Foo{T<:Real} end
+  primitive type Foo{T}<:Bar{T} 32 end
 # ^^^^^^^^^ keyword.other
-#           ^^^ entity.name.type
-#              ^^^^^^^^^ support.type
-  typealias Foo{T} Bar{T}
-# ^^^^^^^^^ keyword.other
-#           ^^^^^^ entity.name.type
-#                  ^^^^^^ support.type
-  bitstype 32 Foo{T}<:Bar{T}
-# ^^^^^^^^ keyword.other
-#          ^^ constant.numeric
-#             ^^^^^^ entity.name.type
-#                   ^^ keyword.operator
-#                     ^^^^^^ support.type
+#           ^^^^ keyword.other
+#                ^^^ entity.name.type
+#                   ^^^ support.type
+#                      ^^ keyword.operator
+#                        ^^^^^^ support.type
+#                               ^^ constant.numeric
 
 # Julia 0.6 (issue 45)
   struct Foo{T} end
