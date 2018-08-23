@@ -75,8 +75,8 @@
 # ^^^^^^^ constant.language
   missing
 # ^^^^^^^ constant.language
-  uninitialized
-# ^^^^^^^^^^^^^ constant.language
+  undef
+# ^^^^^ constant.language
   NaN
 # ^^^ constant.language
   NaN16
@@ -193,9 +193,9 @@
 # (issue 47)
   Base
 # ^^^^ support.module
-  Pkg.foo()
-# ^^^ support.module
-#     ^^^ variable.function
+  Broadcast.foo()
+# ^^^^^^^^^ support.module
+#           ^^^ variable.function
   Core.foo(x) = 2
 # ^^^^ support.module
   filter!()
