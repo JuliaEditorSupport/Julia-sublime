@@ -214,6 +214,10 @@
   Base.length
 # ^^^^ support.module
 #      ^^^^^^ support.function
+  include
+# ^^^^^^^ support.function
+  include()
+# ^^^^^^^ support.function
 
 
 ##
