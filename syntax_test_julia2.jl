@@ -139,9 +139,9 @@
 #     ^^^ meta.generic-name
 
   foo.bar = 1
-# ^^^ meta.qualified-name.julia meta.generic-name.julia
+# ^^^ meta.generic-name.julia
 #    ^ punctuation.accessor.dot.julia
-#     ^^^ meta.qualified-name.julia meta.generic-name.julia
+#     ^^^ meta.generic-name.julia
 #         ^ keyword.operator.assignment.julia
 
   foo.bar()
@@ -149,19 +149,113 @@
 #    ^ punctuation.accessor.dot
 #     ^^^ meta.function-call
 
-  bar()
-# ^^^ meta.function-call.julia variable.function.julia
-#    ^^ meta.function-call.arguments.julia punctuation.section.arguments
+
+  bar(x = 1, y = 2, kwargs...)
+# ^^^ meta.function-call variable.function
+#    ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function-call.julia
+#     ^ meta.function-call.arguments.julia variable.parameter.julia
+#       ^ meta.function-call.arguments.julia keyword.operator.assignment.julia
+#            ^ meta.function-call.arguments.julia variable.parameter.julia
+#              ^ meta.function-call.arguments.julia keyword.operator.assignment.julia
+#                ^ meta.function-call.arguments.julia constant.numeric.julia
+#                   ^^^^^^ meta.function-call.arguments.julia meta.generic-name.julia
+#                         ^^^ meta.function-call.arguments.julia keyword.operator.splat.julia
+
+  bar(x == 1)
+# ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
+#     ^ meta.function-call.arguments.julia meta.generic-name.julia
+#       ^^ meta.function-call.arguments.julia keyword.operator.julia
+#          ^ meta.function-call.arguments.julia constant.numeric.julia
 
   (bar())
 # ^^^^^^^ meta.group.julia
 #  ^^^ meta.function-call.julia variable.function.julia
-#     ^^ meta.function-call.arguments.julia punctuation.section.arguments
+#     ^^ meta.function-call.julia punctuation.section.arguments
 
-  (bar)()
-#  ^^^ meta.qualified-name.julia meta.generic-name.julia
-#      ^^ meta.function-call.arguments.julia punctuation.section.arguments
+  (bar).()
+#  ^^^ meta.generic-name.julia
+#      ^ keyword.operator.broadcast.julia
+#       ^^ meta.function-call.julia punctuation.section.arguments
 
-  bar() = 1
+  bar(a = 1) = 1
+# ^^^ meta.function.julia entity.name.function.julia
+  bar(a = 1) == 1
 
   foo.bar() = 1
+
+
+##
+## UNICODE WORD BOUDARIES ====
+##
+
+# Unicode and numbers in names (issue 18)
+  β1 = 5
+# ^^ meta.generic-name
+  β3(x)
+# ^^ variable.function
+  β2(x) = x
+# ^^ entity.name.function
+  ∇1 = 5
+# ^^ meta.generic-name
+  ∇3(x)
+# ^^ variable.function
+  ∇2(∇2) = x
+# ^^ entity.name.function
+#    ^^^ meta.function meta.function.parameters
+
+
+##
+## RANGES ====
+##
+
+# (issue 14)
+  a:b
+# ^ meta.generic-name
+#  ^ keyword.operator
+#   ^ meta.generic-name
+  1.:a
+# ^^ constant.numeric
+#   ^ keyword.operator
+#    ^ meta.generic-name
+  a:2.
+# ^ meta.generic-name
+#  ^ keyword.operator
+#   ^^ constant.numeric
+  23.:31.
+# ^^^ constant.numeric
+#    ^ keyword.operator
+#     ^^^ constant.numeric
+  β:f()
+# ^ meta.generic-name
+#  ^ keyword.operator
+#   ^ variable.function
+  f():1
+# ^ variable.function
+#    ^ keyword.operator
+#     ^ constant.numeric
+
+
+##
+## TERNARY OPERATORS ====
+##
+
+  a ? b :c
+# ^ meta.generic-name
+#   ^ keyword.operator
+#     ^ meta.generic-name
+#       ^ keyword.operator
+#        ^ meta.generic-name
+
+  a? b : c
+#  ^ invalid.operator.julia
+
+  a ?b : c
+#   ^ invalid.operator.julia
+
+
+##
+## Types ===={
+##
+
+Array{Int, 2}
+Foo{Bar, 2}
