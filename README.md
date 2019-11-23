@@ -14,7 +14,18 @@ If you haven't already, [install Package Control](https://packagecontrol.io/inst
 
 ### Manual installation
 
-Clone the repository into `~/.config/sublime-text-3/Packages/`. (The path may be different depending on OS and version.)
+If you want more control over what you pull down, or if you'd like to submit a PR, you coould clone the repository directly.
+
+```
+# on a Mac
+cd "$HOME/Library/Application Support/Sublime Text 3/Packages"
+# on Linux
+cd $HOME/.config/sublime-text-3/Packages
+# on Windows (PowerShell)
+cd "$env:appdata\Sublime Text 3\Packages\"
+
+git clone git@github.com:JuliaEditorSupport/Julia-sublime.git Julia
+```
 
 
 ## Example
