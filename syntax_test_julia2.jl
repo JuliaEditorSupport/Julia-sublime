@@ -133,6 +133,9 @@
 ## Variables and Functions ====
 ##
 
+  bar
+# ^^^ meta.generic-name.julia
+
   foo.bar
 # ^^^ meta.generic-name
 #    ^ punctuation.accessor.dot
@@ -177,11 +180,23 @@
 #      ^ keyword.operator.broadcast.julia
 #       ^^ meta.function-call.julia punctuation.section.arguments
 
-  bar(a = 1) = 1
+  bar(x, y) = 2
+# ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
+#     ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+#        ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+  bar(a = 1, z = abc) = 1
+#     ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+#                ^^^ meta.function.julia meta.function.parameters.julia meta.generic-name.julia
 # ^^^ meta.function.julia entity.name.function.julia
   bar(a = 1) == 1
+# ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
+#            ^^ keyword.operator.julia
 
   foo.bar() = 1
+# ^^^ meta.generic-name.julia
+#    ^ punctuation.accessor.dot.julia
+#     ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
+#           ^ keyword.operator.assignment.julia
 
 
 ##
@@ -257,5 +272,14 @@
 ## Types ===={
 ##
 
-Array{Int, 2}
-Foo{Bar, 2}
+  Array{Int, 2}
+  Foo{Bar, 2}
+
+  x::Int = 1
+  f(x::Int = 2) = x
+  f(x::Int, y::Float64) = x
+  f(::Int, ::Float64) = x
+  f(::Int = 1, ::Float64 = 1.0) = x
+  f(x::Int, y::Float64)
+  f(x::Int = 2, y::Float64 = 1.0)
+  f(::Int, ::Float64)
