@@ -53,9 +53,10 @@ contexts:
     - include: comments
     - include: constants
     - include: keywords
-    - include: types
-    - include: variables-and-functions
     - include: operators
+    - include: types
+    - include: functions
+    - include: identifiers
     - include: brackets
 
   codesection:
@@ -99,14 +100,20 @@ contexts:
       scope: constant.language.julia
 
   keywords:
+    - match: \b(abstract type|mutable struct|primitive type)\b
+      scope: keyword.other.julia
     - match: \b(baremodule|begin|const|end|export|function|global|import|let|local|macro|module|quote|return|struct|using)\b
       scope: keyword.other.julia
     - match: \b(break|catch|continue|do|else|elseif|finally|for|if|try|while)\b
       scope: keyword.control.julia
+    # these are technical not reserved words, but they are most nevered used as variables.
+    - match: \b(where|in|isa)\b
+      scope: keyword.control.julia
 
   operators:
     # we handle transpose operator seperately in after-expression
-
+    - match: (::)
+      scope: keyword.operator.double-colon.julia
     # broadcast operators
     - match: (\.?)({{long_op}})
       captures:
@@ -130,18 +137,81 @@ contexts:
       scope: support.type.julia
       push: after-expression
 
-  variables-and-functions:
-
-    # function-call or inline function declaration
+  functions:
     - match: '(?={{symb_id}}\.?\()'
       branch_point: function-branch-point
       branch:
         - inline-function-declaration-branch
         - function-call-branch
-    # single variable
+
+  identifiers:
     - match: '{{symb_id}}'
       scope: meta.generic-name.julia
       push: after-expression
+
+  # function-parameters:
+  #   - match: ({{symb_id}})
+  #     scope: variable.parameter.julia
+
+  function-parameters:
+    - match: (?={{symb_id}}|::)
+      scope: variable.parameter.julia
+      branch_point: function-parameter-branch-point
+      branch:
+        - function-parameters-branch
+        - function-parameters-with-default-branch
+
+  # f(x::T)
+  function-parameters-branch:
+    - match: '{{symb_id}}'
+      scope: variable.parameter.julia
+      push:
+        - match: \s*=(?![=>])
+          fail: function-parameter-branch-point
+        - match: (?=::)
+          push: after-expression
+        - match: ''
+          pop: true
+    - match: '(?=::)'
+      push:
+        - match: \s*=(?![=>])
+          fail: function-parameter-branch-point
+        - match: (?=::)
+          push: after-expression
+        - match: ''
+          pop: true
+    - match: ''
+      pop: true
+
+  # f(x::T = 1)
+  function-parameters-with-default-branch:
+    - match: '{{symb_id}}'
+      scope: variable.parameter.julia
+      push:
+        - match: (?=::)
+          push: after-expression
+        - match: =(?![=>])
+          scope: keyword.operator.assignment.julia
+          set:
+          - match: (?:([,;])|(?=\)))
+            captures:
+              1: punctuation.separator.arguments.julia
+            pop: true
+          - include: main
+    - match: '(?=::)'
+      push:
+        - match: (?=::)
+          push: after-expression
+        - match: =(?![=>])
+          scope: keyword.operator.assignment.julia
+          set:
+          - match: (?:([,;])|(?=\)))
+            captures:
+              1: punctuation.separator.arguments.julia
+            pop: true
+          - include: main
+    - match: ''
+      pop: true
 
   inline-function-declaration-branch:
     - match: '({{symb_id}})(\()'
@@ -154,17 +224,9 @@ contexts:
         - match: \)
           scope: punctuation.section.parameters.end.julia
           set: after-expression
-        - match: '({{symb_id}})(?=\s*=[^=>])'
-          scope: variable.parameter.julia
-          push:
-            - match: =(?![=>])
-              scope: keyword.operator.assignment.julia
-              set:
-              - match: (?:([,;])|(?=\)))
-                captures:
-                  1: punctuation.separator.arguments.python
-                pop: true
-              - include: main
+        - include: function-parameters
+        - match: '[,;]'
+          scope: punctuation.separator.arguments.julia
     - match: (?!\s*=[^=>])
       fail: function-branch-point
     - match: ''
@@ -196,7 +258,7 @@ contexts:
               set:
               - match: (?:([,;])|(?=\)))
                 captures:
-                  1: punctuation.separator.arguments.python
+                  1: punctuation.separator.arguments.julia
                 pop: true
               - include: main
         # TODO: :width => 2
@@ -208,19 +270,28 @@ contexts:
     - match: (\.)(?={{symb_id}})
       scope: punctuation.accessor.dot.julia
       push:
-        - include: variables-and-functions
+        - include: functions
+        - include: identifiers
+        - match: ''
+          pop: true
+    - match: (::)
+      scope: keyword.operator.double-colon.julia
+      push:
+        - include: types
         - match: ''
           pop: true
     - match: (\.)?(?=\()
       scope: keyword.operator.broadcast.julia
       push: function-call-arguments
     - match: \{
-      scope: punctuation.section.class.begin.julia
+      scope: punctuation.section.type.begin.julia
       push:
-        - meta_scope: meta.class.inheritance.python
+        - meta_scope: meta.type.inheritance.julia
         - match: \}
-          scope: punctuation.section.class.end.julia
+          scope: punctuation.section.type.end.julia
           set: after-expression
+        - match: ','
+          scope: ppunctuation.separator.inheritance.julia
         - include: main
     - match: (')
       scope: keyword.operator.transpose.julia
