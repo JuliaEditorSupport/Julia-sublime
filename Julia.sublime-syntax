@@ -45,19 +45,46 @@ variables:
   symb_lang: (?:[(){}\[\],.;:'"`@#])
 
   # General identifier symbol
-  symb_id: (?:[^\s{{symb_lang}}{{symb_op}}](?:[^\s{{symb_lang}}{{symb_op}}]|!)*)
+  symb_id: (?:[^\s{{symb_lang}}{{symb_op}}0-9](?:[^\s{{symb_lang}}{{symb_op}}]|!)*)
 
 contexts:
   main:
+    - include: docstrings
     - include: codesection
     - include: comments
     - include: constants
     - include: keywords
     - include: operators
-    - include: types
+    - include: supported-types
+    - include: parametric-types
     - include: functions
     - include: identifiers
     - include: brackets
+
+  docstrings:
+    - match: ^\s*(?=("""|'''|"|'))
+      push:
+      - match: ("""|'''|"|')
+        scope: punctuation.definition.comment.begin.julia
+        set:
+          - meta_scope: comment.block.documentation.julia
+          - include: escaped-unicode-char
+          - include: escaped-char
+          - match: '\1'
+            scope: punctuation.definition.comment.end.julia
+            pop: true
+
+  escaped-char:
+    - match: '(\\x\h{2})|(\\[\\"''abfnrtv])'
+      captures:
+        1: constant.character.escape.hex.julia
+        2: constant.character.escape.julia
+
+  escaped-unicode-char:
+    - match: '(\\U\h{1,8})|(\\u\h{1,4})'
+      captures:
+        1: constant.character.escape.unicode.16-bit-hex.julia
+        2: constant.character.escape.unicode.32-bit-hex.julia
 
   codesection:
     - match: ^\s*((\#+)\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
@@ -113,7 +140,11 @@ contexts:
   operators:
     # we handle transpose operator seperately in after-expression
     - match: (::)
-      scope: keyword.operator.double-colon.julia
+      scope: keyword.operator.colons.julia
+    - match: '(?:(<:)|(>:))'
+      captures:
+        1: keyword.operator.subset.julia
+        2: keyword.operator.superset.julia
     # broadcast operators
     - match: (\.?)({{long_op}})
       captures:
@@ -132,22 +163,124 @@ contexts:
       captures:
         1: keyword.operator.julia
 
-  types:
-    - match: '{{base_types}}'
-      scope: support.type.julia
-      push: after-expression
-
   functions:
     - match: '(?={{symb_id}}\.?\()'
+      push: function-contination
+
+  function-contination:
+    - match: '(?={{symb_id}}?\.?\()'
       branch_point: function-branch-point
       branch:
-        - inline-function-declaration-branch
+        - function-inline-declaration-branch
         - function-call-branch
+    - match: ''
+      pop: true
 
   identifiers:
     - match: '{{symb_id}}'
       scope: meta.generic-name.julia
       push: after-expression
+
+  parametric-types:
+    - match: '{{symb_id}}(?=\{)'
+      scope: meta.parametric-type.julia meta.generic-name.julia
+      push: type-parameters-group
+
+  supported-types:
+    - match: '{{base_types}}(?=\{)'
+      scope: meta.parametric-type.julia support.type.julia
+      push: type-parameters-group
+    - match: '{{base_types}}'
+      scope: support.type.julia
+
+  possible-types:
+    - match: \(
+      scope: punctuation.section.group.begin.julia
+      push:
+        - meta_scope: meta.group.julia
+        - match: \)
+          scope: punctuation.section.group.end.julia
+          set: after-expression
+        - include: possible-types
+    - include: supported-types
+    - include: parametric-types
+    - include: identifiers
+
+  where-clause:
+    - match: \s*(where)
+      captures:
+        1 : meta.where-clause.julia keyword.control.julia
+      push:
+        - meta_content_scope: meta.where-clause.julia
+        - match: \s*(\{)
+          captures:
+            1 : punctuation.section.parameter.begin.julia
+          push:
+            - meta_scope: meta.parametric-type.julia
+            - meta_content_scope: meta.parametric-type.parameters.julia
+            - match: \}
+              pop: 2
+            - match: ','
+              scope: punctuation.separator.parameter.julia
+            - include: main
+        - match: \s*(?={{symb_id}})
+          branch_point: where-clause-branch-point
+          branch:
+            - where-clause-three-terms
+            - where-clause-two-terms
+        - match: ''
+          pop: true
+    - match: ''
+      pop: true
+
+  where-clause-three-terms:
+    - match: '(?={{symb_id}})'
+      push:
+        - match: '(?={{symb_id}})'
+          push:
+            - include: possible-types
+            - match: ''
+              pop: true
+        - match: '\s*(<:)'
+          scope: keyword.operator.subset.julia
+          push:
+            - match: '\s*(?={{symb_id}})'
+              push:
+                - include: possible-types
+                - match: ''
+                  pop: true
+            - match: '\s*(<:)'
+              scope: keyword.operator.subset.julia
+              push:
+                - match: '\s*(?={{symb_id}})'
+                  push:
+                    - include: possible-types
+                    - match: ''
+                      pop: 6
+                - match: ''
+                  fail: where-clause-branch-point
+            - match: ''
+              fail: where-clause-branch-point
+        - match: ''
+          fail: where-clause-branch-point
+    - match: ''
+      fail: where-clause-branch-point
+
+  where-clause-two-terms:
+    - match: '({{symb_id}})\s*(?:(<:)|(>:))\s*'
+      captures:
+        1: meta.generic-name.julia
+        2: keyword.operator.subset.julia
+        3: keyword.operator.superset.julia
+      push:
+        - include: possible-types
+        - match: ''
+          pop: 3
+    - match: '({{symb_id}})'
+      scope: meta.generic-name.julia
+      pop: 2
+    - match: ''
+      pop: 2
 
   # function-parameters:
   #   - match: ({{symb_id}})
@@ -161,7 +294,7 @@ contexts:
         - function-parameters-branch
         - function-parameters-with-default-branch
 
-  # f(x::T)
+  # f(x::T) = 1
   function-parameters-branch:
     - match: '{{symb_id}}'
       scope: variable.parameter.julia
@@ -183,7 +316,7 @@ contexts:
     - match: ''
       pop: true
 
-  # f(x::T = 1)
+  # f(x::T = 1) = 1
   function-parameters-with-default-branch:
     - match: '{{symb_id}}'
       scope: variable.parameter.julia
@@ -213,8 +346,8 @@ contexts:
     - match: ''
       pop: true
 
-  inline-function-declaration-branch:
-    - match: '({{symb_id}})(\()'
+  function-inline-declaration-branch:
+    - match: '({{symb_id}})?\s*(\()'
       captures:
         1: entity.name.function.julia meta.generic-name.julia
         2: punctuation.section.parameters.end.julia
@@ -233,15 +366,29 @@ contexts:
       pop: true
 
   function-call-branch:
-    - match: '({{symb_id}})(\.)?'
+    - match: '({{symb_id}})?(\.)?\s*(?=\()'
       captures:
         1: meta.function-call.julia variable.function.julia meta.generic-name.julia
         2: keyword.operator.broadcast.julia
-      push: function-call-arguments
+      push: function-call-arguments-group
     - match: ''
       pop: true
 
-  function-call-arguments:
+  function-call-keyword-arguments:
+    - match: '({{symb_id}})(?=\s*=[^=>])'
+      scope: variable.parameter.julia
+      push:
+        - match: =(?![=>])
+          scope: keyword.operator.assignment.julia
+          set:
+          - match: (?:([,;])|(?=\)))
+            captures:
+              1: punctuation.separator.arguments.julia
+            pop: true
+          - include: main
+    # TODO: :width => 2
+
+  function-call-arguments-group:
     - match: \(
       scope: punctuation.section.arguments.begin.julia
       push:
@@ -249,19 +396,23 @@ contexts:
         - meta_content_scope: meta.function-call.arguments.julia
         - match: \)
           scope: punctuation.section.arguments.end.julia
-          pop: true
-        - match: '({{symb_id}})(?=\s*=[^=>])'
-          scope: variable.parameter.julia
-          push:
-            - match: =(?![=>])
-              scope: keyword.operator.assignment.julia
-              set:
-              - match: (?:([,;])|(?=\)))
-                captures:
-                  1: punctuation.separator.arguments.julia
-                pop: true
-              - include: main
-        # TODO: :width => 2
+          set: after-expression
+        - include: function-call-keyword-arguments
+        - include: main
+    - match: ''
+      pop: true
+
+  type-parameters-group:
+    - match: \{
+      scope: punctuation.section.parameter.begin.julia
+      push:
+        - meta_scope: meta.parametric-type.julia
+        - meta_content_scope: meta.parametric-type.parameters.julia
+        - match: \}
+          scope: punctuation.section.parameter.end.julia
+          set: after-expression
+        - match: ','
+          scope: punctuation.separator.parameter.julia
         - include: main
     - match: ''
       pop: true
@@ -275,24 +426,14 @@ contexts:
         - match: ''
           pop: true
     - match: (::)
-      scope: keyword.operator.double-colon.julia
+      scope: keyword.operator.colons.julia
       push:
-        - include: types
+        - include: possible-types
+        - include: brackets
         - match: ''
           pop: true
-    - match: (\.)?(?=\()
-      scope: keyword.operator.broadcast.julia
-      push: function-call-arguments
-    - match: \{
-      scope: punctuation.section.type.begin.julia
-      push:
-        - meta_scope: meta.type.inheritance.julia
-        - match: \}
-          scope: punctuation.section.type.end.julia
-          set: after-expression
-        - match: ','
-          scope: ppunctuation.separator.inheritance.julia
-        - include: main
+    - match: (?=\.?\()
+      push: function-contination
     - match: (')
       scope: keyword.operator.transpose.julia
     - match: \.\.\.
@@ -302,6 +443,10 @@ contexts:
     - match: \s*(\?)(?={{symb_id}})
       captures:
         1: invalid.operator.julia
+    - match: (?=\{)
+      push: type-parameters-group
+    - match: (?=\s*where)
+      push: where-clause
     - match: ''
       pop: true
 
