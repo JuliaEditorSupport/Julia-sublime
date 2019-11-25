@@ -147,11 +147,15 @@
 #     ^^^ meta.generic-name.julia
 #         ^ keyword.operator.assignment.julia
 
-  foo.bar()
-# ^^^ meta.generic-name
-#    ^ punctuation.accessor.dot
-#     ^^^ meta.function-call
-
+  foo.bar(x)
+# ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
+#    ^ meta.function-call.julia punctuation.accessor.dot.julia
+#     ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
+#         ^ meta.function-call.julia meta.function-call.arguments.julia meta.generic-name.julia
+  (foo).bar(x)
+#  ^^^ meta.group.julia meta.generic-name.julia
+#      ^ punctuation.accessor.dot.julia
+#       ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
 
   bar(x = 1, y = 2, kwargs...)
 # ^^^ meta.function-call variable.function
@@ -180,10 +184,15 @@
 #      ^ keyword.operator.broadcast.julia
 #       ^^ meta.function-call.julia punctuation.section.arguments
 
+  (bar)(x, y) = 1
+#  ^^^ meta.group.julia meta.generic-name.julia
+#       ^^^^ meta.function.julia meta.function.parameters.julia
+
   bar(x, y) = 2
 # ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
 #     ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
 #        ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+
   bar(a = 1, z = abc) = 1
 #     ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
 #                ^^^ meta.function.julia meta.function.parameters.julia meta.generic-name.julia
@@ -192,11 +201,23 @@
 # ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
 #            ^^ keyword.operator.julia
 
-  foo.bar() = 1
-# ^^^ meta.generic-name.julia
+  foo.bar(x) = 1
+# ^^^^^^^ entity.name.function.julia
 #    ^ punctuation.accessor.dot.julia
-#     ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
-#           ^ keyword.operator.assignment.julia
+#         ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+
+  function foo(x, y)
+
+  end
+
+  function (foo)(x, y)
+
+  end
+
+  function bar.foo(x, y)
+
+  end
+
 
 
 ##
