@@ -269,17 +269,57 @@
 
 
 ##
-## Types ===={
+## Types ====
 ##
 
   Array{Int, 2}
+# ^^^^^ meta.parametric-type.julia support.type.julia
+#      ^ meta.parametric-type.julia punctuation.section.parameter.begin.julia
+#       ^^^ meta.parametric-type.julia meta.parametric-type.parameters.julia support.type.julia
   Foo{Bar, 2}
+# ^^^ meta.parametric-type.julia meta.generic-name.julia
+#    ^ meta.parametric-type.julia punctuation.section.parameter.begin.julia
+#     ^^^ meta.parametric-type.julia meta.parametric-type.parameters.julia meta.generic-name.julia
+  y::MyArray{T, 2} where T foo
+# ^ meta.generic-name.julia
+#  ^^ keyword.operator.colons.julia
+#    ^^^^^^^ meta.parametric-type.julia meta.generic-name.julia
+#                  ^^^^^ meta.where-clause.julia keyword.control.julia
+#                        ^ meta.where-clause.julia meta.generic-name.julia
+#                          ^ - meta.where-clause.julia
+  MyArray{T, 2} where T >: Int
+# ^^^^^^^ meta.parametric-type.julia meta.generic-name.julia
+#               ^^^^^ meta.where-clause.julia keyword.control.julia
+#                     ^ meta.where-clause.julia meta.generic-name.julia
+#                       ^^ meta.where-clause.julia keyword.operator.superset.julia
+#                          ^^^ meta.where-clause.julia support.type.julia
+  MyArray{T, 1} where T <: Array{S} where S
+#                     ^ meta.where-clause.julia meta.generic-name.julia
+#                       ^^ meta.where-clause.julia keyword.operator.subset.julia
+#                          ^^^^^ meta.where-clause.julia meta.parametric-type.julia support.type.julia
+#                               ^ meta.where-clause.julia meta.parametric-type.julia punctuation.section.parameter.begin.julia
+#                                ^ meta.where-clause.julia meta.parametric-type.julia meta.parametric-type.parameters.julia meta.generic-name.julia
+#                                 ^ meta.where-clause.julia meta.parametric-type.julia meta.parametric-type.parameters.julia punctuation.section.parameter.end.julia
+#                                   ^^^^^ meta.where-clause.julia meta.where-clause.julia keyword.control.julia
+#                                         ^ meta.where-clause.julia meta.where-clause.julia meta.generic-name.julia
+  MyArray{T, S} where {T, S}
+#                     ^ meta.where-clause.julia meta.parametric-type.julia punctuation.section.parameter.begin.julia
+#                      ^ meta.where-clause.julia meta.parametric-type.julia meta.parametric-type.parameters.julia meta.generic-name.julia
+#                         ^ meta.where-clause.julia meta.parametric-type.julia meta.parametric-type.parameters.julia meta.generic-name.julia
+  MyArray{T, 1} where Int <: T <: Number
+#                     ^^^ meta.where-clause.julia support.type.julia
+#                         ^^ meta.where-clause.julia keyword.operator.subset.julia
+#                            ^ meta.where-clause.julia meta.generic-name.julia
+#                              ^^ meta.where-clause.julia keyword.operator.subset.julia
+#                                 ^^^^^^ meta.where-clause.julia support.type.julia
 
   x::Int = 1
-  f(x::Int = 2) = x
-  f(x::Int, y::Float64) = x
-  f(::Int, ::Float64) = x
-  f(::Int = 1, ::Float64 = 1.0) = x
-  f(x::Int, y::Float64)
-  f(x::Int = 2, y::Float64 = 1.0)
-  f(::Int, ::Float64)
+  foo(x::Int = 2) = x
+  foo(x::Int, y::Mytype) = x
+  foo(::Int, ::Mytype) = x
+  foo(::Int = 1, ::Mytype = 1.0) = x
+  foo(::Int = 1, ::Mytype = 1.0) = x
+  foo(1::Int, abc::Mytype)
+  foo(x = 1::Int, y = abc::Mytype)
+  (foo)(x::Int = 1, y::Mytype = 1.0) = x
+  (foo).(1::Int, abc::Mytype)
