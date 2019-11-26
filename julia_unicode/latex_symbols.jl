@@ -1,4 +1,4 @@
-include(joinpath(JULIA_HOME, "..", "share", "julia", "base", "repl", "latex_symbols.jl"));
+include(joinpath(Sys.BINDIR, "..", "share", "julia", "stdlib", "v$(VERSION.major).$(VERSION.minor)", "REPL", "src", "latex_symbols.jl"));
 
 φ = open("latex_symbols.py", "w")
 
