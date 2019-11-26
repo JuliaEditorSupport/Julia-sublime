@@ -222,8 +222,10 @@
 
   end
 
+  filter!()
   length([1, 2])
   length(x::Mytype) = 1
+  Base.filter!()
   Base.length([1, 2])
   Base.length(x::Mytype) = 1
 
@@ -276,7 +278,6 @@
 # ^ variable.function
 #    ^ keyword.operator
 #     ^ constant.numeric
-
 
 ##
 ## TERNARY OPERATORS ====
