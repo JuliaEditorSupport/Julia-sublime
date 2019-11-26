@@ -1,4 +1,4 @@
-include(joinpath(JULIA_HOME, "..", "share", "julia", "base", "repl", "emoji_symbols.jl"));
+include(joinpath(Sys.BINDIR, "..", "share", "julia", "stdlib", "v$(VERSION.major).$(VERSION.minor)", "REPL", "src", "emoji_symbols.jl"));
 
 📁 = open("emoji_symbols.py", "w")
 
