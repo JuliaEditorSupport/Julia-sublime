@@ -1,4 +1,4 @@
-# SYNTAX TEST "Packages/Julia/Julia.sublime-syntax"
+# SYNTAX TEST "Packages/Julia-sublime/Julia.sublime-syntax"
 
 # For information on how this file is used, see
 # https://www.sublimetext.com/docs/3/syntax.html#testing
