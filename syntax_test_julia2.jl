@@ -218,7 +218,10 @@
 
   end
 
-
+  length([1, 2])
+  length(x::Mytype) = 1
+  Base.length([1, 2])
+  Base.length(x::Mytype) = 1
 
 ##
 ## UNICODE WORD BOUDARIES ====
