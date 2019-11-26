@@ -98,7 +98,7 @@ contexts:
           - meta_scope: comment.block.documentation.julia
           - include: escaped-unicode-char
           - include: escaped-char
-          - include: dollar-interpolations
+          - include: interpolated-julia
           - match: '\1'
             scope: punctuation.definition.comment.end.julia
             pop: true
@@ -115,18 +115,25 @@ contexts:
         1: constant.character.escape.unicode.16-bit-hex.julia
         2: constant.character.escape.unicode.32-bit-hex.julia
 
-  dollar-interpolations:
-    - match: '(\$)({{symb_id}})'
-      scope: meta.string.interpolated.julia
+  interpolated-julia:
+    - match: '(\$)(?={{symb_id}})'
       captures:
         1: keyword.operator.interpolation.julia
-        2: meta.generic-name.julia
-    - match: '(\$)(\()'
-      scope: punctuation.section.interpolation.begin.julia
       push:
-        - meta_scope: meta.string.interpolated.julia
+        - clear_scopes: 1
+        - meta_scope: meta.interpolation.julia
+        - match: '{{symb_id}}'
+          scope: meta.generic-name.julia
+          pop: true
+    - match: '(\$)(\()'
+      captures:
+        1: keyword.operator.interpolation.julia
+        2: punctuation.section.interpolation.begin.julia
+      push:
+        - clear_scopes: 1
+        - meta_scope: meta.interpolation.julia
         - match: \)
-          scope: punctuation.section.interpolation.end.julia
+          scope: punctuation.section.interpolation.begin.julia
           pop: true
         - include: main
 
@@ -134,6 +141,7 @@ contexts:
     - include: string-quoted-single
     - include: string-quoted-double-block
     - include: string-quoted-double
+    - include: string-backtick
 
   string-quoted-single:
     - match: "'"
@@ -158,7 +166,19 @@ contexts:
           set: after-expression
         - include: escaped-unicode-char
         - include: escaped-char
-        - include: dollar-interpolations
+        - include: interpolated-julia
+
+    - match: '(b)(""")'
+      captures:
+        1: storage.type.string.julia
+        2: meta.string.julia string.quoted.double.block.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.block.julia
+        - match: '"""'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - include: escaped-unicode-char
+        - include: escaped-char
 
     - match: '(r)(""")'
       captures:
@@ -176,6 +196,18 @@ contexts:
             - match: '(?=""")'
               pop: true
 
+    - match: '(v|raw|{{symb_id}})(""")'
+      captures:
+        1: storage.type.string.julia
+        2: meta.string.julia string.quoted.double.block.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.block.julia
+        - match: '"""'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - match: '\\"'
+          scope: constant.character.escape.julia
+
   string-quoted-double:
     - match: '"'
       scope: meta.string.julia string.quoted.double.julia punctuation.definition.string.begin.julia
@@ -186,7 +218,19 @@ contexts:
           set: after-expression
         - include: escaped-unicode-char
         - include: escaped-char
-        - include: dollar-interpolations
+        - include: interpolated-julia
+
+    - match: '(b)(")'
+      captures:
+        1: storage.type.string.julia
+        2: meta.string.julia string.quoted.double.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.julia
+        - match: '"'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - include: escaped-unicode-char
+        - include: escaped-char
 
     - match: '(r)(")'
       captures:
@@ -203,6 +247,38 @@ contexts:
           with_prototype:
             - match: '(?=")'
               pop: true
+
+    - match: '(v|raw|{{symb_id}})(")'
+      captures:
+        1: storage.type.string.julia
+        2: meta.string.julia string.quoted.double.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.julia
+        - match: '"'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - match: '\\"'
+          scope: constant.character.escape.julia
+
+  string-backtick:
+    - match: "`"
+      scope: punctuation.definition.string.begin.julia
+      push:
+        - meta_scope: meta.string.julia string.interpolated.julia
+        - match: "`"
+          scope: punctuation.definition.string.end.julia
+          pop: true
+        - include: interpolated-julia
+        - include: escaped-char
+    - match: "```"
+      scope: punctuation.definition.string.begin.julia
+      push:
+        - meta_scope: meta.string.julia string.interpolated.julia
+        - match: "```"
+          scope: punctuation.definition.string.end.julia
+          pop: true
+        - include: interpolated-julia
+        - include: escaped-char
 
   constants:
     - match: |-
@@ -238,7 +314,7 @@ contexts:
         - match: \)
           scope: punctuation.section.expression.end.julia
           set: after-expression
-        - include: dollar-interpolations
+        - include: interpolated-julia
         - include: main
 
   macros:
