@@ -1,25 +1,4 @@
 [
-
-    {
-        "keys": ["tab"], "command": "julia_unicode_insert_best_completion", "context":
-        [
-            { "key": "selector", "operator": "equal", "operand": "source.julia" },
-            { "key": "setting.tab_completion", "operator": "equal", "operand": true },
-            { "key": "has_next_field", "operator": "equal", "operand": false },
-            { "key": "julia_unicode_has_matches"}
-        ]
-    },
-
-    {
-        "keys": ["tab"], "command": "julia_unicode_insert_best_completion",
-        "args": { "next_completion": true },
-        "context":
-        [
-            { "key": "last_command", "operator": "equal", "operand": "julia_unicode_insert_best_completion" },
-            { "key": "setting.tab_completion", "operator": "equal", "operand": true }
-        ]
-    },
-
     {
         "keys": ["tab"], "command": "julia_unicode_auto_complete", "context":
         [
@@ -37,7 +16,6 @@
         [
             { "key": "selector", "operator": "equal", "operand": "source.julia" },
             { "key": "auto_complete_visible" },
-            { "key": "setting.auto_complete_commit_on_tab" },
             { "key": "julia_unicode_has_matches"}
         ]
     },
