@@ -53,7 +53,9 @@ contexts:
     - include: codesection
     - include: comments
     - include: constants
+    - include: macro-declarations
     - include: function-declarations
+    - include: macros
     - include: keywords
     - include: operators
     - include: functions
@@ -128,6 +130,10 @@ contexts:
     - match: \b(true|false|nothing|missing|ℯ|pi|π|im|undef|NaN|NaN16|NaN32|NaN64|Inf|Inf16|Inf32|Inf64|ARGS|C_NULL|ENDIAN_BOM|ENV|LOAD_PATH|PROGRAM_FILE|STDERR|STDIN|STDOUT|VERSION)\b
       scope: constant.language.julia
 
+  macros:
+    - match: '@{{symb_id}}'
+      scope: support.function.julia
+
   keywords:
     - match: \b(abstract type|mutable struct|primitive type)\b
       scope: keyword.other.julia
@@ -164,6 +170,47 @@ contexts:
     - match: ({{long_op}}|{{symb_op}})
       captures:
         1: keyword.operator.julia
+
+  macro-declarations:
+    - match: (macro)\s+
+      captures:
+        1: meta.macro.julia keyword.declaration.macro.julia
+      push:
+        - match: \(
+          scope: punctuation.section.group.begin.julia
+          push:
+            - meta_scope: meta.group.julia
+            - match: \)
+              scope: punctuation.section.group.end.julia
+              push:
+                - include: macro-propotype
+                - match: ''
+                  pop: 2
+            - include: main
+        - match: '(?={{symb_id}})'
+          push:
+            - include: macro-propotype
+            - match: ''
+              pop: true
+        - match: ''
+          pop: true
+
+  macro-propotype:
+    - match: '{{symb_id}}'
+      scope: meta.macro.julia entity.name.macro.julia meta.generic-name.julia
+    - match: '\('
+      scope: punctuation.section.parameters.end.julia
+      push:
+        - meta_scope: meta.macro.julia
+        - meta_content_scope: meta.macro.parameters.julia
+        - match: \)
+          scope: punctuation.section.parameters.end.julia
+          pop: true
+        - match: '{{symb_id}}'
+          scope: variable.parameter.julia
+          push: after-expression
+        - match: '[,;]'
+          scope: punctuation.separator.arguments.julia
 
   function-declarations:
     - match: (function)\s+
@@ -435,7 +482,7 @@ contexts:
       scope: meta.function-call.julia variable.function.julia meta.generic-name.julia
     - match: '(\.)({{symb_id}})'
       captures:
-        1: metas.function-call.julia punctuation.accessor.dot.julia
+        1: meta.function-call.julia punctuation.accessor.dot.julia
         2: meta.function-call.julia variable.function.julia meta.generic-name.julia
     - match: '(\.)?(?=\()'
       captures:
@@ -490,9 +537,10 @@ contexts:
       pop: true
 
   after-expression:
-    - match: (\.)(?={{symb_id}})
+    - match: (\.)(?=@?{{symb_id}})
       scope: punctuation.accessor.dot.julia
       push:
+        - include: macros
         - include: functions
         - include: identifiers
         - match: ''
