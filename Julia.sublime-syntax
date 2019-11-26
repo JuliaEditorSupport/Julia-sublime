@@ -49,9 +49,10 @@ variables:
 
 contexts:
   main:
-    - include: docstrings
     - include: codesection
     - include: comments
+    - include: docstrings
+    - include: strings
     - include: constants
     - include: symbols
     - include: macro-declarations
@@ -65,31 +66,6 @@ contexts:
     - include: parametric-types
     - include: identifiers
     - include: brackets
-
-  docstrings:
-    - match: ^\s*(?=("""|'''|"|'))
-      push:
-      - match: ("""|'''|"|')
-        scope: punctuation.definition.comment.begin.julia
-        set:
-          - meta_scope: comment.block.documentation.julia
-          - include: escaped-unicode-char
-          - include: escaped-char
-          - match: '\1'
-            scope: punctuation.definition.comment.end.julia
-            pop: true
-
-  escaped-char:
-    - match: '(\\x\h{2})|(\\[\\"''abfnrtv])'
-      captures:
-        1: constant.character.escape.hex.julia
-        2: constant.character.escape.julia
-
-  escaped-unicode-char:
-    - match: '(\\U\h{1,8})|(\\u\h{1,4})'
-      captures:
-        1: constant.character.escape.unicode.16-bit-hex.julia
-        2: constant.character.escape.unicode.32-bit-hex.julia
 
   codesection:
     - match: ^\s*((\#+)\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
@@ -112,6 +88,121 @@ contexts:
         - meta_scope: comment.line.number-sign.julia
         - match: \n
           pop: true
+
+  docstrings:
+    - match: ^\s*(?=("""|"))
+      push:
+      - match: ("""|")
+        scope: punctuation.definition.comment.begin.julia
+        set:
+          - meta_scope: comment.block.documentation.julia
+          - include: escaped-unicode-char
+          - include: escaped-char
+          - include: dollar-interpolations
+          - match: '\1'
+            scope: punctuation.definition.comment.end.julia
+            pop: true
+
+  escaped-char:
+    - match: '(\\x\h{2})|(\\[\\"''abfnrtv])'
+      captures:
+        1: constant.character.escape.hex.julia
+        2: constant.character.escape.julia
+
+  escaped-unicode-char:
+    - match: '(\\U\h{1,8})|(\\u\h{1,4})'
+      captures:
+        1: constant.character.escape.unicode.16-bit-hex.julia
+        2: constant.character.escape.unicode.32-bit-hex.julia
+
+  dollar-interpolations:
+    - match: '(\$)({{symb_id}})'
+      scope: meta.string.interpolated.julia
+      captures:
+        1: keyword.operator.interpolation.julia
+        2: meta.generic-name.julia
+    - match: '(\$)(\()'
+      scope: punctuation.section.interpolation.begin.julia
+      push:
+        - meta_scope: meta.string.interpolated.julia
+        - match: \)
+          scope: punctuation.section.interpolation.end.julia
+          pop: true
+        - include: main
+
+  strings:
+    - include: string-quoted-single
+    - include: string-quoted-double-block
+    - include: string-quoted-double
+
+  string-quoted-single:
+    - match: "'"
+      scope: meta.string.julia string.quoted.single.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.single.julia
+        - match: "'"
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - include: escaped-unicode-char
+        - include: escaped-char
+        - match: "[^']{2,}"
+          scope: invalid.string.julia
+
+  string-quoted-double-block:
+    - match: '"""'
+      scope: meta.string.julia string.quoted.double.block.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.block.julia
+        - match: '"""'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - include: escaped-unicode-char
+        - include: escaped-char
+        - include: dollar-interpolations
+
+    - match: '(r)(""")'
+      captures:
+        1: storage.type.string.julia
+        2: meta.string.julia string.quoted.double.block.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.block.julia
+        - match: '"""'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - match: ''
+          # we borrow the python regular expressions
+          push: scope:source.regexp.python
+          with_prototype:
+            - match: '(?=""")'
+              pop: true
+
+  string-quoted-double:
+    - match: '"'
+      scope: meta.string.julia string.quoted.double.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.julia
+        - match: '"'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - include: escaped-unicode-char
+        - include: escaped-char
+        - include: dollar-interpolations
+
+    - match: '(r)(")'
+      captures:
+        1: storage.type.string.julia
+        2: meta.string.julia string.quoted.double.julia punctuation.definition.string.begin.julia
+      push:
+        - meta_content_scope: meta.string.julia string.quoted.double.julia
+        - match: '"'
+          scope: punctuation.definition.string.end.julia
+          set: after-expression
+        - match: ''
+          # we borrow the python regular expressions
+          push: scope:source.regexp.python
+          with_prototype:
+            - match: '(?=")'
+              pop: true
 
   constants:
     - match: |-
@@ -147,6 +238,7 @@ contexts:
         - match: \)
           scope: punctuation.section.expression.end.julia
           set: after-expression
+        - include: dollar-interpolations
         - include: main
 
   macros:

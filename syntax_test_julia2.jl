@@ -207,27 +207,45 @@
 #         ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
 
   function foo(x, y)
-
+#          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
+#              ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+#               ^ meta.function.julia meta.function.parameters.julia punctuation.separator.arguments.julia
+#                 ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
   end
 
   function (foo)(x, y)
-
+#           ^^^ meta.group.julia meta.generic-name.julia
+#                ^^^^ meta.group.julia meta.function.julia meta.function.parameters.julia
   end
 
   function bar.foo(x, y)
-
+#          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
+#             ^ meta.function.julia entity.name.function.julia punctuation.accessor.dot.julia
+#              ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
   end
 
   function f
-
+#          ^ meta.function.julia entity.name.function.julia meta.generic-name.julia
   end
 
   filter!()
+# ^^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   length([1, 2])
+# ^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   length(x::Mytype) = 1
+# ^^^^^^ meta.function-call.julia entity.name.function.julia support.function.julia
   Base.filter!()
+# ^^^^ meta.function-call.julia variable.function.julia support.module.julia
+#     ^ meta.function-call.julia punctuation.accessor.dot.julia
+#      ^^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   Base.length([1, 2])
+# ^^^^ meta.function-call.julia variable.function.julia support.module.julia
+#     ^ meta.function-call.julia punctuation.accessor.dot.julia
+#      ^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   Base.length(x::Mytype) = 1
+# ^^^^ meta.function-call.julia entity.name.function.julia support.module.julia
+#     ^ meta.function-call.julia entity.name.function.julia punctuation.accessor.dot.julia
+#      ^^^^^^ meta.function-call.julia entity.name.function.julia support.function.julia
 
 ##
 ## UNICODE WORD BOUDARIES ====
@@ -343,18 +361,23 @@
 #                                 ^^^^^^ meta.where-clause.julia support.type.julia
 
   x::Int = 1
+# ^ meta.generic-name.julia
+#  ^^ keyword.operator.colons.julia
+#    ^^^ support.type.julia
   x::Array{S, 2} where S = [2 2; 1 1]
-  foo(x::Int = 2) = x
+#    ^^^^^ meta.parametric-type.julia support.type.julia
+#                ^^^^^ meta.where-clause.julia keyword.control.julia
+#                      ^ meta.where-clause.julia meta.generic-name.julia
+#                        ^ keyword.operator.assignment.julia
+
+  foo(1::Int, abc::Mytype)
+  foo(x = 1::Int, y = abc::Mytype)
+  (foo).(1::Int, abc::Mytype)
+
   foo(x::Int, y::Mytype) = x
   foo(::Int, ::Mytype) = x
   foo(::Int = 1, ::Mytype = 1.0) = x
-  foo(::Int = 1, ::Mytype = 1.0) = x
-  foo(1::Int, abc::Mytype)
-  foo(x = 1::Int, y = abc::Mytype)
-  (foo)(x::Int = 1, y::Mytype = 1.0) = x
-  (foo).(1::Int, abc::Mytype)
-
-
+  (foo::Int)(x::Int = 1, y::Mytype = 1.0) = x
 
 
 ##
@@ -376,7 +399,7 @@ end
   foo(a = 1, :abc => foo())
 # ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
 #            ^^^^ meta.function-call.julia meta.function-call.arguments.julia constant.other.symbol.julia
-#                 ^^ meta.function-call.julia meta.function-call.arguments.julia keyword.operator.fat-arrow.julia
+#                 ^^ meta.function-call.julia meta.function-call.arguments.julia keyword.operator.pair.julia
 
   :a.b
 # ^ keyword.operator
@@ -426,3 +449,32 @@ end
   :function
 # ^ keyword.operator
 #  ^^^^^^^^ constant.other.symbol
+
+
+##
+## Chars ====
+##
+
+s = '\''
+s = 'ab'
+
+##
+## Strings ====
+##
+
+s = "\U03b1\U03b2"
+s =  "foo + $apple"
+s = """
+apple
+orange
+banana
+"""
+s = "$('\U03b1')\U03b2"
+s = "$(1 + 1)\U03b2"
+r = r"[a-z0-9]{2, 3}"
+
+r = r"""
+[a-z0-9]{2, 3}"""
+
+r = r"\""
+r = r"""a"b"""
