@@ -1,10 +1,10 @@
 <snippet>
   <content><![CDATA[
-type $1
+struct $1
     $0
 end
 ]]></content>
-  <tabTrigger>type</tabTrigger>
+  <tabTrigger>struct</tabTrigger>
   <scope>source.julia</scope>
-  <description>type definition</description>
+  <description>struct definition</description>
 </snippet>
