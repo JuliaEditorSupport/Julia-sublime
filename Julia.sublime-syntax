@@ -301,7 +301,7 @@ contexts:
       push: after-expression
 
   symbols:
-    - match: '(:)({{symb_id}}|\.?{{long_op}}|\.?{{symb_op}}|\.)'
+    - match: '(:)(?!:)({{symb_id}}|\.?{{long_op}}|\.?{{symb_op}}|\.)'
       captures:
         1: keyword.operator.colon.julia constant.other.symbol.julia
         2: constant.other.symbol.julia
