@@ -455,26 +455,33 @@ end
 ## Chars ====
 ##
 
-s = '\''
-s = 'ab'
+  s = '\''
+  s = 'ab'
 
 ##
 ## Strings ====
 ##
 
-s = "\U03b1\U03b2"
-s =  "foo + $apple"
-s = """
-apple
-orange
-banana
-"""
-s = "$('\U03b1')\U03b2"
-s = "$(1 + 1)\U03b2"
-r = r"[a-z0-9]{2, 3}"
+  s = "\U03b1\U03b2"
+  s =  "foo + $apple"
+  s = """
+  apple
+  orange
+  banana
+  """
+  s = "$('\U03b1')\U03b2"
+  s = "$(apple + 1)\U03b2"
+  r = r"[a-z0-9]{2, 3}"
 
-r = r"""
-[a-z0-9]{2, 3}"""
+  r"""
+  [a-z0-9]{2, 3}"""
 
-r = r"\""
-r = r"""a"b"""
+  r"\""
+  r"""a"b"""
+
+  b"DATA\xff\u2200"
+  b"""DATA\xff\u2200"""
+
+  v"3.0-"
+
+  raw"abc\"few"
