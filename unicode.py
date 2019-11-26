@@ -10,10 +10,6 @@ RE_COMMAND_PREFIX = re.compile(
 symbols = latex_symbols + emoji_symbols
 
 
-def is_ascii(s):
-    return all(ord(c) < 128 for c in s)
-
-
 class JuliaUnicodeMixin(object):
     def find_command_backward(self, view, pt):
         line_content = view.substr(view.line(pt))
@@ -58,7 +54,7 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
         if not prefix:
             return None
 
-        ret = [(s[0][1:] + "\t" + s[1], s[1]) for s in latex_symbols if s[0].startswith(prefix)]
+        ret = [(s[0] + "\t" + s[1], s[1]) for s in latex_symbols if s[0].startswith(prefix)]
         if not ret:
             ret = [(s[0][1:] + "\t" + s[1], s[1]) for s in emoji_symbols if s[0].startswith(prefix)]
 
