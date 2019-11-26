@@ -133,6 +133,7 @@
 ## Variables and Functions ====
 ##
 
+
   bar
 # ^^^ meta.generic-name.julia
 
@@ -179,6 +180,8 @@
 #  ^^^ meta.function-call.julia variable.function.julia
 #     ^^ meta.function-call.julia punctuation.section.arguments
 
+  bar.()
+
   (bar).()
 #  ^^^ meta.generic-name.julia
 #      ^ keyword.operator.broadcast.julia
@@ -206,16 +209,12 @@
 #    ^ punctuation.accessor.dot.julia
 #         ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
 
+
   function foo(x, y)
 #          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
 #              ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
 #               ^ meta.function.julia meta.function.parameters.julia punctuation.separator.arguments.julia
 #                 ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
-  end
-
-  function (foo)(x, y)
-#           ^^^ meta.group.julia meta.generic-name.julia
-#                ^^^^ meta.group.julia meta.function.julia meta.function.parameters.julia
   end
 
   function bar.foo(x, y)
@@ -224,8 +223,21 @@
 #              ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
   end
 
-  function f
-#          ^ meta.function.julia entity.name.function.julia meta.generic-name.julia
+
+  function (foo)(x, y)
+#           ^^^ meta.group.julia meta.function.julia entity.name.function.julia meta.generic-name.julia
+#                ^^^^ meta.function.julia meta.function.parameters.julia
+  end
+
+  function foo
+#          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
+  end
+
+  function (x, y)
+#           ^^^^ meta.function.julia meta.function.parameters.julia
+  end
+
+  function (f::Mytype)(x, y)
   end
 
   filter!()
@@ -246,6 +258,8 @@
 # ^^^^ meta.function-call.julia entity.name.function.julia support.module.julia
 #     ^ meta.function-call.julia entity.name.function.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function-call.julia entity.name.function.julia support.function.julia
+
+
 
 ##
 ## UNICODE WORD BOUDARIES ====
