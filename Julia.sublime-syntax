@@ -53,6 +53,7 @@ contexts:
     - include: codesection
     - include: comments
     - include: constants
+    - include: symbols
     - include: macro-declarations
     - include: function-declarations
     - include: macros
@@ -127,11 +128,31 @@ contexts:
           (?:e[-+]?\d(?:_?\d)*)?                # Any of the above followed by e+123 or similar, for scientific notation.
         )
       scope: constant.numeric.julia
+      push: after-expression
     - match: \b(true|false|nothing|missing|ℯ|pi|π|im|undef|NaN|NaN16|NaN32|NaN64|Inf|Inf16|Inf32|Inf64|ARGS|C_NULL|ENDIAN_BOM|ENV|LOAD_PATH|PROGRAM_FILE|STDERR|STDIN|STDOUT|VERSION)\b
       scope: constant.language.julia
+      push: after-expression
+
+  symbols:
+    - match: '(:)({{symb_id}}|\.?{{long_op}}|\.?{{symb_op}}|\.)'
+      captures:
+        1: keyword.operator.colon.julia constant.other.symbol.julia
+        2: constant.other.symbol.julia
+    - match: '(:)(\()'
+      captures:
+        1: keyword.operator.colon.julia constant.other.expression.julia
+        2: punctuation.section.expression.begin.julia
+      push:
+        - meta_scope: meta.expression.julia
+        - match: \)
+          scope: punctuation.section.expression.end.julia
+          set: after-expression
+        - include: main
 
   macros:
     - match: '@{{symb_id}}'
+      scope: support.function.julia
+    - match: '@\.'
       scope: support.function.julia
 
   keywords:
@@ -228,7 +249,7 @@ contexts:
                 - match: ''
                   pop: 2
             - include: main
-        - match: '(?={{symb_id}}(?:\.{{symb_id}})*\.?\()'
+        - match: '(?={{symb_id}}(?:\.{{symb_id}})*\.?\(?)'
           push:
             - include: function-propotype
             - match: ''
@@ -505,7 +526,19 @@ contexts:
               1: punctuation.separator.arguments.julia
             pop: true
           - include: main
-    # TODO: :width => 2
+    - match: '(:)({{symb_id}}|\.?{{long_op}}|\.?{{symb_op}}|\.)(?=\s*=>)'
+      captures:
+        1: keyword.operator.colon.julia constant.other.symbol.julia
+        2: constant.other.symbol.julia
+      push:
+        - match: '=>'
+          scope: keyword.operator.fat-arrow.julia
+          set:
+          - match: (?:([,;])|(?=\)))
+            captures:
+              1: punctuation.separator.arguments.julia
+            pop: true
+          - include: main
 
   function-call-arguments-group:
     - match: \(
@@ -550,6 +583,18 @@ contexts:
       push:
         - include: possible-types
         - include: brackets
+        - match: ''
+          pop: true
+    - match: \s*(:)
+      captures:
+        1 : keyword.operator.colons.julia
+      push:
+        - match: \s*(?={{symb_id}})
+          push:
+            - include: functions
+            - include: identifiers
+            - match: ''
+              pop: true
         - match: ''
           pop: true
     - match: (?=\.?\()

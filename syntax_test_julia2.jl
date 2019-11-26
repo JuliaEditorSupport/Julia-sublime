@@ -218,6 +218,10 @@
 
   end
 
+  function f
+
+  end
+
   length([1, 2])
   length(x::Mytype) = 1
   Base.length([1, 2])
@@ -338,6 +342,7 @@
 #                                 ^^^^^^ meta.where-clause.julia support.type.julia
 
   x::Int = 1
+  x::Array{S, 2} where S = [2 2; 1 1]
   foo(x::Int = 2) = x
   foo(x::Int, y::Mytype) = x
   foo(::Int, ::Mytype) = x
@@ -347,3 +352,76 @@
   foo(x = 1::Int, y = abc::Mytype)
   (foo)(x::Int = 1, y::Mytype = 1.0) = x
   (foo).(1::Int, abc::Mytype)
+
+
+
+
+##
+## MACROS ====
+##
+
+macro foo(x, y)
+
+end
+
+@foo x y
+@foo(x, y)
+
+
+##
+## Symbols ====
+##
+
+  foo(a = 1, :abc => foo())
+# ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
+#            ^^^^ meta.function-call.julia meta.function-call.arguments.julia constant.other.symbol.julia
+#                 ^^ meta.function-call.julia meta.function-call.arguments.julia keyword.operator.fat-arrow.julia
+
+  :a.b
+# ^ keyword.operator
+#  ^ constant.other.symbol
+#    ^ meta.generic-name
+# (issue 3)
+  ,:βa
+#  ^ keyword.operator
+#   ^^ constant.other.symbol
+  [:+]
+#  ^ keyword.operator
+#   ^ constant.other.symbol
+  (:∘)
+#  ^ keyword.operator
+#   ^ constant.other.symbol
+  :a!
+# ^ keyword.operator
+#  ^^ constant.other.symbol
+  :(:)
+# ^ keyword.operator
+#  ^ source.julia
+#    ^ source.julia
+  :(a)
+# ^ keyword.operator
+#  ^ source.julia
+#   ^ meta.generic-name
+#      ^ source.julia
+  :++a
+# ^ keyword.operator
+#  ^^ constant.other.symbol
+#    ^ meta.generic-name
+  :+a
+# ^ keyword.operator
+#  ^ constant.other.symbol
+#   ^ meta.generic-name
+  :∘+a # Yes, this is correct, equivalent to +(:∘, a)
+# ^ keyword.operator
+#  ^ constant.other.symbol
+#   ^ keyword.operator
+#    ^ meta.generic-name
+  :.///a
+# ^ keyword.operator
+#  ^^^ constant.other.symbol
+#     ^ keyword.operator
+#      ^ meta.generic-name
+# (issue 43)
+  :function
+# ^ keyword.operator
+#  ^^^^^^^^ constant.other.symbol
