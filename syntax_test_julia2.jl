@@ -213,7 +213,7 @@
   function foo(x, y)
 #          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
 #              ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
-#               ^ meta.function.julia meta.function.parameters.julia punctuation.separator.arguments.julia
+#               ^ meta.function.julia meta.function.parameters.julia punctuation.separator.parameters.julia
 #                 ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
   end
 
@@ -259,6 +259,17 @@
 #     ^ meta.function-call.julia entity.name.function.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function-call.julia entity.name.function.julia support.function.julia
 
+
+##
+## Lambda functions ====
+##
+
+  x -> x^2
+  x::Int -> x^2
+
+  () -> 3^2
+
+  (x::Int, y) -> x + y
 
 
 ##
