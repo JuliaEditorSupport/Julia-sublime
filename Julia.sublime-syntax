@@ -622,7 +622,7 @@ contexts:
         - match: \s*=(?![=>])
           fail: function-parameter-branch-point
         - match: (?=::)
-          set: after-expression
+          push: after-expression
         - match: ''
           pop: true
     - match: '(?=::)'
@@ -630,7 +630,7 @@ contexts:
         - match: \s*=(?![=>])
           fail: function-parameter-branch-point
         - match: (?=::)
-          set: after-expression
+          push: after-expression
         - match: ''
           pop: true
     - match: ''
@@ -913,8 +913,10 @@ contexts:
       captures:
         1: keyword.operator.broadcast.julia
       push: function-call-arguments-group
-    - match: (')
-      scope: keyword.operator.transpose.julia
+    - match: (\.)?(')
+      captures:
+        1: keyword.operator.broadcast.julia
+        2: keyword.operator.transpose.julia
     - match: \.\.\.
       scope: keyword.operator.splat.julia
     - match: \?
