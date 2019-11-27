@@ -55,17 +55,36 @@ contexts:
     - include: strings
     - include: constants
     - include: symbols
+    - include: macros
+    - include: operators
     - include: macro-declarations
     - include: function-declarations
-    - include: macros
     - include: keywords
-    - include: operators
+    - include: maybe-identifiers
+    - include: brackets
+
+  maybe-identifiers:
+    - match: (?={{symb_id}})
+      branch_point: lambda-function-single-branch-point
+      branch:
+        - lambda-function-single-branch
+        - not-lambda-function
+
+    - match: (?=\()
+      branch_point: lambda-function-branch-point
+      branch:
+        - lambda-function-branch
+        - not-lambda-function
+
+  not-lambda-function:
     - include: functions
     - include: supported-modules
     - include: supported-types
     - include: parametric-types
     - include: identifiers
     - include: brackets
+    - match: ''
+      pop: true
 
   codesection:
     - match: ^\s*((\#+)\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
@@ -514,6 +533,42 @@ contexts:
     - match: ''
       pop: 2
 
+  lambda-function-single-branch:
+    - match: (?={{symb_id}})
+      push:
+        - match: '\s*(->)'
+          scope: meta.function.julia
+          captures:
+            1: keyword.operator.arrow.julia
+          pop: true
+        - match: ({{symb_id}})
+          scope: variable.parameter.julia
+          push:
+            - meta_scope: meta.function.julia meta.function.parameters.julia
+            - match: '(?=::)'
+              push: after-expression
+            - match: ''
+              pop: true
+        - match: ''
+          fail: lambda-function-single-branch-point
+    - match: ''
+      pop: true
+
+  lambda-function-branch:
+    - match: (?=\()
+      push:
+        - match: '\s*(->)'
+          scope: meta.function.julia
+          captures:
+            1: keyword.operator.arrow.julia
+          pop: true
+        - match: (?=\()
+          push: function-propotype-parameters-group
+        - match: ''
+          fail: lambda-function-branch-point
+    - match: ''
+      pop: true
+
   function-declarations:
     - match: (function)\s+
       captures:
@@ -669,7 +724,7 @@ contexts:
           set: after-expression
         - include: function-parameters
         - match: '[,;]'
-          scope: punctuation.separator.arguments.julia
+          scope: punctuation.separator.parameters.julia
     - match: ''
       pop: true
 
