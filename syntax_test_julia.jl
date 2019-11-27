@@ -228,6 +228,7 @@
   function foo
 #          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
   end
+#
 # <- meta.group
 )
 
@@ -237,7 +238,7 @@
   function (x, y)
 #           ^^^^ meta.function.julia meta.function.parameters.julia
   end
-
+#
 # <- meta.group
 )
 
@@ -453,7 +454,7 @@
 #       ^^^ meta.function.inline.julia support.type.julia
 #            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.inline.julia meta.function.parameters.julia
 #                     ^ meta.function.inline.julia meta.function.parameters.julia constant.numeric.julia
-
+#
 # <- meta.group
 )
 ##
@@ -493,6 +494,7 @@ quote
     #        ^^^ meta.interpolation.julia meta.generic-name.julia
     #             ^ meta.quote.julia meta.generic-name.julia
   end
+#
 # <- meta.quote.julia
 end
 
@@ -607,3 +609,28 @@ end
 
   raw"abc\"few"
 #        ^^ meta.string.julia string.quoted.double.julia constant.character.escape.julia
+
+##
+## List comprehension ====
+##
+
+  (s for s in S)
+#  ^^^^^^^^^^^^^ meta.group.julia
+#    ^^^ meta.group.julia keyword.control.julia
+#                ^ - meta.group.julia
+  (s for s in S if s > 0)
+#  ^^^^^^^^^^^^^^^^^^^^^ meta.group.julia
+#    ^^^ meta.group.julia keyword.control.julia
+#               ^^ meta.group.julia keyword.control.julia
+#                        ^ - meta.group.julia
+
+
+  [s for s in S]
+#  ^^^^^^^^^^^^^ meta.sequence.julia
+#    ^^^ meta.sequence.julia keyword.control.julia
+#                ^ - meta.sequence.julia
+  [s for s in S if s > 0]
+#  ^^^^^^^^^^^^^^^^^^^^^ meta.sequence.julia
+#    ^^^ meta.sequence.julia keyword.control.julia
+#               ^^ meta.sequence.julia keyword.control.julia
+#                        ^ - meta.sequence.julia
