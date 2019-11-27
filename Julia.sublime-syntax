@@ -59,6 +59,7 @@ contexts:
     - include: operators
     - include: macro-declarations
     - include: function-declarations
+    - include: struct-declarations
     - include: keywords
     - include: maybe-identifiers
     - include: brackets
@@ -424,6 +425,25 @@ contexts:
           push: after-expression
         - match: '[,;]'
           scope: punctuation.separator.arguments.julia
+
+  struct-declarations:
+    - match: (struct)\s*({{symb_id}})
+      scope: meta.struct.julia
+      captures:
+        1: storage.type.struct.julia keyword.declaration.struct.julia
+        2: entity.name.struct.julia
+
+    - match: (mutable struct)\s*({{symb_id}})
+      scope: meta.struct.mutable.julia
+      captures:
+        1: storage.type.struct.mutable.julia keyword.declaration.struct.mutable.julia
+        2: entity.name.struct.mutable.julia
+
+    - match: (abstract type)\s*({{symb_id}})
+      scope: meta.type.abstract.julia
+      captures:
+        1: storage.type.type.abstract.julia keyword.declaration.type.abstract.julia
+        2: entity.name.type.abstract.julia
 
   supported-modules:
     - match: '{{base_modules}}'
