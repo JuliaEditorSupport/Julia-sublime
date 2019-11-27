@@ -404,6 +404,22 @@ contexts:
     - include: parametric-types
     - match: '{{symb_id}}'
       scope: meta.generic-name.julia
+    - match: \(
+      scope: punctuation.section.group.begin.julia
+      push:
+        - meta_scope: meta.group.julia
+        - match: \)
+          scope: punctuation.section.group.end.julia
+          set: after-expression
+        - include: quote-include
+    - match: \[
+      scope: punctuation.section.sequence.begin.julia
+      push:
+        - meta_scope: meta.sequence.julia
+        - match: \]
+          scope: punctuation.section.sequence.end.julia
+          set: after-expression
+        - include: quote-include
 
   quotes:
     - match: \b(quote)\b
@@ -429,8 +445,9 @@ contexts:
       push: quote-block-body
 
   quote-block-body:
-    - match: \bend\b
-      scope: keyword.other.julia
+    - match: \b(end)\b|(?=[\)\]])
+      captures:
+        1: keyword.other.julia
       pop: true
     - include: quote-include
 
@@ -446,8 +463,9 @@ contexts:
       push: block-body
 
   block-body:
-    - match: \bend\b
-      scope: keyword.other.julia
+    - match: \b(end)\b|(?=[\)\]])
+      captures:
+        1: keyword.other.julia
       pop: true
     - include: main
 
