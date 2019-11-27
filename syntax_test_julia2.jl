@@ -240,12 +240,14 @@
   function (f::Mytype)(x, y)
   end
 
+  (f::Mytype)(x, y) = 1
+
   filter!()
 # ^^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   length([1, 2])
 # ^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   length(x::Mytype) = 1
-# ^^^^^^ meta.function-call.julia entity.name.function.julia support.function.julia
+# ^^^^^^ meta.function.julia entity.name.function.julia
   Base.filter!()
 # ^^^^ meta.function-call.julia variable.function.julia support.module.julia
 #     ^ meta.function-call.julia punctuation.accessor.dot.julia
@@ -255,9 +257,9 @@
 #     ^ meta.function-call.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   Base.length(x::Mytype) = 1
-# ^^^^ meta.function-call.julia entity.name.function.julia support.module.julia
-#     ^ meta.function-call.julia entity.name.function.julia punctuation.accessor.dot.julia
-#      ^^^^^^ meta.function-call.julia entity.name.function.julia support.function.julia
+# ^^^^ meta.function.julia entity.name.function.julia support.module.julia
+#     ^ meta.function.julia entity.name.function.julia punctuation.accessor.dot.julia
+#      ^^^^^^ meta.function.julia entity.name.function.julia
 
 
 ##
