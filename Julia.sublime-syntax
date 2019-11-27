@@ -540,7 +540,7 @@ contexts:
           scope: meta.function.julia
           captures:
             1: keyword.operator.arrow.julia
-          pop: true
+          pop: 2
         - match: ({{symb_id}})
           scope: variable.parameter.julia
           push:
@@ -551,8 +551,6 @@ contexts:
               pop: true
         - match: ''
           fail: lambda-function-single-branch-point
-    - match: ''
-      pop: true
 
   lambda-function-branch:
     - match: (?=\()
@@ -561,42 +559,29 @@ contexts:
           scope: meta.function.julia
           captures:
             1: keyword.operator.arrow.julia
-          pop: true
+          pop: 2
         - match: (?=\()
           push: function-propotype-parameters-group
         - match: ''
           fail: lambda-function-branch-point
-    - match: ''
-      pop: true
 
   function-declarations:
     - match: (function)\s+
       captures:
         1: meta.function.julia keyword.declaration.function.julia
-      push:
-        - match: '(?=\({{symb_id}}(?:\.{{symb_id}})*\)\()'
-          set: function-propotype
-        - match: '(?={{symb_id}}(?:\.{{symb_id}})*\()'
-          set: function-propotype
-        - match: '(?={{symb_id}})'
-          set: function-propotype
-        - match: '(?=\()'
-          set: function-propotype-parameters-group
+      push: function-propotype
 
   function-call-or-inline-declaration:
-    - match: '(?=\({{symb_id}}(?:\.{{symb_id}})*\)\.?\()'
-      push: function-contination
-    - match: '(?={{symb_id}}(?:\.{{symb_id}})*\.?\()'
-      push: function-contination
-
-  function-contination:
-    - match: '(?=\(?{{symb_id}}(?:\.{{symb_id}})*\)?\.?\()'
+    - match: (?x)
+          (?=\({{symb_id}}(?:\.{{symb_id}})*\)\.?\()
+            |
+          (?={{symb_id}}(?:\.{{symb_id}})*\.?\()
+            |
+          (?=\({{symb_id}}::[^\)]+\)\()
       branch_point: function-branch-point
       branch:
-        - function-call-branch
-        - function-inline-declaration-branch
-    - match: ''
-      pop: true
+        - function-call
+        - function-propotype
 
   function-parameters:
     - match: (?={{symb_id}}|::)
@@ -614,7 +599,7 @@ contexts:
         - match: \s*=(?![=>])
           fail: function-parameter-branch-point
         - match: (?=::)
-          push: after-expression
+          set: after-expression
         - match: ''
           pop: true
     - match: '(?=::)'
@@ -622,7 +607,7 @@ contexts:
         - match: \s*=(?![=>])
           fail: function-parameter-branch-point
         - match: (?=::)
-          push: after-expression
+          set: after-expression
         - match: ''
           pop: true
     - match: ''
@@ -632,7 +617,7 @@ contexts:
   function-parameters-with-default-branch:
     - match: '{{symb_id}}'
       scope: variable.parameter.julia
-      push:
+      set:
         - match: (?=::)
           push: after-expression
         - match: =(?![=>])
@@ -644,7 +629,7 @@ contexts:
             pop: true
           - include: main
     - match: '(?=::)'
-      push:
+      set:
         - match: (?=::)
           push: after-expression
         - match: =(?![=>])
@@ -655,27 +640,49 @@ contexts:
               1: punctuation.separator.arguments.julia
             pop: true
           - include: main
-    - match: ''
-      pop: true
 
   function-propotype:
     # (foo)(x, y)
     - match: '(?=\({{symb_id}}(\.{{symb_id}})*\)\()'
-      push:
+      set:
         - include: function-propotype-entity
-        - include: function-propotype-parameters-group
+        - match: (?=\()
+          set: function-propotype-parameters-group
     # foo(x, y)
     - match: '(?={{symb_id}}(\.{{symb_id}})*\()'
-      push:
+      set:
         - include: function-propotype-entity
-        - include: function-propotype-parameters-group
+        - match: (?=\()
+          set: function-propotype-parameters-group
     # foo
-    - match: '(?={{symb_id}})'
+    - match: '(?={{symb_id}}(\.{{symb_id}})*)'
       push:
         - include: function-propotype-entity
-        - include: function-propotype-parameters-group
+        - match: ''
+          pop: true
+    # (foo::Mytype)(x, y) or (x, y)
+    - match: '(?=\()'
+      branch_point: function-propotype-branch-point
+      branch:
+        - function-like-object-method
+        - function-propotype-parameters-group
     - match: ''
       pop: true
+
+  function-like-object-method:
+    - match: \(
+      scope: punctuation.section.group.begin.julia
+      set:
+        - meta_scope: meta.function.julia
+        - match: \)
+          scope: punctuation.section.group.end.julia
+          set:
+            - meta_scope: meta.function.julia
+            - match: (?=\()
+              set: function-propotype-parameters-group
+            - match: ''
+              fail: function-propotype-branch-point
+        - include: main
 
   function-propotype-entity:
     # (foo)(x, y)
@@ -717,7 +724,7 @@ contexts:
   function-propotype-parameters-group:
     - match: '\('
       scope: punctuation.section.parameters.end.julia
-      push:
+      set:
         - meta_scope: meta.function.julia
         - meta_content_scope: meta.function.parameters.julia
         - match: \)
@@ -726,13 +733,8 @@ contexts:
         - include: function-parameters
         - match: '[,;]'
           scope: punctuation.separator.parameters.julia
-    - match: ''
-      pop: true
 
-  function-inline-declaration-branch:
-    - include: function-propotype
-
-  function-call-branch:
+  function-call:
     # (foo)(x, y)
     - match: '(?=\({{symb_id}}(\.{{symb_id}})*\)\.?\()'
       push:
@@ -749,6 +751,22 @@ contexts:
           captures:
             1: keyword.operator.broadcast.julia
           set: function-call-arguments-group
+    # (foo::Mytype)(x, y)
+    - match: '(?=\({{symb_id}}::[^\)]+\)\()'
+      push:
+        - match: \(
+          scope: punctuation.section.group.begin.julia
+          set:
+            - meta_scope: meta.function-call.julia
+            - match: \)
+              scope: punctuation.section.group.end.julia
+              set:
+                - meta_scope: meta.function-call.julia
+                - match: (?=\()
+                  set: function-call-arguments-group
+                - match: ''
+                  fail: function-branch-point
+            - include: main
     - match: (?=\s*=[^=>])
       fail: function-branch-point
     - match: ''
@@ -818,7 +836,7 @@ contexts:
   function-call-arguments-group:
     - match: \(
       scope: punctuation.section.arguments.begin.julia
-      push:
+      set:
         - meta_scope: meta.function-call.julia
         - meta_content_scope: meta.function-call.arguments.julia
         - match: \)
@@ -826,13 +844,11 @@ contexts:
           set: after-expression
         - include: function-call-keyword-arguments
         - include: main
-    - match: ''
-      pop: true
 
   type-parameters-group:
     - match: \{
       scope: punctuation.section.parameter.begin.julia
-      push:
+      set:
         - meta_scope: meta.parametric-type.julia
         - meta_content_scope: meta.parametric-type.parameters.julia
         - match: \}
@@ -841,8 +857,6 @@ contexts:
         - match: ','
           scope: punctuation.separator.parameter.julia
         - include: main
-    - match: ''
-      pop: true
 
   after-expression:
     - match: (\.)(?=@?{{symb_id}})
@@ -872,8 +886,10 @@ contexts:
               pop: true
         - match: ''
           pop: true
-    - match: (?=\.?\()
-      push: function-contination
+    - match: (\.)?(?=\()
+      captures:
+        1: keyword.operator.broadcast.julia
+      push: function-call-arguments-group
     - match: (')
       scope: keyword.operator.transpose.julia
     - match: \.\.\.
