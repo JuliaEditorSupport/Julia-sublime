@@ -109,16 +109,19 @@ contexts:
           pop: true
 
   docstrings:
-    - match: ^\s*(?=("""|"))
+    - match: ^\s*(?=(@doc\s+raw"""|"))
       push:
-      - match: ("""|")
-        scope: punctuation.definition.comment.begin.julia
+      - match: '@doc'
+        scope: support.function.julia
+      - match: (raw)?("""|")
+        captures:
+          1: storage.type.string.julia
+          2: punctuation.definition.comment.begin.julia
         set:
           - meta_scope: comment.block.documentation.julia
-          - include: escaped-unicode-char
-          - include: escaped-char
-          - include: interpolated-julia
-          - match: '\1'
+          - match: '\\"'
+            scope: constant.character.escape.julia
+          - match: '\2'
             scope: punctuation.definition.comment.end.julia
             pop: true
 
