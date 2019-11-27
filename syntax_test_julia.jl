@@ -457,7 +457,7 @@
 # <- meta.group
 )
 ##
-## MACROS ====
+## Macros ====
 ##
 
   macro foo(x, y)
@@ -475,6 +475,26 @@
   @foo(x, y)
 # ^^^^ support.function.julia
 
+##
+## Quotes ====
+##
+
+quote
+  foo
+# ^^^ meta.quote.julia meta.generic-name.julia
+  Array
+# ^^^^^ meta.quote.julia support.type.julia
+  Base
+# ^^^^ meta.quote.julia support.module.julia
+  Foo{}
+# ^^^^^ meta.quote.julia meta.parametric-type.julia
+  function $(abc)(x)
+    # <- - meta.function
+    #        ^^^ meta.interpolation.julia meta.generic-name.julia
+    #             ^ meta.quote.julia meta.generic-name.julia
+  end
+# <- meta.quote.julia
+end
 
 ##
 ## Symbols ====
