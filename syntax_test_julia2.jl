@@ -4,18 +4,15 @@
 # https://www.sublimetext.com/docs/3/syntax.html#testing
 # Run tests by pressing `ctrl(or cmd)+shift+b`, i.e. run the `build` command
 
-
 #=
   command block
 # ^^^^^^^^^^^^^ comment.block.number-equal-sign
 =#
 # <- comment.block.number-equal-sign punctuation.definition.comment.number-equal-sign
 
-
 ##
 ## NUMBERS ====
 ##
-
   0b101
 # ^^^^^ constant.numeric
   0o7
@@ -168,7 +165,6 @@
 #                ^ meta.function-call.arguments.julia constant.numeric.julia
 #                   ^^^^^^ meta.function-call.arguments.julia meta.generic-name.julia
 #                         ^^^ meta.function-call.arguments.julia keyword.operator.splat.julia
-
   bar(x == 1)
 # ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
 #     ^ meta.function-call.arguments.julia meta.generic-name.julia
@@ -209,7 +205,6 @@
 #    ^ punctuation.accessor.dot.julia
 #         ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
 
-
   function foo(x, y)
 #          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
 #              ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
@@ -222,7 +217,6 @@
 #             ^ meta.function.julia entity.name.function.julia punctuation.accessor.dot.julia
 #              ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
   end
-
 
   function (foo)(x, y)
 #           ^^^ meta.group.julia meta.function.julia entity.name.function.julia meta.generic-name.julia
@@ -237,10 +231,22 @@
 #           ^^^^ meta.function.julia meta.function.parameters.julia
   end
 
+
   function (f::Mytype)(x, y)
+#           ^ meta.function.julia meta.generic-name.julia
+#                      ^^^^ meta.function.julia meta.function.parameters.julia
   end
 
+  (f::Mytype)(x, y)
+# ^^^^^^^^^^^^^^^^^ meta.function-call.julia
+#             ^^^^ meta.function-call.julia meta.function-call.arguments.julia
   (f::Mytype)(x, y) = 1
+# ^^^^^^^^^^^^^^^^^ meta.function.julia
+#             ^^^^ meta.function.julia meta.function.parameters.julia
+
+  bar().(x = 1, y = 2)
+#      ^ keyword.operator.broadcast.julia
+#        ^^^^^^^^^^^^ meta.function-call.julia meta.function-call.arguments.julia
 
   filter!()
 # ^^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
@@ -257,7 +263,7 @@
 #     ^ meta.function-call.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   Base.length(x::Mytype) = 1
-# ^^^^ meta.function.julia entity.name.function.julia support.module.julia
+# ^^^^ meta.function.julia entity.name.function.julia
 #     ^ meta.function.julia entity.name.function.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function.julia entity.name.function.julia
 
@@ -272,7 +278,6 @@
   () -> 3^2
 
   (x::Int, y) -> x + y
-
 
 ##
 ## UNICODE WORD BOUDARIES ====
@@ -341,7 +346,6 @@
   a ?b : c
 #   ^ invalid.operator.julia
 
-
 ##
 ## Types ====
 ##
@@ -354,7 +358,7 @@
 # ^^^ meta.parametric-type.julia meta.generic-name.julia
 #    ^ meta.parametric-type.julia punctuation.section.parameter.begin.julia
 #     ^^^ meta.parametric-type.julia meta.parametric-type.parameters.julia meta.generic-name.julia
-  y::MyArray{T, 2} where T foo
+  y::MyArray{T, 2} where T
 # ^ meta.generic-name.julia
 #  ^^ keyword.operator.colons.julia
 #    ^^^^^^^ meta.parametric-type.julia meta.generic-name.julia
