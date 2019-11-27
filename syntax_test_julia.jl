@@ -10,7 +10,6 @@
 =#
 # <- comment.block.number-equal-sign punctuation.definition.comment.number-equal-sign
 
-
 ##
 ## NUMBERS ====
 ##
@@ -186,17 +185,17 @@
 
   (bar)(x, y) = 1
 #  ^^^ meta.group.julia meta.generic-name.julia
-#       ^^^^ meta.function.julia meta.function.parameters.julia
+#       ^^^^ meta.function.inline.julia meta.function.parameters.julia
 
   bar(x, y) = 2
-# ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
-#     ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
-#        ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+# ^^^ meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#     ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
+#        ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
 
   bar(a = 1, z = abc) = 1
-#     ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
-#                ^^^ meta.function.julia meta.function.parameters.julia meta.generic-name.julia
-# ^^^ meta.function.julia entity.name.function.julia
+#     ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
+#                ^^^ meta.function.inline.julia meta.function.parameters.julia meta.generic-name.julia
+# ^^^ meta.function.inline.julia entity.name.function.julia
   bar(a = 1) == 1
 # ^^^ meta.function-call.julia variable.function.julia meta.generic-name.julia
 #            ^^ keyword.operator.julia
@@ -204,7 +203,7 @@
   foo.bar(x) = 1
 # ^^^^^^^ entity.name.function.julia
 #    ^ punctuation.accessor.dot.julia
-#         ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
+#         ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
 
   function foo(x, y)
 #          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
@@ -220,18 +219,27 @@
   end
 
   function (foo)(x, y)
-#           ^^^ meta.group.julia meta.function.julia entity.name.function.julia meta.generic-name.julia
+#           ^^^ meta.function.julia meta.group.julia entity.name.function.julia meta.generic-name.julia
 #                ^^^^ meta.function.julia meta.function.parameters.julia
   end
 
+(
+# <- meta.group
   function foo
 #          ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
   end
+# <- meta.group
+)
+
+(
+# <- meta.group
 
   function (x, y)
 #           ^^^^ meta.function.julia meta.function.parameters.julia
   end
 
+# <- meta.group
+)
 
   function (f::Mytype)(x, y)
 #           ^ meta.function.julia meta.generic-name.julia
@@ -242,8 +250,8 @@
 # ^^^^^^^^^^^^^^^^^ meta.function-call.julia
 #             ^^^^ meta.function-call.julia meta.function-call.arguments.julia
   (f::Mytype)(x, y) = 1
-# ^^^^^^^^^^^^^^^^^ meta.function.julia
-#             ^^^^ meta.function.julia meta.function.parameters.julia
+# ^^^^^^^^^^^^^^^^^ meta.function.inline.julia
+#             ^^^^ meta.function.inline.julia meta.function.parameters.julia
 
   bar().(x = 1, y = 2)
 #      ^ keyword.operator.broadcast.julia
@@ -254,7 +262,7 @@
   length([1, 2])
 # ^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   length(x::Mytype) = 1
-# ^^^^^^ meta.function.julia entity.name.function.julia
+# ^^^^^^ meta.function.inline.julia entity.name.function.julia
   Base.filter!()
 # ^^^^ meta.function-call.julia variable.function.julia support.module.julia
 #     ^ meta.function-call.julia punctuation.accessor.dot.julia
@@ -264,9 +272,9 @@
 #     ^ meta.function-call.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function-call.julia variable.function.julia support.function.julia
   Base.length(x::Mytype) = 1
-# ^^^^ meta.function.julia entity.name.function.julia
-#     ^ meta.function.julia entity.name.function.julia punctuation.accessor.dot.julia
-#      ^^^^^^ meta.function.julia entity.name.function.julia
+# ^^^^ meta.function.inline.julia entity.name.function.julia
+#     ^ meta.function.inline.julia entity.name.function.julia punctuation.accessor.dot.julia
+#      ^^^^^^ meta.function.inline.julia entity.name.function.julia
 
 
 ##
@@ -274,18 +282,18 @@
 ##
 
   x -> x^2
-# ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
-#   ^^ meta.function.julia keyword.operator.arrow.julia
+# ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
+#   ^^ meta.function.lambda.julia keyword.operator.arrow.julia
   x::Int -> x^2
-# ^ meta.function.julia meta.function.parameters.julia variable.parameter.julia
-#        ^^ meta.function.julia keyword.operator.arrow.julia
+# ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
+#        ^^ meta.function.lambda.julia keyword.operator.arrow.julia
   () -> 3^2
-# ^^ meta.function.julia punctuation.section.parameters
-#    ^^ meta.function.julia keyword.operator.arrow.julia
+# ^^ meta.function.lambda.julia punctuation.section.parameters
+#    ^^ meta.function.lambda.julia keyword.operator.arrow.julia
   (x::Int, y) -> x + y
-# ^^^^^^^^^^ meta.function.julia
-#     ^^^ meta.function.julia meta.function.parameters.julia support.type.julia
-#             ^^ meta.function.julia keyword.operator.arrow.julia
+# ^^^^^^^^^^ meta.function.lambda.julia
+#     ^^^ meta.function.lambda.julia meta.function.parameters.julia support.type.julia
+#             ^^ meta.function.lambda.julia keyword.operator.arrow.julia
 
 ##
 ## UNICODE WORD BOUDARIES ====
@@ -423,26 +431,31 @@
 #      ^ keyword.operator.broadcast.julia
 #       ^^^^^^^^^^^^^^^^^^^^^ meta.function-call.julia
   foo(x::Int, y::Mytype) = x
-# ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
-#     ^^^^^^^^^^^^^^^^^^ meta.function.julia meta.function.parameters.julia
+# ^^^ meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#     ^^^^^^^^^^^^^^^^^^ meta.function.inline.julia meta.function.parameters.julia
 #                        ^ keyword.operator.assignment.julia
   foo(::Int, ::Mytype) = x
-# ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
-#     ^^ meta.function.julia meta.function.parameters.julia keyword.operator.colons.julia
+# ^^^ meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#     ^^ meta.function.inline.julia meta.function.parameters.julia keyword.operator.colons.julia
   foo(::Int = 1, ::Mytype = 1.0) = x
-# ^^^ meta.function.julia entity.name.function.julia meta.generic-name.julia
-#     ^^ meta.function.julia meta.function.parameters.julia keyword.operator.colons.julia
-#           ^ meta.function.julia meta.function.parameters.julia keyword.operator.assignment.julia
-#             ^ meta.function.julia meta.function.parameters.julia constant.numeric.julia
-#              ^ meta.function.julia meta.function.parameters.julia punctuation.separator.arguments.julia
-#                  ^^^^^^ meta.function.julia meta.function.parameters.julia meta.generic-name.julia
-#                         ^ meta.function.julia meta.function.parameters.julia keyword.operator.assignment.julia
-  (foo::Int)(x::Int = 1, y::Mytype = 1.0) = x
-#  ^^^ meta.function.julia meta.generic-name.julia
-#       ^^^ meta.function.julia support.type.julia
-#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.julia meta.function.parameters.julia
-#                     ^ meta.function.julia meta.function.parameters.julia constant.numeric.julia
+# ^^^ meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#     ^^ meta.function.inline.julia meta.function.parameters.julia keyword.operator.colons.julia
+#           ^ meta.function.inline.julia meta.function.parameters.julia keyword.operator.assignment.julia
+#             ^ meta.function.inline.julia meta.function.parameters.julia constant.numeric.julia
+#              ^ meta.function.inline.julia meta.function.parameters.julia punctuation.separator.arguments.julia
+#                  ^^^^^^ meta.function.inline.julia meta.function.parameters.julia meta.generic-name.julia
+#                         ^ meta.function.inline.julia meta.function.parameters.julia keyword.operator.assignment.julia
 
+(
+# <- meta.group
+  (foo::Int)(x::Int = 1, y::Mytype = 1.0) = x
+#  ^^^ meta.function.inline.julia meta.generic-name.julia
+#       ^^^ meta.function.inline.julia support.type.julia
+#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.inline.julia meta.function.parameters.julia
+#                     ^ meta.function.inline.julia meta.function.parameters.julia constant.numeric.julia
+
+# <- meta.group
+)
 ##
 ## MACROS ====
 ##
@@ -450,6 +463,11 @@
   macro foo(x, y)
 #       ^^^ meta.macro.julia entity.name.macro.julia meta.generic-name.julia
 #           ^^^^ meta.macro.julia meta.macro.parameters.julia
+  end
+
+  macro (foo)(x, y)
+#        ^^^ meta.macro.julia entity.name.macro.julia meta.generic-name.julia
+#             ^^^^ meta.macro.julia meta.macro.parameters.julia
   end
 
   @foo x y
