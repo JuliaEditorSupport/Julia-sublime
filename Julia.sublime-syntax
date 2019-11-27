@@ -57,10 +57,11 @@ contexts:
     - include: symbols
     - include: macros
     - include: operators
-    - include: blocks
+    - include: quotes
     - include: macro-declarations
     - include: function-declarations
     - include: struct-declarations
+    - include: blocks
     - include: keywords
     - include: maybe-identifiers
     - include: brackets
@@ -387,8 +388,61 @@ contexts:
       captures:
         1: keyword.operator.julia
 
+  quote-include:
+    - include: comments
+    - include: interpolated-julia
+    - include: strings
+    - include: constants
+    - include: symbols
+    - include: macros
+    - include: operators
+    - include: quotes
+    - include: quote-blocks
+    - include: keywords
+    - include: supported-modules
+    - include: supported-types
+    - include: parametric-types
+    - match: '{{symb_id}}'
+      scope: meta.generic-name.julia
+
+  quotes:
+    - match: \b(quote)\b
+      scope: keyword.other.julia
+      push: quote-body
+
+  quote-body:
+    - meta_scope: meta.quote.julia
+    - match: \bend\b
+      scope: keyword.other.julia
+      pop: true
+    - include: quote-include
+
+  quote-blocks:
+    - match: \b(abstract type|mutable struct|primitive type)\b
+      scope: keyword.other.julia
+      push: quote-block-body
+    - match: \b(begin|function|let|local|macro|module|quote|struct)\b
+      scope: keyword.other.julia
+      push: quote-block-body
+    - match: \b(do|for|if|try|while)\b
+      scope: keyword.control.julia
+      push: quote-block-body
+
+  quote-block-body:
+    - match: \bend\b
+      scope: keyword.other.julia
+      pop: true
+    - include: quote-include
+
   blocks:
-    - match: (?=\b(begin|let|local|module|quote|do|for|if|try|while)\b)
+    - match: \b(abstract type|mutable struct|primitive type)\b
+      scope: keyword.other.julia
+      push: block-body
+    - match: \b(begin|function|let|local|macro|module|quote|struct)\b
+      scope: keyword.other.julia
+      push: block-body
+    - match: \b(do|for|if|try|while)\b
+      scope: keyword.control.julia
       push: block-body
 
   block-body:
