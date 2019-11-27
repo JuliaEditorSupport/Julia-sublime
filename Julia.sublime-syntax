@@ -879,7 +879,7 @@ contexts:
           pop: true
     - match: \s*(:)
       captures:
-        1 : keyword.operator.colons.julia
+        1 : keyword.operator.colon.julia
       push:
         - match: \s*(?={{symb_id}})
           push:
