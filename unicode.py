@@ -34,6 +34,17 @@ class JuliaUnicodeMixin(object):
                 view.replace(edit, sublime.Region(pt-4, pt-1), "")
 
 
+def normalize_completion(symbols):
+    return sublime.CompletionList(
+            (sublime.CompletionItem(
+                trigger=s[0],
+                completion=s[1],
+                annotation=s[1],
+                kind=(sublime.KIND_ID_AMBIGUOUS, s[1], "unicode"))
+                for s in symbols if len(s[1]) == 1),
+            flags=sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS)
+
+
 class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
 
     def should_complete(self, view, pt):
@@ -54,11 +65,11 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
         if not prefix:
             return None
 
-        ret = [(s[0] + "\t" + s[1], s[1]) for s in latex_symbols if s[0].startswith(prefix)]
+        ret = [s for s in latex_symbols if s[0].startswith(prefix)]
         if not ret:
-            ret = [(s[0][1:] + "\t" + s[1], s[1]) for s in emoji_symbols if s[0].startswith(prefix)]
+            ret = [(s[0][1:], s[1]) for s in emoji_symbols if s[0].startswith(prefix)]
 
-        return (ret, sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS)
+        return normalize_completion(ret)
 
     def on_query_context(self, view, key, operator, operand, match_all):
 
