@@ -57,7 +57,6 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
             return False
 
     def on_query_completions(self, view, prefix, locations):
-
         if not self.should_complete(view, locations[0]):
             return None
 
@@ -71,8 +70,24 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
 
         return normalize_completion(ret)
 
-    def on_query_context(self, view, key, operator, operand, match_all):
+    def on_text_changed_async(self, view, changes):
+        # sublime ac is not case sensitive, this is a hack to hide auto complete panel when
+        # there is an exact match
+        if view.score_selector(0, "source.julia") <= 0:
+            return
+        if not changes:
+            return
+        if not view.is_auto_complete_visible():
+            return
+        prefix = self.look_command_backward(view, changes[0].b.pt + 1)
+        if not prefix:
+            return
+        for s in symbols:
+            if s[0] == prefix:
+                view.run_command("hide_auto_complete")
+                return
 
+    def on_query_context(self, view, key, operator, operand, match_all):
         sel = view.sel()
         if len(sel) == 0 or not sel[0].empty():
             return

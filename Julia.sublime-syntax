@@ -49,6 +49,9 @@ variables:
 
 contexts:
   main:
+      # a helper to support emoji completion
+    - match: \\:(?:\n|\s)?
+      scope: keyword.operator.julia meta.disable-completion.julia
     - include: codesection
     - include: comments
     - include: docstrings
@@ -360,11 +363,8 @@ contexts:
     - match: \b(where|in|isa)\b
       scope: keyword.control.julia
 
-  # we handle transpose operator seperately in after-expression
   operators:
-    # a helper to disable emoji completion
-    - match: (\\:(?:\n|\s))
-      scope: keyword.operator.other.julia meta.disable-completion.julia
+    # we handle transpose operator seperately in after-expression
     - match: (::)
       scope: keyword.operator.colons.julia
     - match: '(?:(<:)|(>:))'
