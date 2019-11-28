@@ -1,4 +1,4 @@
 {
     // inhibit auto completion menu for \:, otherwise emoji would not been shown
-    "auto_complete_selector": "meta.tag - punctuation.definition.tag.begin, source - keyword.operator - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc"
+    "auto_complete_selector": "meta.tag - punctuation.definition.tag.begin, source - meta.disable-completion - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc"
 }

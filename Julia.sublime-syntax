@@ -360,8 +360,11 @@ contexts:
     - match: \b(where|in|isa)\b
       scope: keyword.control.julia
 
+  # we handle transpose operator seperately in after-expression
   operators:
-    # we handle transpose operator seperately in after-expression
+    # a helper to disable emoji completion
+    - match: (\\:(?:\n|\s))
+      scope: keyword.operator.other.julia meta.disable-completion.julia
     - match: (::)
       scope: keyword.operator.colons.julia
     - match: '(?:(<:)|(>:))'
