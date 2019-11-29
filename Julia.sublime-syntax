@@ -440,7 +440,7 @@ contexts:
     - match: \b(abstract type|mutable struct|primitive type)\b
       scope: keyword.other.julia
       push: quote-block-body
-    - match: \b(begin|function|let|local|macro|module|quote|struct)\b
+    - match: \b(begin|function|let|macro|module|quote|struct)\b
       scope: keyword.other.julia
       push: quote-block-body
     - match: \b(do|for|if|try|while)\b
@@ -458,7 +458,7 @@ contexts:
     - match: \b(abstract type|mutable struct|primitive type)\b
       scope: keyword.other.julia
       push: block-body
-    - match: \b(begin|function|let|local|macro|module|quote|struct)\b
+    - match: \b(begin|function|let|macro|module|quote|struct)\b
       scope: keyword.other.julia
       push: block-body
     - match: \b(do|for|if|try|while)\b
