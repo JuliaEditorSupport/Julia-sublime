@@ -675,15 +675,32 @@ contexts:
   lambda-function-branch:
     - meta_scope: meta.function.lambda.julia
     - match: (?=\()
+      push: [lambda-function-body, lambda-function-arguments]
+
+  lambda-function-body:
+    - match: '\s*(->)'
+      captures:
+        1: keyword.operator.arrow.julia
+      pop: 2
+    - match: ''
+      fail: lambda-function-branch-point
+
+  lambda-function-arguments:
+    - match: (?=\(\s*(?:{{symb_id}}|::|\)))
+      set: function-propotype-parameters-group
+    - match: \(
+      scope: punctuation.section.group.begin.julia
       push:
-        - match: '\s*(->)'
-          captures:
-            1: keyword.operator.arrow.julia
-          pop: 2
-        - match: (?=\()
-          push: function-propotype-parameters-group
+        - meta_scope: meta.group.julia
+        - match: \)
+          scope: punctuation.section.group.end.julia
+          pop: true
+        - match: (?=\(\s*(?:{{symb_id}}|::|\)))
+          push: lambda-function-arguments
         - match: ''
           fail: lambda-function-branch-point
+    - match: ''
+      fail: lambda-function-branch-point
 
   function-body:
     - meta_scope: meta.function.julia

@@ -296,6 +296,13 @@
 #     ^^^ meta.function.lambda.julia meta.function.parameters.julia support.type.julia
 #             ^^ meta.function.lambda.julia keyword.operator.arrow.julia
 
+  (::Int) -> 1
+# ^^^^^^^^^^ meta.function.lambda.julia
+
+  ( (x=1) -> x )
+# ^ meta.group.julia
+#  ^ - meta.funciton.lambda.julia
+
 ##
 ## UNICODE WORD BOUDARIES ====
 ##
