@@ -1,32 +1,12 @@
 [
     {
-        "keys": ["tab"], "command": "julia_unicode_auto_complete", "context":
+        "keys": ["tab"], "command": "julia_unicode_insert_completion", "context":
         [
             { "key": "selector", "operator": "equal", "operand": "source.julia" },
             { "key": "setting.tab_completion", "operator": "equal", "operand": true },
             { "key": "has_next_field", "operator": "equal", "operand": false },
             { "key": "auto_complete_visible", "operator": "equal", "operand": false},
-            { "key": "julia_unicode_has_matches"},
-            { "key": "julia_unicode_only_one_match"}
-        ]
-    },
-
-    {
-        "keys": ["tab"], "command": "julia_unicode_commit_complete", "context":
-        [
-            { "key": "selector", "operator": "equal", "operand": "source.julia" },
-            { "key": "auto_complete_visible" },
-            { "key": "julia_unicode_has_matches"}
-        ]
-    },
-
-    {
-        "keys": ["enter"], "command": "julia_unicode_commit_complete", "context":
-        [
-            { "key": "selector", "operator": "equal", "operand": "source.julia" },
-            { "key": "auto_complete_visible" },
-            { "key": "setting.auto_complete_commit_on_tab", "operand": false },
-            { "key": "julia_unicode_has_matches"}
+            { "key": "julia_unicode_exact_match"}
         ]
     }
 ]

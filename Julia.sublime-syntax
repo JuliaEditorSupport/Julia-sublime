@@ -50,7 +50,7 @@ variables:
 contexts:
   main:
       # a helper to support emoji completion
-    - match: \\:(?:\n|\s)?
+    - match: '\\:'
       scope: keyword.operator.julia meta.disable-completion.julia
     - include: codesection
     - include: comments
