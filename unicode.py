@@ -23,16 +23,6 @@ class JuliaUnicodeMixin(object):
         if ret:
             return view.substr(ret)
 
-    def fix_completion(self, view, edit):
-        for sel in view.sel():
-            pt = sel.begin()
-            if view.substr(sublime.Region(pt-3, pt-1)) == "\\:":
-                view.replace(edit, sublime.Region(pt-3, pt-1), "")
-            elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:+":
-                view.replace(edit, sublime.Region(pt-4, pt-1), "")
-            elif view.substr(sublime.Region(pt-4, pt-1)) == "\\:-":
-                view.replace(edit, sublime.Region(pt-4, pt-1), "")
-
 
 def normalize_completion(symbols):
     return sublime.CompletionList(
@@ -66,7 +56,7 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
 
         ret = [s for s in latex_symbols if s[0].startswith(prefix)]
         if not ret:
-            ret = [(s[0][1:], s[1]) for s in emoji_symbols if s[0].startswith(prefix)]
+            ret = [s for s in emoji_symbols if s[0].startswith(prefix)]
 
         return normalize_completion(ret)
 
@@ -97,21 +87,17 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
         if not self.should_complete(view, pt):
             return None
 
-        if key == 'julia_unicode_only_one_match':
+        if key == 'julia_unicode_exact_match':
             prefix = self.look_command_backward(view, pt)
-            count = 0
             for s in symbols:
-                if s[0].startswith(prefix):
-                    count = count + 1
-            return (count == 1) == operand
-        elif key == 'julia_unicode_has_matches':
-            prefix = self.look_command_backward(view, pt)
-            return (prefix is not None) == operand
+                if s[0] == prefix:
+                    return True
+            return False
 
         return None
 
 
-class JuliaUnicodeAutoComplete(JuliaUnicodeMixin, sublime_plugin.TextCommand):
+class JuliaUnicodeInsertCompletionCommand(JuliaUnicodeMixin, sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         for sel in view.sel():
@@ -123,10 +109,4 @@ class JuliaUnicodeAutoComplete(JuliaUnicodeMixin, sublime_plugin.TextCommand):
             for s in symbols:
                 if s[0] == prefix:
                     view.replace(edit, sublime.Region(sel.begin() - len(s[0]), sel.begin()), s[1])
-
-
-class JuliaUnicodeCommitComplete(JuliaUnicodeMixin, sublime_plugin.TextCommand):
-    def run(self, edit):
-        view = self.view
-        view.run_command("commit_completion")
-        self.fix_completion(view, edit)
+                    return
