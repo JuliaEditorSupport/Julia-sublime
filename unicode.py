@@ -61,8 +61,7 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
         return normalize_completion(ret)
 
     def on_text_changed_async(self, view, changes):
-        # sublime ac is not case sensitive, this is a hack to hide auto complete panel when
-        # there is an exact match
+        # help the completion of \mu because there is another item \multimap
         if view.score_selector(0, "source.julia") <= 0:
             return
         if not changes:
