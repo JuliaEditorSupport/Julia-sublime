@@ -118,7 +118,7 @@ contexts:
     - match: ^\s*(?=(@doc\s+raw"""|"))
       push:
       - match: '@doc'
-        scope: support.function.julia
+        scope: variable.macro.julia support.function.julia
       - match: (raw)?("""|")
         captures:
           1: storage.type.string.julia
@@ -347,9 +347,9 @@ contexts:
 
   macros:
     - match: '@{{symb_id}}'
-      scope: support.function.julia
+      scope: variable.macro.julia support.function.julia
     - match: '@\.'
-      scope: support.function.julia
+      scope: variable.macro.julia support.function.julia
 
 
   keywords:
