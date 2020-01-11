@@ -468,6 +468,10 @@
 ## Macros ====
 ##
 
+  @eval hello()
+# ^ punctuation.definition.macro.julia
+#  ^^^^ variable.macro.julia support.function.macro.julia
+
   macro foo(x, y)
 #       ^^^ meta.macro.julia entity.name.macro.julia meta.generic-name.julia
 #           ^^^^ meta.macro.julia meta.macro.parameters.julia
@@ -479,9 +483,11 @@
   end
 
   @foo x y
-# ^^^^ support.function.julia
+# ^ punctuation.definition.macro.julia
+#  ^^^ variable.macro.julia meta.generic-name.julia
   @foo(x, y)
-# ^^^^ support.function.julia
+# ^ punctuation.definition.macro.julia
+#  ^^^ variable.macro.julia meta.generic-name.julia
 
 ##
 ## Quotes ====
