@@ -30,7 +30,7 @@ def normalize_completion(symbols):
                 trigger=s[0],
                 completion=s[1],
                 annotation=s[1],
-                kind=(sublime.KIND_ID_AMBIGUOUS, s[1] if len(s[1]) == 1 else " ", "unicode"))
+                kind=sublime.KIND_AMBIGUOUS)
                 for s in symbols),
             flags=sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS)
 
