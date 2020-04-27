@@ -118,7 +118,7 @@ contexts:
           pop: true
 
   docstrings:
-    - match: ^\s*(?=(@doc\s+raw"""|"))
+    - match: ^\s*(?=(@doc\s+raw"""|^(raw)?"""|^"(?:.*"$)))
       push:
       - match: '@doc'
         scope: variable.macro.julia support.function.julia
