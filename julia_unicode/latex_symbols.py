@@ -549,6 +549,8 @@ latex_symbols = [
   ("\\sansE", u"𝖤"),
   ("\\rightdotarrow", u"⤑"),
   ("\\leqslant", u"⩽"),
+  ("\\leq", u"≤"),
+  ("\\geq", u"≥"),
   ("\\questeq", u"≟"),
   ("\\trnr", u"ɹ"),
   ("\\wp", u"℘"),
