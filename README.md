@@ -1,6 +1,6 @@
 # Julia-sublime
 
-Julia language support for Sublime Text 4 or above
+Julia language support for Sublime Text 3 or above
 
 - Syntax highlighting
 - Unicode tab completion (like the [REPL](http://docs.julialang.org/en/latest/manual/interacting-with-julia/#tab-completion))
