@@ -18,11 +18,11 @@ If you want more control over what you pull down, or if you'd like to submit a P
 
 ```
 # on a Mac
-cd "$HOME/Library/Application Support/Sublime Text 3/Packages"
+cd "$HOME/Library/Application Support/Sublime Text/Packages"
 # on Linux
-cd $HOME/.config/sublime-text-3/Packages
+cd $HOME/.config/sublime-text/Packages
 # on Windows (PowerShell)
-cd "$env:appdata\Sublime Text 3\Packages\"
+cd "$env:appdata\Sublime Text\Packages\"
 
 git clone git@github.com:JuliaEditorSupport/Julia-sublime.git Julia
 ```
