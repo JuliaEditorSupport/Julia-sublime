@@ -33,8 +33,8 @@ git clone git@github.com:JuliaEditorSupport/Julia-sublime.git Julia
 ### Sublime Text version support
 
 This package should be only used in Sublime Text 4 or above. Sublime Text 3
-support is deprecated. You are still able to install older version of Julia
-from Package Control.
+support is deprecated. You are still able to install older version (0.9.0) of Julia
+from Package Control or from GitHub release https://github.com/juliaeditorsupport/julia-sublime/releases.
 
 ### Custom colors
 
