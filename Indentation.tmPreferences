@@ -3,7 +3,7 @@
 <dict>
 
   <key>scope</key>
-  <string>source.julia -string -comment</string>
+  <string>source.julia</string>
 
   <key>settings</key>
   <dict>
@@ -13,6 +13,9 @@
 
     <key>increaseIndentPattern</key>
     <string>^(\s*|\w*\s*=\s*|@\w*\s*)[\w\s]*\b(if|else|elseif|for|while|begin|function|type|macro|immutable|try|catch|finally|let|quote|.*\)\s*do|struct)\b(?!.*\bend\b[^\]]*$).*$</string>
+ 
+   <key>unIndentedLinePattern</key>
+   <string>^\s*#|\s*(=#$)</string>
 
   </dict>
 
