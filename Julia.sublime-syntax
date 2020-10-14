@@ -114,7 +114,7 @@ contexts:
       scope: punctuation.definition.comment.julia
       push:
         - meta_scope: comment.line.number-sign.julia
-        - match: \n
+        - match: (?=\n)
           pop: true
 
   docstrings:
