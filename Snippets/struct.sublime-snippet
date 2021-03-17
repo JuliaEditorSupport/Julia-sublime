@@ -1,7 +1,7 @@
 <snippet>
   <content><![CDATA[
 struct $1
-    $0
+	$0
 end
 ]]></content>
   <tabTrigger>struct</tabTrigger>

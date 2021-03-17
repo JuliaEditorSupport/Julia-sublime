@@ -1,7 +1,7 @@
 <snippet>
   <content><![CDATA[
 if $1
-    $0
+	$0
 end
 ]]></content>
   <tabTrigger>if</tabTrigger>
