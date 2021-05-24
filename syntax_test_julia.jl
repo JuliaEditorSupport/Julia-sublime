@@ -647,3 +647,11 @@ end
 #    ^^^ meta.sequence.julia keyword.control.julia
 #               ^^ meta.sequence.julia keyword.control.julia
 #
+
+
+# Issues
+
+# #98
+  ((x, "x = x"))
+# ^^^^^^^^^^^^^^ meta.group.julia
+#      ^^^^^^^ string.quoted.double.julia

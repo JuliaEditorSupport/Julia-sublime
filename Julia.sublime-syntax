@@ -513,6 +513,7 @@ contexts:
           push: after-expression
         - match: '[,;]'
           scope: punctuation.separator.arguments.julia
+        - include: main
 
   struct-body:
     - meta_scope: meta.struct.julia
@@ -926,6 +927,7 @@ contexts:
         - include: function-parameters
         - match: '[,;]'
           scope: punctuation.separator.parameters.julia
+        - include: main
 
   function-call:
     # (foo)(x, y)
