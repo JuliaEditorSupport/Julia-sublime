@@ -513,7 +513,6 @@ contexts:
           push: after-expression
         - match: '[,;]'
           scope: punctuation.separator.arguments.julia
-        - include: main
 
   struct-body:
     - meta_scope: meta.struct.julia
@@ -918,7 +917,7 @@ contexts:
 
   function-propotype-parameters-group:
     - match: '\('
-      scope: punctuation.section.parameters.end.julia
+      scope: punctuation.section.parameters.begin.julia
       set:
         - meta_content_scope: meta.function.parameters.julia
         - match: \)
@@ -927,7 +926,8 @@ contexts:
         - include: function-parameters
         - match: '[,;]'
           scope: punctuation.separator.parameters.julia
-        - include: main
+        - match: '(?=\S)'
+          fail: lambda-function-branch-point
 
   function-call:
     # (foo)(x, y)

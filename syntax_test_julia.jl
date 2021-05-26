@@ -655,3 +655,8 @@ end
   ((x, "x = x"))
 # ^^^^^^^^^^^^^^ meta.group.julia
 #      ^^^^^^^ string.quoted.double.julia
+
+# #99
+ (I + W1' * W1 / n)
+#^^^^^^^^^^^^^^^^^^ meta.group.julia
+#       ^ keyword.operator.transpose.julia
