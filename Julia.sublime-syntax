@@ -926,6 +926,7 @@ contexts:
         - include: function-parameters
         - match: '[,;]'
           scope: punctuation.separator.parameters.julia
+        - include: comments
         - match: '(?=\S)'
           fail: lambda-function-branch-point
 

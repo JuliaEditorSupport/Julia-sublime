@@ -660,3 +660,11 @@ end
  (I + W1' * W1 / n)
 #^^^^^^^^^^^^^^^^^^ meta.group.julia
 #       ^ keyword.operator.transpose.julia
+
+
+f(#=x::Int=#; kwargs...)
+# ^^^^^^^^^^ comment.block
+f(#=x::Int=#; kwargs...) = 1
+# <- entity.name.function.julia meta.generic-name.julia
+# ^^^^^^^^^^ comment.block
+#^ meta.function.inline.julia
