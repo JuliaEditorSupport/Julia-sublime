@@ -758,6 +758,12 @@ contexts:
       branch:
         - function-parameters-branch
         - function-parameters-with-default-branch
+    - match: '\('
+      scope: punctuation.section.parameters.begin.julia
+      push:
+        - match: \)
+          pop: true
+        - include: function-parameters
 
   # f(x::T) = 1
   function-parameters-branch:
@@ -926,9 +932,7 @@ contexts:
         - include: function-parameters
         - match: '[,;]'
           scope: punctuation.separator.parameters.julia
-        - include: comments
-        - match: '(?=\S)'
-          fail: lambda-function-branch-point
+        - include: main
 
   function-call:
     # (foo)(x, y)

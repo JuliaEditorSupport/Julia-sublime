@@ -277,6 +277,12 @@
 #     ^ meta.function.inline.julia entity.name.function.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function.inline.julia entity.name.function.julia
 
+  foo((x), ((y))) = 1
+# ^^^ meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#      ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
+#            ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
+
+
 
 # ##
 # ## Lambda functions ====
@@ -668,3 +674,9 @@ f(#=x::Int=#; kwargs...) = 1
 # <- entity.name.function.julia meta.generic-name.julia
 # ^^^^^^^^^^ comment.block
 #^ meta.function.inline.julia
+
+
+# 101
+foo(x::A{f(a)}) = 1
+# <- meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#        ^^^^ meta.function.inline.julia meta.function.parameters.julia meta.parametric-type.julia meta.parametric-type.parameters.julia meta.function-call.julia
