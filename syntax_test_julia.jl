@@ -630,6 +630,16 @@ end
 #        ^^ meta.string.julia string.quoted.double.julia constant.character.escape.julia
 
 ##
+## Struct ====
+##
+
+Base.@kwdef mutable struct ABC
+  repo::REPO{} = repo()
+# ^^^^ meta.struct.julia meta.generic-name.julia
+#       ^^^^ meta.struct.julia meta.type.julia meta.parametric-type.julia meta.generic-name.julia
+end
+
+##
 ## List comprehension ====
 ##
 

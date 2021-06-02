@@ -562,15 +562,15 @@ contexts:
 
   parametric-types:
     - match: '{{symb_id}}(?=\{)'
-      scope: meta.parametric-type.julia meta.generic-name.julia
-      push: type-parameters-group
+      scope: meta.type.julia meta.parametric-type.julia meta.generic-name.julia
+      push: parametric-type-parameters-group
 
   supported-types:
     - match: '{{base_types}}(?=\{)'
       scope: meta.parametric-type.julia support.type.julia
-      push: type-parameters-group
+      push: parametric-type-parameters-group
     - match: '{{base_types}}'
-      scope: support.type.julia
+      scope: meta.type.julia support.type.julia
 
   possible-types:
     - match: \(
@@ -583,7 +583,8 @@ contexts:
         - include: possible-types
     - include: supported-types
     - include: parametric-types
-    - include: identifiers
+    - match: '{{symb_id}}'
+      scope: meta.type.julia meta.generic-name.julia
 
   where-clause:
     - match: \s*(where)\b
@@ -1045,11 +1046,11 @@ contexts:
         - include: function-call-keyword-arguments
         - include: main
 
-  type-parameters-group:
+  parametric-type-parameters-group:
     - match: \{
       scope: punctuation.section.parameter.begin.julia
       set:
-        - meta_scope: meta.parametric-type.julia
+        - meta_scope: meta.type.julia meta.parametric-type.julia
         - meta_content_scope: meta.parametric-type.parameters.julia
         - match: \}
           scope: punctuation.section.parameter.end.julia
@@ -1102,7 +1103,7 @@ contexts:
       captures:
         1: invalid.operator.julia
     - match: (?=\{)
-      push: type-parameters-group
+      push: parametric-type-parameters-group
     - match: (?=\s*where)
       push: where-clause
     - match: ''
