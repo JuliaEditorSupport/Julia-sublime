@@ -278,30 +278,30 @@
 #      ^^^^^^ meta.function.inline.julia entity.name.function.julia
 
 
-##
-## Lambda functions ====
-##
+# ##
+# ## Lambda functions ====
+# ##
 
-  x -> x^2
-# ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
-#   ^^ meta.function.lambda.julia keyword.operator.arrow.julia
-  x::Int -> x^2
-# ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
-#        ^^ meta.function.lambda.julia keyword.operator.arrow.julia
-  () -> 3^2
-# ^^ meta.function.lambda.julia punctuation.section.parameters
-#    ^^ meta.function.lambda.julia keyword.operator.arrow.julia
-  (x::Int, y) -> x + y
-# ^^^^^^^^^^ meta.function.lambda.julia
-#     ^^^ meta.function.lambda.julia meta.function.parameters.julia support.type.julia
-#             ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+#   x -> x^2
+# # ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
+# #   ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+#   x::Int -> x^2
+# # ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
+# #        ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+#   () -> 3^2
+# # ^^ meta.function.lambda.julia punctuation.section.parameters
+# #    ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+#   (x::Int, y) -> x + y
+# # ^^^^^^^^^^ meta.function.lambda.julia
+# #     ^^^ meta.function.lambda.julia meta.function.parameters.julia support.type.julia
+# #             ^^ meta.function.lambda.julia keyword.operator.arrow.julia
 
-  (::Int) -> 1
-# ^^^^^^^^^^ meta.function.lambda.julia
+#   (::Int) -> 1
+# # ^^^^^^^^^^ meta.function.lambda.julia
 
-  ( (x=1) -> x )
-# ^ meta.group.julia
-#  ^ - meta.funciton.lambda.julia
+#   ( (x=1) -> x )
+# # ^ meta.group.julia
+# #  ^ - meta.funciton.lambda.julia
 
 ##
 ## UNICODE WORD BOUDARIES ====

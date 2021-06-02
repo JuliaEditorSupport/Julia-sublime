@@ -69,21 +69,21 @@ contexts:
     - include: struct-declarations
     - include: blocks
     - include: keywords
-    - include: maybe-identifiers
+    - include: not-lambda-function
     - include: brackets
 
-  maybe-identifiers:
-    - match: (?={{symb_id}})
-      branch_point: lambda-function-single-branch-point
-      branch:
-        - lambda-function-single-branch
-        - not-lambda-function
+  # maybe-identifiers:
+    # - match: (?={{symb_id}})
+    #   branch_point: lambda-function-single-branch-point
+    #   branch:
+    #     - lambda-function-single-branch
+    #     - not-lambda-function
 
-    - match: (?=\()
-      branch_point: lambda-function-branch-point
-      branch:
-        - lambda-function-branch
-        - not-lambda-function
+    # - match: (?=\()
+    #   branch_point: lambda-function-branch-point
+    #   branch:
+    #     - lambda-function-branch
+    #     - not-lambda-function
 
   not-lambda-function:
     - include: function-call-or-inline-declaration
@@ -92,8 +92,8 @@ contexts:
     - include: parametric-types
     - include: identifiers
     - include: brackets
-    - match: ''
-      pop: true
+    # - match: ''
+    #   pop: true
 
   codesection:
     - match: ^\s*((\#+)\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
