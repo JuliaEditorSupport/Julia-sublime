@@ -59,3 +59,49 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
             ret = [s for s in emoji_symbols if s[0].startswith(prefix)]
 
         return normalize_completion(ret)
+
+    def on_query_context(self, view, key, operator, operand, match_all):
+        sel = view.sel()
+        if len(sel) == 0 or not sel[0].empty():
+            return
+
+        pt = sel[0].end()
+        if key == "active_view_is_julia":
+            if view.settings().get('is_widget'):
+                active_view = view.window().active_view()
+                if active_view:
+                    sel = active_view.sel()
+                    if len(sel) >= 1:
+                        return active_view.score_selector(sel[0].begin(), "source.julia") > 0
+
+        elif key == 'julia_unicode_has_matches':
+            prefix = self.look_command_backward(view, pt)
+            return (prefix is not None) == operand
+
+        return None
+
+
+class JuliaUnicodeInsertBestCompletion(JuliaUnicodeMixin, sublime_plugin.TextCommand):
+    def run(self, edit, next_completion=False):
+        view = self.view
+        if len(view.sel()) == 0 or not view.sel()[0].empty():
+            return
+        pt = view.sel()[0].end()
+
+        if not next_completion:
+            prefix = self.look_command_backward(view, pt)
+            region = sublime.Region(view.sel()[0].begin()-len(prefix), view.sel()[0].begin())
+            exact_match = [s[1] for s in symbols if s[0] == prefix]
+            self.completions = exact_match + \
+                    list(set([s[1] for s in symbols if s[0].startswith(prefix) and s[0] != prefix]))
+            view.replace(edit, region, self.completions[0])
+        else:
+            region = sublime.Region(view.sel()[0].begin()-1, view.sel()[0].begin())
+            prev_char = view.substr(region)
+            if prev_char in self.completions:
+                prev_index = self.completions.index(prev_char)
+                next_index = prev_index + 1 if prev_index < len(self.completions) - 1 else 0
+                for sel in reversed(view.sel()):
+                    pt = sel.begin()
+                    if view.substr(sublime.Region(pt-1, pt)) == prev_char:
+                        view.replace(edit, sublime.Region(pt-1, pt), self.completions[next_index])
