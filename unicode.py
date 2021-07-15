@@ -78,6 +78,14 @@ class JuliaUnicodeListener(JuliaUnicodeMixin, sublime_plugin.EventListener):
             prefix = self.look_command_backward(view, pt)
             return (prefix is not None) == operand
 
+        elif key == 'julia_unicode_only_one_match':
+            prefix = self.look_command_backward(view, pt)
+            count = 0
+            for s in symbols:
+                if s[0].startswith(prefix):
+                    count = count + 1
+            return (count == 1) == operand
+
         return None
 
 
