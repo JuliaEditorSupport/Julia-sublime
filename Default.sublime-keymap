@@ -14,9 +14,7 @@
         "args": { "next_completion": true },
         "context":
         [
-            { "key": "setting.is_widget"},
             { "key": "last_command", "operator": "equal", "operand": "julia_unicode_insert_best_completion" },
-            { "key": "setting.tab_completion", "operator": "equal", "operand": true }
         ]
     }
 ]
