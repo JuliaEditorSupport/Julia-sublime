@@ -680,6 +680,17 @@ end
 #               ^^ meta.sequence.julia keyword.control.julia
 #
 
+[x for x in 1:10 if x < 5]
+#            ^ keyword.operator.colon.julia
+#                ^^ keyword.control.julia
+[x for x in 1:f(10) if x < 5]
+#            ^ keyword.operator.colon.julia
+#             ^ meta.function-call.julia variable.function.julia meta.generic-name.julia
+#                   ^^ keyword.control.julia
+[x for x in 1:@f(10) if x < 5]
+#            ^ keyword.operator.colon.julia
+#             ^^ meta.function-call.macro.julia
+#                    ^^ keyword.control.julia
 
 # Issues
 

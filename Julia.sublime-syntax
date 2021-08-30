@@ -1078,15 +1078,6 @@ contexts:
     - match: \s*(:)
       captures:
         1 : keyword.operator.colon.julia
-      push:
-        - match: \s*(?={{symb_id}})
-          push:
-            - include: function-call-or-inline-declaration
-            - include: identifiers
-            - match: ''
-              pop: true
-        - match: ''
-          pop: true
     - match: (\.)?(?=\()
       captures:
         1: keyword.operator.broadcast.julia
