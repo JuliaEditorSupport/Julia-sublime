@@ -349,7 +349,7 @@ contexts:
         - include: main
 
   macros:
-    - match: '(@)({{base_macros}}|\.)\b'
+    - match: '(@)({{base_macros}}\b|\.)'
       scope: meta.function-call.macro.julia
       captures:
         1: punctuation.definition.macro.julia
