@@ -96,7 +96,7 @@ contexts:
     #   pop: true
 
   codesection:
-    - match: ^\s*((\#+)\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
+    - match: ^\s*((\#+(?!==))\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
       captures:
         1: comment.line.number-sign.julia
         2: punctuation.definition.comment.julia

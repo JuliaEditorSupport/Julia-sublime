@@ -10,6 +10,17 @@
 =#
 # <- comment.block.number-equal-sign punctuation.definition.comment.number-equal-sign
 
+
+# Code section ####
+# ^^^^^^^^^^^^ comment.line.number-sign.julia entity.name.section.julia
+# Code section ====
+# ^^^^^^^^^^^^ comment.line.number-sign.julia entity.name.section.julia
+# = ====
+# ^ comment.line.number-sign.julia entity.name.section.julia
+#=====
+#^ -comment.line.number-sign.julia entity.name.section.julia
+=====#
+
 ##
 ## NUMBERS ====
 ##
