@@ -506,6 +506,11 @@
 # ^ punctuation.definition.macro.julia
 #  ^^^ variable.macro.julia meta.generic-name.julia
 
+@timecustom
+#^^^^^^^^^^ -support.function.macro.julia
+@time
+#^^^^ support.function.macro.julia
+
 ##
 ## Quotes ====
 ##
