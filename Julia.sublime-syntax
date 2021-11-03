@@ -69,21 +69,21 @@ contexts:
     - include: struct-declarations
     - include: blocks
     - include: keywords
-    - include: maybe-identifiers
+    - include: not-lambda-function
     - include: brackets
 
-  maybe-identifiers:
-    - match: (?={{symb_id}})
-      branch_point: lambda-function-single-branch-point
-      branch:
-        - lambda-function-single-branch
-        - not-lambda-function
+  # maybe-identifiers:
+    # - match: (?={{symb_id}})
+    #   branch_point: lambda-function-single-branch-point
+    #   branch:
+    #     - lambda-function-single-branch
+    #     - not-lambda-function
 
-    - match: (?=\()
-      branch_point: lambda-function-branch-point
-      branch:
-        - lambda-function-branch
-        - not-lambda-function
+    # - match: (?=\()
+    #   branch_point: lambda-function-branch-point
+    #   branch:
+    #     - lambda-function-branch
+    #     - not-lambda-function
 
   not-lambda-function:
     - include: function-call-or-inline-declaration
@@ -92,11 +92,11 @@ contexts:
     - include: parametric-types
     - include: identifiers
     - include: brackets
-    - match: ''
-      pop: true
+    # - match: ''
+    #   pop: true
 
   codesection:
-    - match: ^\s*((\#+)\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
+    - match: ^\s*((\#+(?!==))\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
       captures:
         1: comment.line.number-sign.julia
         2: punctuation.definition.comment.julia
@@ -349,12 +349,12 @@ contexts:
         - include: main
 
   macros:
-    - match: '(@)({{base_macros}}|\.)'
+    - match: '(@)({{base_macros}}\b|\.)'
       scope: meta.function-call.macro.julia
       captures:
         1: punctuation.definition.macro.julia
         2: variable.macro.julia support.function.macro.julia
-    - match: '(@)({{symb_id}})'
+    - match: '(@)({{symb_id}})\b'
       scope: meta.function-call.macro.julia
       captures:
         1: punctuation.definition.macro.julia
@@ -562,15 +562,15 @@ contexts:
 
   parametric-types:
     - match: '{{symb_id}}(?=\{)'
-      scope: meta.parametric-type.julia meta.generic-name.julia
-      push: type-parameters-group
+      scope: meta.type.julia meta.parametric-type.julia meta.generic-name.julia
+      push: parametric-type-parameters-group
 
   supported-types:
     - match: '{{base_types}}(?=\{)'
       scope: meta.parametric-type.julia support.type.julia
-      push: type-parameters-group
+      push: parametric-type-parameters-group
     - match: '{{base_types}}'
-      scope: support.type.julia
+      scope: meta.type.julia support.type.julia
 
   possible-types:
     - match: \(
@@ -583,7 +583,8 @@ contexts:
         - include: possible-types
     - include: supported-types
     - include: parametric-types
-    - include: identifiers
+    - match: '{{symb_id}}'
+      scope: meta.type.julia meta.generic-name.julia
 
   where-clause:
     - match: \s*(where)\b
@@ -758,6 +759,12 @@ contexts:
       branch:
         - function-parameters-branch
         - function-parameters-with-default-branch
+    - match: '\('
+      scope: punctuation.section.parameters.begin.julia
+      push:
+        - match: \)
+          pop: true
+        - include: function-parameters
 
   # f(x::T) = 1
   function-parameters-branch:
@@ -926,8 +933,7 @@ contexts:
         - include: function-parameters
         - match: '[,;]'
           scope: punctuation.separator.parameters.julia
-        - match: '(?=\S)'
-          fail: lambda-function-branch-point
+        - include: main
 
   function-call:
     # (foo)(x, y)
@@ -1040,11 +1046,11 @@ contexts:
         - include: function-call-keyword-arguments
         - include: main
 
-  type-parameters-group:
+  parametric-type-parameters-group:
     - match: \{
       scope: punctuation.section.parameter.begin.julia
       set:
-        - meta_scope: meta.parametric-type.julia
+        - meta_scope: meta.type.julia meta.parametric-type.julia
         - meta_content_scope: meta.parametric-type.parameters.julia
         - match: \}
           scope: punctuation.section.parameter.end.julia
@@ -1072,15 +1078,6 @@ contexts:
     - match: \s*(:)
       captures:
         1 : keyword.operator.colon.julia
-      push:
-        - match: \s*(?={{symb_id}})
-          push:
-            - include: function-call-or-inline-declaration
-            - include: identifiers
-            - match: ''
-              pop: true
-        - match: ''
-          pop: true
     - match: (\.)?(?=\()
       captures:
         1: keyword.operator.broadcast.julia
@@ -1097,7 +1094,7 @@ contexts:
       captures:
         1: invalid.operator.julia
     - match: (?=\{)
-      push: type-parameters-group
+      push: parametric-type-parameters-group
     - match: (?=\s*where)
       push: where-clause
     - match: ''

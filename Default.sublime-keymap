@@ -1,0 +1,20 @@
+[
+    {
+        "keys": ["tab"], "command": "julia_unicode_insert_best_completion", "context":
+        [
+            { "key": "setting.is_widget"},
+            { "key": "setting.tab_completion", "operator": "equal", "operand": true },
+            { "key": "active_view_is_julia", "operator": "equal", "operand": true },
+            { "key": "has_next_field", "operator": "equal", "operand": false },
+            { "key": "julia_unicode_has_matches"}
+        ]
+    },
+
+    {   "keys": ["tab"], "command": "julia_unicode_insert_best_completion",
+        "args": { "next_completion": true },
+        "context":
+        [
+            { "key": "last_command", "operator": "equal", "operand": "julia_unicode_insert_best_completion" },
+        ]
+    }
+]

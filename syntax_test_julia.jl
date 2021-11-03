@@ -10,8 +10,16 @@
 =#
 # <- comment.block.number-equal-sign punctuation.definition.comment.number-equal-sign
 
-# %% ==================== This is a test ====================
 
+# Code section ####
+# ^^^^^^^^^^^^ comment.line.number-sign.julia entity.name.section.julia
+# Code section ====
+# ^^^^^^^^^^^^ comment.line.number-sign.julia entity.name.section.julia
+# = ====
+# ^ comment.line.number-sign.julia entity.name.section.julia
+#=====
+#^ -comment.line.number-sign.julia entity.name.section.julia
+=====#
 
 ##
 ## NUMBERS ====
@@ -280,31 +288,37 @@
 #     ^ meta.function.inline.julia entity.name.function.julia punctuation.accessor.dot.julia
 #      ^^^^^^ meta.function.inline.julia entity.name.function.julia
 
+  foo((x), ((y))) = 1
+# ^^^ meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#      ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
+#            ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
 
-##
-## Lambda functions ====
-##
 
-  x -> x^2
-# ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
-#   ^^ meta.function.lambda.julia keyword.operator.arrow.julia
-  x::Int -> x^2
-# ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
-#        ^^ meta.function.lambda.julia keyword.operator.arrow.julia
-  () -> 3^2
-# ^^ meta.function.lambda.julia punctuation.section.parameters
-#    ^^ meta.function.lambda.julia keyword.operator.arrow.julia
-  (x::Int, y) -> x + y
-# ^^^^^^^^^^ meta.function.lambda.julia
-#     ^^^ meta.function.lambda.julia meta.function.parameters.julia support.type.julia
-#             ^^ meta.function.lambda.julia keyword.operator.arrow.julia
 
-  (::Int) -> 1
-# ^^^^^^^^^^ meta.function.lambda.julia
+# ##
+# ## Lambda functions ====
+# ##
 
-  ( (x=1) -> x )
-# ^ meta.group.julia
-#  ^ - meta.funciton.lambda.julia
+#   x -> x^2
+# # ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
+# #   ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+#   x::Int -> x^2
+# # ^ meta.function.lambda.julia meta.function.parameters.julia variable.parameter.julia
+# #        ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+#   () -> 3^2
+# # ^^ meta.function.lambda.julia punctuation.section.parameters
+# #    ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+#   (x::Int, y) -> x + y
+# # ^^^^^^^^^^ meta.function.lambda.julia
+# #     ^^^ meta.function.lambda.julia meta.function.parameters.julia support.type.julia
+# #             ^^ meta.function.lambda.julia keyword.operator.arrow.julia
+
+#   (::Int) -> 1
+# # ^^^^^^^^^^ meta.function.lambda.julia
+
+#   ( (x=1) -> x )
+# # ^ meta.group.julia
+# #  ^ - meta.funciton.lambda.julia
 
 ##
 ## UNICODE WORD BOUDARIES ====
@@ -492,6 +506,11 @@
 # ^ punctuation.definition.macro.julia
 #  ^^^ variable.macro.julia meta.generic-name.julia
 
+@timecustom
+#^^^^^^^^^^ -support.function.macro.julia
+@time
+#^^^^ support.function.macro.julia
+
 ##
 ## Quotes ====
 ##
@@ -627,6 +646,16 @@ end
 #        ^^ meta.string.julia string.quoted.double.julia constant.character.escape.julia
 
 ##
+## Struct ====
+##
+
+Base.@kwdef mutable struct ABC
+  repo::REPO{} = repo()
+# ^^^^ meta.struct.julia meta.generic-name.julia
+#       ^^^^ meta.struct.julia meta.type.julia meta.parametric-type.julia meta.generic-name.julia
+end
+
+##
 ## List comprehension ====
 ##
 
@@ -651,6 +680,17 @@ end
 #               ^^ meta.sequence.julia keyword.control.julia
 #
 
+[x for x in 1:10 if x < 5]
+#            ^ keyword.operator.colon.julia
+#                ^^ keyword.control.julia
+[x for x in 1:f(10) if x < 5]
+#            ^ keyword.operator.colon.julia
+#             ^ meta.function-call.julia variable.function.julia meta.generic-name.julia
+#                   ^^ keyword.control.julia
+[x for x in 1:@f(10) if x < 5]
+#            ^ keyword.operator.colon.julia
+#             ^^ meta.function-call.macro.julia
+#                    ^^ keyword.control.julia
 
 # Issues
 
@@ -663,3 +703,17 @@ end
  (I + W1' * W1 / n)
 #^^^^^^^^^^^^^^^^^^ meta.group.julia
 #       ^ keyword.operator.transpose.julia
+
+
+f(#=x::Int=#; kwargs...)
+# ^^^^^^^^^^ comment.block
+f(#=x::Int=#; kwargs...) = 1
+# <- entity.name.function.julia meta.generic-name.julia
+# ^^^^^^^^^^ comment.block
+#^ meta.function.inline.julia
+
+
+# 101
+foo(x::A{f(a)}) = 1
+# <- meta.function.inline.julia entity.name.function.julia meta.generic-name.julia
+#        ^^^^ meta.function.inline.julia meta.function.parameters.julia meta.parametric-type.julia meta.parametric-type.parameters.julia meta.function-call.julia
