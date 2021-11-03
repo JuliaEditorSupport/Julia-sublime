@@ -20,8 +20,11 @@
 #=====
 #^ -comment.line.number-sign.julia entity.name.section.julia
 =====#
+# ---- Code section ----
+# ^^^^ comment.line.number-sign.julia -entity.name.section.julia
+#      ^^^^^^^^^^^^ comment.line.number-sign.julia entity.name.section.julia
+#                   ^^^^ comment.line.number-sign.julia -entity.name.section.julia
 
-##
 ## NUMBERS ====
 ##
   0b101

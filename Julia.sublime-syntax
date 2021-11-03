@@ -96,6 +96,11 @@ contexts:
     #   pop: true
 
   codesection:
+    - match: ^\s*((\#+(?!==)\s*[#%-= ]*)(\w+[\s\w]*)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
+      captures:
+        1: comment.line.number-sign.julia
+        2: punctuation.definition.comment.julia
+        3: entity.name.section.julia
     - match: ^\s*((\#+(?!==))\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
       captures:
         1: comment.line.number-sign.julia
