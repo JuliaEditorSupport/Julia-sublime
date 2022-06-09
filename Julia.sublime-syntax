@@ -522,28 +522,28 @@ contexts:
     - include: main
 
   struct-declarations:
-    - match: \b(struct)\s*({{symb_id}})
+    - match: \b(struct)\s+({{symb_id}})
       scope: meta.struct.julia
       captures:
         1: storage.type.struct.julia keyword.declaration.struct.julia
         2: entity.name.struct.julia
       push: struct-body
 
-    - match: \b(mutable struct)\s*({{symb_id}})
+    - match: \b(mutable struct)\s+({{symb_id}})
       scope: meta.struct.mutable.julia
       captures:
         1: storage.type.struct.mutable.julia keyword.declaration.struct.mutable.julia
         2: entity.name.struct.mutable.julia
       push: struct-body
 
-    - match: \b(abstract type)\s*({{symb_id}})
+    - match: \b(abstract type)\s+({{symb_id}})
       scope: meta.type.abstract.julia
       captures:
         1: storage.type.type.abstract.julia keyword.declaration.type.abstract.julia
         2: entity.name.type.abstract.julia
       push: struct-body
 
-    - match: \b(primitive type)\s*({{symb_id}})
+    - match: \b(primitive type)\s+({{symb_id}})
       scope: meta.type.primitive.julia
       captures:
         1: storage.type.type.primitive.julia keyword.declaration.type.primitive.julia
