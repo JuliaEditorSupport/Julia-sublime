@@ -629,9 +629,9 @@ end
 # ^^^^^^^^^^^^^^ meta.string.julia string.quoted.double.block.julia source.regexp
 
   r"\""
-#   ^^ meta.string.julia string.quoted.double.julia source.regexp.python constant.character.escape.backslash.regexp
+#   ^^ meta.string.julia string.quoted.double.julia source.regexp.python meta.mode.basic.regexp constant.character.escape.regexp
   r"""a"b"""
-#     ^^^ meta.string.julia string.quoted.double.block.julia source.regexp.python
+#     ^^^ meta.string.julia string.quoted.double.block.julia source.regexp.python meta.mode.basic.regexp
 
   b"DATA\xff\u2200"
 #       ^^^^ meta.string.julia string.quoted.double.julia constant.character.escape.hex.julia
