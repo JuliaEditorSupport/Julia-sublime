@@ -54,14 +54,18 @@ contexts:
   main:
       # a helper to support emoji completion
     - match: (R)(""")
+      scope: rcall.julia
       captures:
         1: constant.other.language-name.markdown
         2: comment.line.number-sign.julia
       embed: scope:source.r
       embed_scope: rcall.julia
       escape: (""")
+      escape_scope: rcall.julia
       escape_captures:
+        0: rcall.julia
         1: comment.line.number-sign.julia
+
       # captures:
         # 1: punctuation.definition.raw.code-fence.begin.markdown
         # 2: punctuation.definition.raw.code-fence.options.begin.markdown
