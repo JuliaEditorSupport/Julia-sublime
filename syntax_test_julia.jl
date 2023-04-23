@@ -296,6 +296,8 @@
 #      ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
 #            ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
 
+  bar(x; y, kws...)
+#        ^ meta.function-call.arguments.julia variable.parameter.julia
 
 
 # ##

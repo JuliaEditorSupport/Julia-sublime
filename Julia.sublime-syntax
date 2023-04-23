@@ -96,16 +96,11 @@ contexts:
     #   pop: true
 
   codesection:
-    - match: ^\s*((\#+(?!==)\s*[#%-= ]*)(\w+[\s\w]*)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
+    - match: ^(\# %% =+) ([^=]+) (=+)
       captures:
         1: comment.line.number-sign.julia
-        2: punctuation.definition.comment.julia
-        3: entity.name.section.julia
-    - match: ^\s*((\#+(?!==))\s*(.+?)\s*(?:-{4,}|={4,}|#{4,})[ \t]*$\n?)
-      captures:
-        1: comment.line.number-sign.julia
-        2: punctuation.definition.comment.julia
-        3: entity.name.section.julia
+        2: entity.name.section.julia
+        3: comment.line.number-sign.julia
 
   comments:
     - match: \#=
@@ -527,7 +522,7 @@ contexts:
     - include: main
 
   struct-declarations:
-    - match: \b(struct)\s*({{symb_id}})
+    - match: \b(struct)\s+({{symb_id}})
       scope: meta.struct.julia
       captures:
         1: storage.type.struct.julia keyword.declaration.struct.julia
@@ -1039,15 +1034,34 @@ contexts:
             pop: true
           - include: main
 
+  function-call-keyword-arguments-only:
+    - meta_content_scope: meta.function-call.arguments.julia
+    - match: \)
+      scope: punctuation.section.arguments.end.julia
+      set: after-expression
+    - match: \,
+      scope: punctuation.separator.comma.julia
+    - include: function-call-keyword-arguments
+    - match: '{{symb_id}}(?=\s*(?:\,|\)|\.{3}))'
+      scope: variable.parameter.julia
+      push: after-expression
+    - include: main
+  
   function-call-arguments-group:
     - match: \(
       scope: punctuation.section.arguments.begin.julia
       set:
-        - meta_scope: meta.function-call.julia
-        - meta_content_scope: meta.function-call.arguments.julia
+        # - meta_scope: meta.function-call.julia
+        # - meta_content_scope: meta.function-call.arguments.julia
+        - meta_scope: meta.function-call.arguments.julia
         - match: \)
           scope: punctuation.section.arguments.end.julia
           set: after-expression
+        - match: \,
+          scope: punctuation.separator.comma.julia
+        - match: \;
+          scope: punctuation.separator.semicolon.julia
+          set: function-call-keyword-arguments-only
         - include: function-call-keyword-arguments
         - include: main
 
@@ -1080,7 +1094,7 @@ contexts:
         - include: brackets
         - match: ''
           pop: true
-    - match: \s*(:)
+    - match: (:)
       captures:
         1 : keyword.operator.colon.julia
     - match: (\.)?(?=\()
