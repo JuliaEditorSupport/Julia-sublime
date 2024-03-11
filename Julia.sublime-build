@@ -1,0 +1,4 @@
+{
+	"shell_cmd": ["julia", "$file_name"],
+	"selector": "source.jl",
+}
