@@ -20,8 +20,11 @@
 #=====
 #^ -comment.line.number-sign.julia entity.name.section.julia
 =====#
+# ---- Code section ----
+# ^^^^ comment.line.number-sign.julia -entity.name.section.julia
+#      ^^^^^^^^^^^^ comment.line.number-sign.julia entity.name.section.julia
+#                   ^^^^ comment.line.number-sign.julia -entity.name.section.julia
 
-##
 ## NUMBERS ====
 ##
   0b101
@@ -293,6 +296,8 @@
 #      ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
 #            ^ meta.function.inline.julia meta.function.parameters.julia variable.parameter.julia
 
+  bar(x; y, kws...)
+#        ^ meta.function-call.arguments.julia variable.parameter.julia
 
 
 # ##
